@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Window
+    x:Class="ComicReader.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:local="using:ComicReader"
+    xmlns:controls="using:CommunityToolkit.WinUI.Controls"
+    mc:Ignorable="d"
+    Title="ComicReader">
+
+    <Window.SystemBackdrop>
+        <MicaBackdrop />
+    </Window.SystemBackdrop>
+
+    <Grid x:Name="grid">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition x:Name="FoldersColumn" Width="415"/>
+            <ColumnDefinition Width="673*"/>
+        </Grid.ColumnDefinitions>
+
+        <StackPanel x:Name="breadcrumbPanel" Orientation="Horizontal" Grid.ColumnSpan="2" Spacing="6"/>
+
+        <StackPanel Grid.Row="1" Orientation="Vertical">
+            <TextBox x:Name="folderPathTextBox" Margin="10" FontSize="16"
+                     KeyUp="FolderPathTextBox_KeyUp"/>
+            <ListView x:Name="folderListView" DisplayMemberPath="Name" ItemsSource="{x:Bind dirs}"
+          SelectionChanged="FolderListView_SelectionChanged" FontSize="16"/>
+        </StackPanel>
+        
+
+
+        <Grid Grid.Column="1" Grid.Row="1" Grid.RowSpan="2" x:Name="imageHost">
+           
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <Button x:Name="showFoldersButton" Content="Afficher les dossiers" 
+                        HorizontalAlignment="Center" VerticalAlignment="Top"
+                        Visibility="Collapsed" Click="ShowFoldersButton_Click"/>
+                
+                <Image Grid.Row="1" x:Name="comicsImage" Stretch="Uniform" PointerWheelChanged="ComicImage_PointerWheelChanged"
+                       HorizontalAlignment="Center" VerticalAlignment="Center" Margin="10"/>
+                <Image Grid.Row="1" x:Name="comicsImageBack" Stretch="Uniform" Visibility="Collapsed"
+                       PointerWheelChanged="ComicImage_PointerWheelChanged"
+                       HorizontalAlignment="Center" VerticalAlignment="Center" Margin="10"/>
+            </Grid>
+        </Grid>
+    </Grid>
+</Window>

@@ -1,0 +1,33 @@
+{
+  "Comic": {
+    "extension": "",
+    "URL": "https://exemple_url.com",
+    "BaseURL": "https://exemple_baseurl.com",
+    "PackageName": "package name",
+    "Filename": "",
+    "Host": "host.com",
+    "NumberPages": 0,
+    "Author": "author",
+    "Path": "E:\\Manga Scan\\Manga\\hentai\\author\\package name",
+    "Enabled": true,
+    "Priority": 3,
+    "DeepAnalyze": true,
+    "HtmlBody": "",
+    "AutoConfirm": false
+  },
+  "Hosts": [
+    "https://k2s.cc/",
+    "https://fboom.me/",
+    "https://florenfile.com/"
+  ],
+  "Confirms": [
+    "https://e-hentai.org/",
+    "https://fastfile.cc/"
+  ],
+  "Paths": [
+    "E:\\Manga Scan\\Manga\\hentai",
+    "V:\\vidéo",
+    "E:\\Jeux\\Porn"
+  ],
+  "Period": 14
+}

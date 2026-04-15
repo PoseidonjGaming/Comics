@@ -1,0 +1,12 @@
+<Solution>
+  <Project Path="ComicReader/ComicReader.csproj" Id="c0bc82e6-a568-44ae-8e13-54b1eac8371f">
+    <Platform Project="x64" />
+    <Deploy />
+  </Project>
+  <Project Path="DownloadComics/DownloadComics.csproj" />
+  <Project Path="ModernDownloadComics/ModernDownloadComics.csproj" Id="f93a39e2-7528-4743-9fd1-13db9d4a89c4">
+    <Platform Project="x64" />
+    <Deploy />
+  </Project>
+  <Project Path="SearchComics/SearchComics.csproj" Id="240d193f-7326-4701-88df-41beac774443" />
+</Solution>

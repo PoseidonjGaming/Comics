@@ -1,0 +1,23 @@
+﻿<Window x:Class="DownloadComics.windows.ChangeSourceWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:DownloadComics.windows"
+        xmlns:res="clr-namespace:DownloadComics.resources"
+        mc:Ignorable="d"
+        Title="{res:Loc Change_Source_Title}" Height="115" Width="200" 
+        WindowStartupLocation="CenterScreen" Loaded="Window_Loaded">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <StackPanel Margin="10">
+            <ComboBox Name="sourcesCMB" FontSize="14"/>
+            <Button Name="changeSourceBTN" Content="{res:Loc Change_Source_Change_Button}" 
+                    Margin="0,10,0,0" Click="ChangeSourceBTN_Click" FontSize="14"/> 
+        </StackPanel>
+
+    </Grid>
+</Window>

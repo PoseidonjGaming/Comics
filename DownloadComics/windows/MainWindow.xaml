@@ -1,0 +1,204 @@
+﻿<Window x:Class="DownloadComics.windows.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:res="clr-namespace:DownloadComics.resources"
+        xmlns:enum="clr-namespace:DownloadComics.models"
+        xmlns:conv="clr-namespace:DownloadComics.resources.converters"
+        mc:Ignorable="d"
+        Title="{res:Loc Main_Title}" FontSize="14" Height="720" Width="1280" WindowStartupLocation="CenterScreen" ResizeMode="CanMinimize">
+
+    <Window.Resources>
+        <Style TargetType="ScrollBar" x:Key="ThinHorizontalScrollBar">
+            <Setter Property="Height" Value="8"/>
+            <Setter Property="MinHeight" Value="8"/>
+        </Style>
+        <ObjectDataProvider x:Key="EnumDataSource" MethodName="GetValues" ObjectType="{x:Type enum:Priority}">
+            <ObjectDataProvider.MethodParameters>
+                <x:TypeExtension TypeName="enum:Priority" />
+            </ObjectDataProvider.MethodParameters>
+        </ObjectDataProvider>
+        <conv:EnumConverter x:Key="EnumConverter"/>
+        <conv:HostConverter x:Key="HostConverter"/>
+    </Window.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="124"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="415"/>
+            <ColumnDefinition Width="673*"/>
+
+        </Grid.ColumnDefinitions>
+
+        <Menu Grid.Row="0" Grid.ColumnSpan="2" VerticalAlignment="Top" Height="21">
+            <MenuItem Header="{res:Loc Main_Generate_Menu_Item}" Click="GenerateBTN_Click" FontSize="14"/>
+            <MenuItem Header="{res:Loc Main_Backup_Menu_Item}" FontSize="14">
+                <MenuItem Header="{res:Loc Main_Restore_Backup_Menu_Item}" Click="RestoreBackup" FontSize="14"/>
+                <MenuItem Header="{res:Loc Main_Clear_Session_MenuItem}" Click="ClearPrevSession" FontSize="14" />
+            </MenuItem>
+            <MenuItem Header="{res:Loc Main_Settings_Menu_Item}" FontSize="14">
+                <MenuItem Header="{res:Loc Main_Open_Settings_Menu_Item}" FontSize="14" Click="SettingsItem_Click"/>
+                <MenuItem Header="{res:Loc Main_Open_Jdownloader_Settings_Menu_Item}" FontSize="14" Click="OpenJDownloaderSettingsClick"/>
+                <MenuItem Header="{res:Loc Main_Select_Lang_Menu_Item}" FontSize="14" Click="ChangeLang_Click"/>
+                <Separator />
+                <MenuItem Header="{res:Loc Main_Import_Settings_Menu_Item}" FontSize="14" Click="ImportSettings_Click"/>
+                <MenuItem Header="{res:Loc Main_Export_Settings_Menu_Item}" FontSize="14" Click="ExportSettingsItem_Click"/>
+            </MenuItem>
+            <MenuItem Header="{res:Loc Main_Import_Menu_Item}" Click="ImportItem" FontSize="14"/>
+        </Menu>
+
+      
+        
+
+        <!-- Formulaire d'ajout/édition -->
+        <StackPanel Orientation="Horizontal" Margin="10,0,10,0" Grid.Column="0" Grid.ColumnSpan="3" VerticalAlignment="Center" Height="82">
+            <StackPanel Margin="10">
+                <Label Content="URL:" VerticalAlignment="Center" FontSize="16" />
+                <TextBox Name="urlTXT" HorizontalAlignment="Left" VerticalAlignment="Top" TextWrapping="NoWrap"
+                  HorizontalScrollBarVisibility="Auto" Width="300" Height="30" FontSize="16">
+                    <TextBox.Resources>
+                        <Style TargetType="ScrollBar" BasedOn="{StaticResource ThinHorizontalScrollBar}"/>
+                    </TextBox.Resources>
+                </TextBox>
+            </StackPanel>
+            <StackPanel Margin="10">
+                <Label Content="{res:Loc Key=Comic_Author_Label,Format={}{0}:}" VerticalAlignment="Center" FontSize="16"/>
+                <TextBox Name="authorTXT" Width="150" Height="30" FontSize="16" TextWrapping="NoWrap"
+                  HorizontalAlignment="Left" VerticalAlignment="Top" VerticalContentAlignment="Center"/>
+            </StackPanel>
+            <StackPanel Margin="10">
+                <Label Content="{res:Loc Key=Comic_Name_Label,Format={}{0}:}" FontSize="16" VerticalAlignment="Center"/>
+                <TextBox Name="comicNameTXT" Width="150" Height="30" FontSize="16" TextWrapping="NoWrap"
+                         VerticalAlignment="Top" HorizontalAlignment="Left" VerticalContentAlignment="Center"/>
+            </StackPanel>
+            <StackPanel Margin="10">
+                <Label Content="Pages:" FontSize="16" VerticalAlignment="Center" />
+                <TextBox Name="numberPagesTXT" Text="0" Width="75" Height="30" FontSize="16" TextWrapping="NoWrap"
+                         VerticalAlignment="Top" HorizontalAlignment="Left" VerticalContentAlignment="Center"/>
+            </StackPanel>
+            <StackPanel Orientation="Vertical" VerticalAlignment="Center">
+                <Label Content="{res:Loc Key=Common_Scan_Label,Format={}{0}:}" FontSize="16" VerticalAlignment="Center" Padding="0,0,0,16"/>
+                <CheckBox Name="isScan" HorizontalAlignment="Center" VerticalAlignment="Center" IsChecked="True"/>
+            </StackPanel>
+
+            <StackPanel Orientation="Vertical" VerticalAlignment="Center" Margin="10,10,0,0">
+                <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+                    <Button Content="{res:Loc Common_Add_Button}" Name="addBtn" Click="AddBtn_Click" Height="30" FontSize="16" 
+                            HorizontalAlignment="Center" VerticalAlignment="Top" Margin="10,0,0,0" Padding="10,0,10,0"/>
+                    <Button Content="{res:Loc Common_Remove_Button}" Name="removeBtn" Click="RemoveBtn_Click" Height="30" FontSize="16"
+                            HorizontalAlignment="Center" VerticalAlignment="Top" Margin="10,0,0,0" Padding="10,0,10,0"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <Button Content="{res:Loc Common_Search_Comic_Button}" Name="searchBtn" Click="SearchBTN_Click"
+                            Height="30" FontSize="16" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="10,0,0,0" Padding="10,0,10,0"/>
+                    <Button Content="{res:Loc Main_Clear_Comics_Button}" Name="clearComicsBtn" Click="ClearComicsBTN_Click"
+        Height="30" FontSize="16" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="10,0,0,0" Padding="10,0,10,0"/>
+                </StackPanel>
+            </StackPanel>
+        </StackPanel>
+
+        <Grid Grid.Row="1" Margin="10">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <StackPanel Orientation="Vertical" Margin="0,0,0,10">
+                <Label Content="Filter:" FontSize="16" VerticalAlignment="Center"/>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBox x:Name="filterTXT"
+                             Text="{Binding Filter, UpdateSourceTrigger=PropertyChanged}" 
+                             TextChanged="FilterTXT_TextChanged"/>
+                    <ComboBox Name="filterHostCMB" Grid.Column="1" SelectionChanged="FilterHostCMB_SelectionChanged">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Converter={StaticResource HostConverter}}"/>
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
+                </Grid>
+            </StackPanel>
+            
+            <ListView Grid.Row="1" x:Name="comicsURLsList" 
+                      DisplayMemberPath="PackageName"
+                      SelectionChanged="ComicsURLsList_SelectionChanged">
+            </ListView>
+
+        </Grid>
+        <!-- Détail et édition du comic sélectionné -->
+        <StackPanel Grid.Row="1" Grid.Column="1" Margin="10,10,10,10" Grid.ColumnSpan="2">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch">
+                <StackPanel Orientation="Vertical" Margin="0,0,50,0">
+                    <Label Content="URL:" FontSize="16"/>
+                    <TextBox Name="dUrlTXT" FontSize="16" TextWrapping="NoWrap"
+                      VerticalContentAlignment="Center" Width="500" TextChanged="DUrlTXT_TextChanged"/>
+                </StackPanel>
+                <StackPanel Orientation="Vertical">
+                    <Label Content="{res:Loc Key=Comic_Host_Label,Format={}{0}:}" FontSize="16"/>
+                    <TextBox Name="hostTXT" FontSize="16" Width="150" TextWrapping="NoWrap"/>
+                </StackPanel>
+            </StackPanel>
+
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch">
+                <StackPanel Orientation="Vertical">
+                    <Label Content="{res:Loc Key=Comic_Author_Label,Format={}{0}:}" FontSize="16"/>
+                    <TextBox Name="dAuthorTXT" FontSize="16" Width="150" TextWrapping="NoWrap"/>
+                </StackPanel>
+                <StackPanel Orientation="Vertical" Margin="40,0,40,0">
+                    <Label Content="{res:Loc Key=Comic_Package_Name_Label,Format={}{0}:}" FontSize="16"/>
+                    <TextBox Name="pkgNameTXT" FontSize="16" Width="300" VerticalContentAlignment="Center" TextWrapping="NoWrap"/>
+                </StackPanel>
+                <StackPanel Orientation="Vertical">
+                    <Label Content="{res:Loc Key=Comic_Filename_Label,Format={}{0}:}" FontSize="16"/>
+                    <TextBox Name="filenameTXT" FontSize="16" Width="200" TextWrapping="NoWrap" VerticalContentAlignment="Center"/>
+                </StackPanel>
+            </StackPanel>
+
+            <StackPanel Orientation="Vertical">
+                <Label Content="{res:Loc Key=Comic_Path_Label,Format={}{0}:}" FontSize="16"/>
+                <TextBox Name="pathTXT" FontSize="16"/>
+            </StackPanel>
+
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch">
+                <StackPanel Orientation="Vertical" HorizontalAlignment="Left">
+                    <Label Content="{res:Loc Key=Comic_Number_Pages_Label,Format={}{0}:}" FontSize="16" HorizontalAlignment="Left"/>
+                    <TextBox Name="pagesTXT" FontSize="16" HorizontalAlignment="Stretch"
+                             PreviewTextInput="PagesTXT_PreviewTextInput" DataObject.Pasting="PagesTXT_Pasting"/>
+                </StackPanel>
+
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch">
+                <StackPanel Orientation="Vertical" Margin="10" VerticalAlignment="Center">
+                    <Label Content="{res:Loc Key=Comic_Enabled_Label,Format={}{0}:}" FontSize="16" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                    <CheckBox Name="enabledCB" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Margin="10" VerticalAlignment="Center">
+                    <Label Content="{res:Loc Key=Comic_Priority_Label,Format={}{0}:}" FontSize="16" HorizontalAlignment="Stretch" VerticalAlignment="Center"/>
+                    <ComboBox Name="priorityCombo" ItemsSource="{Binding Source={StaticResource EnumDataSource}, Mode=OneWay}" FontSize="16"
+                              VerticalContentAlignment="Center" SelectedIndex="3">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Converter={StaticResource EnumConverter}}"/>
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
+                </StackPanel>
+            </StackPanel>
+
+            <StackPanel Orientation="Horizontal" Margin="0,20,0,0">
+                <Button Name="changeSourceBTN" Content="{res:Loc Main_Change_Source_Button}" FontSize="16" Padding="10,0,10,0" Margin="0,0,10,0" Click="ChangeSourceBTN_Click"/>
+                <Button Name="updateBtn" Content="{res:Loc Common_Update_Button}" FontSize="16" Padding="10,0,10,0" Margin="0,0,10,0" Click="UpdateBtn_Click"/>
+                <Button Name="unselectBtn" Content="{res:Loc Main_Unselect_Button}" FontSize="16" Click="UnselectBtn_Click" Padding="10,0,10,0"/>
+            </StackPanel>
+        </StackPanel>
+
+    </Grid>
+</Window>

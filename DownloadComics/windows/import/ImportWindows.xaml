@@ -1,0 +1,70 @@
+﻿<Window x:Class="DownloadComics.windows.ImportWindows"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:DownloadComics.windows"
+        xmlns:wv2="clr-namespace:Microsoft.Web.WebView2.Wpf;assembly=Microsoft.Web.WebView2.Wpf"
+        xmlns:res="clr-namespace:DownloadComics.resources"
+        mc:Ignorable="d"
+        Title="ImportWindows" Height="900" Width="1610" Loaded="Window_Loaded" 
+        Closed="Window_Closed" WindowStartupLocation="CenterOwner" ShowInTaskbar="True">
+
+    <Window.Resources>
+        <Style TargetType="ScrollBar" x:Key="ThinHorizontalScrollBar">
+            <Setter Property="Height" Value="8"/>
+            <Setter Property="MinHeight" Value="8"/>
+        </Style>
+    </Window.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="177*"/>
+            <RowDefinition Height="40*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="49*"/>
+            <ColumnDefinition Width="171*"/>
+        </Grid.ColumnDefinitions>
+
+        <wv2:WebView2 Name="browser" Grid.Column="1" Margin="10"/>
+
+        <ListView Grid.Row="0" Grid.RowSpan="2" x:Name="comicsURLsList" Margin="10,10,10,10" SelectionChanged="ComicsURLsList_SelectionChanged"/>
+
+        <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.Column="1" VerticalAlignment="Center" Height="82">
+            <StackPanel Margin="10">
+                <Label Content="URL:" VerticalAlignment="Center" FontSize="16" />
+                <TextBox Name="urlTXT" HorizontalAlignment="Left" VerticalAlignment="Top" TextWrapping="NoWrap"
+            HorizontalScrollBarVisibility="Auto" Width="300" Height="30" FontSize="16">
+                    <TextBox.Resources>
+                        <Style TargetType="ScrollBar" BasedOn="{StaticResource ThinHorizontalScrollBar}"/>
+                    </TextBox.Resources>
+                </TextBox>
+            </StackPanel>
+            <StackPanel Margin="10">
+                <Label Content="{res:Loc Key=Common_Author_Label,Format={}{0}:}" VerticalAlignment="Center"  FontSize="16"/>
+                <TextBox Name="authorTXT" Width="150" Height="30" FontSize="16" TextWrapping="NoWrap"
+            HorizontalAlignment="Left" VerticalAlignment="Top" VerticalContentAlignment="Center"/>
+            </StackPanel>
+            <StackPanel Margin="10">
+                <Label Content="{res:Loc Key=Common_Name_Label,Format={}{0}:}" FontSize="16" VerticalAlignment="Center" />
+                <TextBox Name="comicNameTXT" Width="150" Height="30" FontSize="16" TextWrapping="NoWrap" 
+                         VerticalAlignment="Top" HorizontalAlignment="Left" VerticalContentAlignment="Center"/>
+            </StackPanel>
+            <StackPanel Margin="10">
+                <Label Content="Pages:" FontSize="16" VerticalAlignment="Center" />
+                <TextBox Name="numberPageTXT" Width="75" Height="30" FontSize="16" TextWrapping="NoWrap" 
+              VerticalAlignment="Top" HorizontalAlignment="Left" VerticalContentAlignment="Center"/>
+            </StackPanel>
+            <StackPanel Orientation="Vertical" VerticalAlignment="Center">
+                <Label Content="{res:Loc Common_Scan_Label}" FontSize="16" VerticalAlignment="Center" Padding="0,0,0,16"/>
+                <CheckBox Name="isScan" HorizontalAlignment="Center" VerticalAlignment="Center" />
+            </StackPanel>
+            <Button Name="addBtn" Height="30" FontSize="16" Click="AddBtn_Click" Content="{res:Loc Common_Add_Button}"
+                    HorizontalAlignment="Center" VerticalAlignment="Center" Margin="10,0,0,0" Padding="10,0,10,0"/>
+            <Button Name="searchBtn" Height="30" FontSize="16" Click="SearchBtn_Click"
+                    Content="{res:Loc Common_Search_Comic_Button}" HorizontalAlignment="Center"
+                    VerticalAlignment="Center" Margin="10,0,0,0" Padding="10,0,10,0"/>
+        </StackPanel>
+    </Grid>
+</Window>

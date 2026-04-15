@@ -1,0 +1,19 @@
+﻿<Window x:Class="DownloadComics.windows.ResolveCaptcha"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:wv2="clr-namespace:Microsoft.Web.WebView2.Wpf;assembly=Microsoft.Web.WebView2.Wpf"
+        xmlns:local="clr-namespace:DownloadComics.windows"
+        mc:Ignorable="d"
+        Title="ResolveCaptcha" Height="450" Width="800" 
+        Loaded="Window_Loaded" Closed="Window_Closed"
+        WindowStartupLocation="CenterOwner">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <wv2:WebView2 Name="browser" Margin="10"/>
+    </Grid>
+</Window>

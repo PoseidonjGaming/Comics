@@ -1,0 +1,30 @@
+﻿<Window x:Class="DownloadComics.windows.SelectArchive"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:DownloadComics.windows"
+        xmlns:model="clr-namespace:DownloadComics.models"
+        xmlns:res="clr-namespace:DownloadComics.resources"
+        mc:Ignorable="d"
+        Title="{res:Loc Select_Archive_Title}" Height="120" Width="300"
+        Loaded="Window_Loaded" WindowStartupLocation="CenterOwner">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <StackPanel Orientation="Vertical">
+            <ComboBox Name="fileCB" Margin="10" FontSize="16" VerticalContentAlignment="Center" SelectedIndex="0"/>
+            <Grid Margin="0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Button Name="impotBtn" Grid.Column="0" Content="{res:Loc Select_Archive_Import_Button}" 
+                        FontSize="16" Click="ImpotBtn_Click" Margin="10,0"/>
+            </Grid>
+            
+        </StackPanel>
+        
+    </Grid>
+</Window>

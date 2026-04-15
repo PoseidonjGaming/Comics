@@ -1,0 +1,27 @@
+﻿<Window x:Class="DownloadComics.windows.LanguageWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:DownloadComics.windows"
+        xmlns:res="clr-namespace:DownloadComics.resources"
+        mc:Ignorable="d"
+        Title="{res:Loc Language_Title}" Height="130" Width="320" WindowStartupLocation="CenterOwner">
+    <Grid>
+        <StackPanel Orientation="Vertical" Margin="10">
+            <ComboBox Name="langCMB" FontSize="14" VerticalContentAlignment="Center" SelectionChanged="LangCMB_SelectionChanged">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Horizontal" Margin="4,2">
+                            <Image Source="{Binding FlagPath}" Width="28" Height="21" Margin="6,0,12,0"
+                                   Stretch="UniformToFill" VerticalAlignment="Center"/>
+                            <TextBlock Text="{Binding DisplayName}" FontSize="16" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                        </StackPanel>
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
+            <Button Name="selectLangBTN" Content="{res:Loc Language_Select_Button}" Margin="0,10,0,0" 
+                    FontSize="16" Click="SelectLangBTN_Click"/>
+        </StackPanel>
+    </Grid>
+</Window>

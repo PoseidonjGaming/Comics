@@ -59,7 +59,6 @@ namespace DownloadComics.windows
                 return filterName && filterHost;
             };
 
-            DataContext = this;
 
             comicsURLsList.ItemsSource = State.GetComics();
 
@@ -76,9 +75,9 @@ namespace DownloadComics.windows
                     foreach (var c in comics)
                         State.GetComics().Add(c);
 
-                    PopulateFilterCombo();
+                    
                 }
-
+                PopulateFilterCombo();
                 if (File.Exists(FileService.TrackFilePath))
                 {
                     State.Tracks = FileService.ReadFile<List<Track>>(FileService.TrackFilePath) ?? [];
@@ -125,26 +124,6 @@ namespace DownloadComics.windows
             numberPagesTXT.Text = "0";
         }
 
-        private void PopulateComics()
-        {
-            if (comicsURLsList.SelectedItem is Comic comic)
-            {
-                dUrlTXT.Text = comic.URL;
-                dAuthorTXT.Text = comic.Author;
-                filenameTXT.Text = comic.Filename;
-                pkgNameTXT.Text = comic.PackageName;
-                pagesTXT.Text = comic.NumberPages.ToString();
-                hostTXT.Text = comic.Host;
-                pathTXT.Text = comic.Path;
-                enabledCB.IsChecked = comic.Enabled;
-                priorityCombo.Text = comic.Priority.ToString();
-
-                ImportWindows? importWindow = Application.Current.Windows.OfType<ImportWindows>().FirstOrDefault();
-
-                importWindow?.Navigate(comic.BaseURL);
-            }
-        }
-
         private void PopulateFilterCombo()
         {
             filterHostCMB.Items.Clear();
@@ -176,7 +155,6 @@ namespace DownloadComics.windows
 
         private void ComicsURLsList_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            PopulateComics();
         }
 
         private void RemoveBtn_Click(object sender, RoutedEventArgs e)
@@ -186,6 +164,7 @@ namespace DownloadComics.windows
                 State.RemoveComic(comic);
                 ClearSelectedComic();
                 WriteBackup();
+                PopulateFilterCombo();
             }
         }
 
@@ -275,7 +254,7 @@ namespace DownloadComics.windows
 
         private void DUrlTXT_TextChanged(object sender, TextChangedEventArgs e)
         {
-            hostTXT.Text = RegexUtility.HostRegex().Match(dUrlTXT.Text).Value;
+            
         }
 
 
@@ -415,7 +394,22 @@ namespace DownloadComics.windows
 
                 changeSourceWindow.Closed += (sender, e) =>
                 {
-                    PopulateComics();
+                    if (comicsURLsList.SelectedItem is Comic comic)
+                    {
+                        dUrlTXT.Text = comic.URL;
+                        dAuthorTXT.Text = comic.Author;
+                        filenameTXT.Text = comic.Filename;
+                        pkgNameTXT.Text = comic.PackageName;
+                        pagesTXT.Text = comic.NumberPages.ToString();
+                        hostTXT.Text = comic.Host;
+                        pathTXT.Text = comic.Path;
+                        enabledCB.IsChecked = comic.Enabled;
+                        priorityCombo.Text = comic.Priority.ToString();
+
+                        ImportWindows? importWindow = Application.Current.Windows.OfType<ImportWindows>().FirstOrDefault();
+
+                        importWindow?.Navigate(comic.BaseURL);
+                    }
                 };
                 changeSourceWindow.ShowDialog();
             }

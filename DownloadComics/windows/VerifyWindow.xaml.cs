@@ -74,7 +74,7 @@ namespace DownloadComics.windows
             progressBar.IsIndeterminate = true;
             jobToggleBtn.IsChecked = true;
             jobToggleBtn.Content = VerifyStrings.Verify_Stop_Button;
-            _listenerService.StartAsync(() => _jdownloaderService.startingCount.ToString(),
+            _listenerService.StartAsync(() => _jdownloaderService.StartingCount.ToString(),
                 () => State.GetComics().Count.ToString());
             RunVerify();
         }
@@ -153,7 +153,7 @@ namespace DownloadComics.windows
                    await AddLinks(comic => !options.Confirms.Contains(comic.Host), ct);
 
                    Dispatcher.Invoke(() => _states.Add(VerifyStrings.Verify_Wait));
-                   offlineLinks = await _listenerService.TaskCompletionSource.Task;
+                   offlineLinks = await _listenerService.WaitJob();
 
                    Dispatcher.Invoke(() => _states.Add(VerifyStrings.Verify_Disable));
                    await DisableLinks(client);

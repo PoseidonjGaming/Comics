@@ -5,11 +5,14 @@ using DownloadComics.utilities;
 using DownloadComics.windows.settings;
 using FuzzierSharp;
 using FuzzierSharp.PreProcess;
+using JDownloader;
+using JDownloader.Model;
 using Microsoft.Win32;
 using Newtonsoft.Json;
 using System.ComponentModel;
 using System.Globalization;
 using System.IO;
+using System.Net;
 using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
@@ -40,7 +43,7 @@ namespace DownloadComics.windows
                 if (o is not Comic comic)
                     return false;
 
-               
+
 
                 bool filterName = true;
                 if (!string.IsNullOrEmpty(Filter))
@@ -75,7 +78,7 @@ namespace DownloadComics.windows
                     foreach (var c in comics)
                         State.GetComics().Add(c);
 
-                    
+
                 }
                 PopulateFilterCombo();
                 if (File.Exists(FileService.TrackFilePath))
@@ -254,7 +257,7 @@ namespace DownloadComics.windows
 
         private void DUrlTXT_TextChanged(object sender, TextChangedEventArgs e)
         {
-            
+
         }
 
 

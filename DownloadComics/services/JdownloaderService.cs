@@ -24,7 +24,7 @@ namespace DownloadComics.services
         private static readonly Lazy<JdownloaderService> _instance = new(new JdownloaderService());
         public static readonly JdownloaderService Instance = _instance.Value;
 
-        public int startingCount = 0;
+        public int StartingCount = 0;
         private readonly List<long> jobUUIds = [];
         private static AppState State
         {
@@ -147,7 +147,7 @@ namespace DownloadComics.services
 
         public async Task SetCrawledPackageCount()
         {
-            startingCount = await GetCrawledPackageCount();
+            StartingCount = await GetCrawledPackageCount();
         }
 
         public void ClearJobs()

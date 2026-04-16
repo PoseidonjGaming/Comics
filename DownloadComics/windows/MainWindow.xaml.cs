@@ -57,9 +57,6 @@ namespace DownloadComics.windows
                 }
 
                 return filterName && filterHost;
-
-                //filter vide comparer le host avec le selectedItem
-                //filter non vide fuzz + compare host
             };
 
             DataContext = this;
@@ -165,6 +162,7 @@ namespace DownloadComics.windows
             {
                 ComicUtility.MakeComic(urlTXT.Text, authorTXT.Text, comicNameTXT.Text, pages, this,
                     isScan.IsChecked.GetValueOrDefault());
+                PopulateFilterCombo();
 
                 FileService.WriteFile(FileService.TrackFilePath, State.Tracks);
                 WriteBackup();

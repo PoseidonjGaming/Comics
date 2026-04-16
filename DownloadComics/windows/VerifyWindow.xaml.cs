@@ -96,7 +96,7 @@ namespace DownloadComics.windows
 
             Task.Run(async () =>
                {
-                   List<OfflineLinks> offlineLinks = [];
+                   List<OfflineLink> offlineLinks = [];
 
                    JDownloaderClient client = await _jdownloaderService.GetInstanceAsync();
                    do
@@ -122,7 +122,7 @@ namespace DownloadComics.windows
                            progressBar.IsIndeterminate = true;
                        });
 
-                       offlineLinks = await _listenerService.TaskCompletionSource.Task;
+                       offlineLinks = await _listenerService.WaitJob();
 
                        offlineLinks.ForEach(async ol =>
                        {

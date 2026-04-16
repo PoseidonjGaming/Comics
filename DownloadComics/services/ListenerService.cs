@@ -11,7 +11,7 @@ namespace DownloadComics.services
     {
         private CancellationTokenSource? _listenTokenSource;
         private HttpListener? _listener;
-        public TaskCompletionSource<List<OfflineLinks>> TaskCompletionSource;
+        public TaskCompletionSource<List<OfflineLink>> TaskCompletionSource;
 
         private static readonly Lazy<ListenerService> _instance = new(() => new ListenerService());
 
@@ -20,7 +20,7 @@ namespace DownloadComics.services
         private ListenerService()
         {
             _listenTokenSource = null;
-            TaskCompletionSource = new TaskCompletionSource<List<OfflineLinks>>();
+            TaskCompletionSource = new TaskCompletionSource<List<OfflineLink>>();
         }
 
         public Task? StartAsync(Func<string>? packageProvider = null, Func<string>? countProvider = null, int port = 12345)
@@ -67,15 +67,14 @@ namespace DownloadComics.services
                                     using StreamReader reader = new(context.Request.InputStream);
                                     string response = reader.ReadToEnd();
 
-                                    TaskCompletionSource.TrySetResult(JsonConvert.DeserializeObject<List<OfflineLinks>>(response.Replace("data=", string.Empty)) ?? []);
-                                    TaskCompletionSource = new TaskCompletionSource<List<OfflineLinks>>();
-                                   
+                                    TaskCompletionSource.TrySetResult(JsonConvert.DeserializeObject<List<OfflineLink>>(response.Replace("data=", string.Empty)) ?? []);
+
                                     using StreamWriter writer = new(context.Response.OutputStream);
                                     writer.Write("OK");
                                     writer.Flush();
                                     context.Response.Close();
                                 }
-                                
+
                                 break;
                             default:
                                 context.Response.StatusCode = 404;
@@ -84,10 +83,12 @@ namespace DownloadComics.services
                         }
                     }
                 }
-                catch (HttpListenerException) {
-                  
+                catch (HttpListenerException)
+                {
+
                 }
-                catch (OperationCanceledException ex) {
+                catch (OperationCanceledException ex)
+                {
                     Application.Current.Dispatcher.Invoke(() => MessageBox.Show(ex.Message));
                 }
                 finally
@@ -129,6 +130,13 @@ namespace DownloadComics.services
             _listener = null;
             _listenTokenSource?.Dispose();
             _listenTokenSource = null;
+        }
+
+        public async Task<List<OfflineLink>> WaitJob()
+        {
+            List<OfflineLink> links = await TaskCompletionSource.Task;
+            TaskCompletionSource = new();
+            return links;
         }
     }
 }

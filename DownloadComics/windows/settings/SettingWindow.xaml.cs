@@ -16,20 +16,17 @@ namespace DownloadComics.windows.settings
     {
 
         private readonly List<OptionCollection> Collections = [];
-
         private Options? options;
-
         public SettingsWindow()
         {
             InitializeComponent();
 
-            foreach (var item in Options.OptionList)
-            {
-                Collections.Add(new(item));
-            }
 
             string optionsJson = Properties.Settings.Default.Options ?? string.Empty;
-
+            foreach (string item in Options.OptionList)
+            {
+                Collections.Add(new OptionCollection(item));
+            }
             if (!string.IsNullOrEmpty(optionsJson))
             {
 

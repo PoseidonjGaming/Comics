@@ -22,7 +22,7 @@ namespace DownloadComics.resources.settings {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "18.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    internal class SettingsStrings {
+    public class SettingsStrings {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
@@ -36,7 +36,7 @@ namespace DownloadComics.resources.settings {
         ///   Retourne l'instance ResourceManager mise en cache utilisée par cette classe.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Resources.ResourceManager ResourceManager {
+        public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
                     global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("DownloadComics.resources.settings.SettingsStrings", typeof(SettingsStrings).Assembly);
@@ -51,7 +51,7 @@ namespace DownloadComics.resources.settings {
         ///   les recherches de ressources à l'aide de cette classe de ressource fortement typée.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Globalization.CultureInfo Culture {
+        public static global::System.Globalization.CultureInfo Culture {
             get {
                 return resourceCulture;
             }
@@ -63,7 +63,7 @@ namespace DownloadComics.resources.settings {
         /// <summary>
         ///   Recherche une chaîne localisée semblable à Host is not a valid host.
         /// </summary>
-        internal static string Msg_Host_Error {
+        public static string Msg_Host_Error {
             get {
                 return ResourceManager.GetString("Msg_Host_Error", resourceCulture);
             }
@@ -72,7 +72,7 @@ namespace DownloadComics.resources.settings {
         /// <summary>
         ///   Recherche une chaîne localisée semblable à Settings has been saved successfully.
         /// </summary>
-        internal static string Msg_Settings_Saved {
+        public static string Msg_Settings_Saved {
             get {
                 return ResourceManager.GetString("Msg_Settings_Saved", resourceCulture);
             }
@@ -81,7 +81,7 @@ namespace DownloadComics.resources.settings {
         /// <summary>
         ///   Recherche une chaîne localisée semblable à Success.
         /// </summary>
-        internal static string Msg_Settings_Saved_Title {
+        public static string Msg_Settings_Saved_Title {
             get {
                 return ResourceManager.GetString("Msg_Settings_Saved_Title", resourceCulture);
             }
@@ -90,7 +90,7 @@ namespace DownloadComics.resources.settings {
         /// <summary>
         ///   Recherche une chaîne localisée semblable à Add Host.
         /// </summary>
-        internal static string Settings_Add_Host_Button {
+        public static string Settings_Add_Host_Button {
             get {
                 return ResourceManager.GetString("Settings_Add_Host_Button", resourceCulture);
             }
@@ -99,7 +99,7 @@ namespace DownloadComics.resources.settings {
         /// <summary>
         ///   Recherche une chaîne localisée semblable à Excluded Host.
         /// </summary>
-        internal static string Settings_Excluded_Host {
+        public static string Settings_Excluded_Host {
             get {
                 return ResourceManager.GetString("Settings_Excluded_Host", resourceCulture);
             }
@@ -108,7 +108,7 @@ namespace DownloadComics.resources.settings {
         /// <summary>
         ///   Recherche une chaîne localisée semblable à Extension.
         /// </summary>
-        internal static string Settings_Extension_Label {
+        public static string Settings_Extension_Label {
             get {
                 return ResourceManager.GetString("Settings_Extension_Label", resourceCulture);
             }
@@ -117,7 +117,7 @@ namespace DownloadComics.resources.settings {
         /// <summary>
         ///   Recherche une chaîne localisée semblable à Host Not Confirm.
         /// </summary>
-        internal static string Settings_Host_Confirm {
+        public static string Settings_Host_Confirm {
             get {
                 return ResourceManager.GetString("Settings_Host_Confirm", resourceCulture);
             }
@@ -126,7 +126,7 @@ namespace DownloadComics.resources.settings {
         /// <summary>
         ///   Recherche une chaîne localisée semblable à Host.
         /// </summary>
-        internal static string Settings_Host_Label {
+        public static string Settings_Host_Label {
             get {
                 return ResourceManager.GetString("Settings_Host_Label", resourceCulture);
             }
@@ -135,7 +135,7 @@ namespace DownloadComics.resources.settings {
         /// <summary>
         ///   Recherche une chaîne localisée semblable à Host to search.
         /// </summary>
-        internal static string Settings_Host_Search {
+        public static string Settings_Host_Search {
             get {
                 return ResourceManager.GetString("Settings_Host_Search", resourceCulture);
             }
@@ -144,7 +144,7 @@ namespace DownloadComics.resources.settings {
         /// <summary>
         ///   Recherche une chaîne localisée semblable à Paths.
         /// </summary>
-        internal static string Settings_Path {
+        public static string Settings_Path {
             get {
                 return ResourceManager.GetString("Settings_Path", resourceCulture);
             }
@@ -153,7 +153,7 @@ namespace DownloadComics.resources.settings {
         /// <summary>
         ///   Recherche une chaîne localisée semblable à Remove Host.
         /// </summary>
-        internal static string Settings_Remove_Host_Button {
+        public static string Settings_Remove_Host_Button {
             get {
                 return ResourceManager.GetString("Settings_Remove_Host_Button", resourceCulture);
             }

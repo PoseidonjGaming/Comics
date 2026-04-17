@@ -20,6 +20,7 @@
             </ObjectDataProvider.MethodParameters>
         </ObjectDataProvider>
         <conv:EnumConverter x:Key="EnumConverter"/>
+        <conv:StaticConverter x:Key="StaticConverter"/>
     </Window.Resources>
 
     <Grid>
@@ -119,8 +120,13 @@
 
             <StackPanel Grid.Row="1">
                 <ComboBox Name="settingCB" Margin="10,10,10,0" Width="200" FontSize="16" HorizontalAlignment="Left"
-                          SelectionChanged="SettingCB_SelectionChanged" SelectedIndex="0"
-                          DisplayMemberPath="OptionName"/>
+                          SelectionChanged="SettingCB_SelectionChanged" SelectedIndex="0">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding OptionName, Converter={StaticResource StaticConverter}}"/>
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
 
                 <ListView Name="hostList" Grid.Row="1" Margin="10,10,10,10" Height="340" />
             </StackPanel>

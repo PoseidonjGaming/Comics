@@ -6,10 +6,10 @@ namespace DownloadComics.models
     public class Options
     {
         public static readonly string[] OptionList = [
-            SettingsStrings.Settings_Host_Search,
-            SettingsStrings.Settings_Host_Confirm,
-            SettingsStrings.Settings_Path,
-            SettingsStrings.Settings_Excluded_Host];
+            "Settings_Host_Search",
+            "Settings_Host_Confirm",
+            "Settings_Path",
+            "Settings_Excluded_Host"];
         public Comic? Comic { get; set; }
         public string[] Hosts { get; set; } = [];
         public string[] Confirms { get; set; } = [];

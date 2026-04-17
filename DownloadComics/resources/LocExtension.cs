@@ -1,5 +1,4 @@
 ﻿using DownloadComics.resources.converters;
-using System.Resources;
 using System.Windows;
 using System.Windows.Data;
 using System.Windows.Markup;

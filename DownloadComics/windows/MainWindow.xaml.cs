@@ -65,7 +65,13 @@ namespace DownloadComics.windows
             InitFolder(FileService.BackupDirPath);
             InitFolder(FileService.ComicsDir);
 
-
+            Options? options = JsonConvert.DeserializeObject<Options>(Properties.Settings.Default.Options);
+            if (options == null)
+            {
+                Properties.Settings.Default.Options = JsonConvert.SerializeObject(new Options());
+                Properties.Settings.Default.Save();
+            }
+                
             if (File.Exists(FileService.BackupFilePath))
             {
                 string backup = File.ReadAllText(FileService.BackupFilePath);
@@ -74,9 +80,8 @@ namespace DownloadComics.windows
                 {
                     foreach (var c in comics)
                         State.GetComics().Add(c);
-
-
                 }
+
                 PopulateFilterCombo();
                 if (File.Exists(FileService.TrackFilePath))
                 {
@@ -155,6 +160,11 @@ namespace DownloadComics.windows
 
         private void ComicsURLsList_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            if(comicsURLsList.SelectedItem is Comic comic)
+            {
+                enabledCB.IsChecked = comic.Enabled;
+                priorityCombo.SelectedItem = comic.Priority;
+            }
         }
 
         private void RemoveBtn_Click(object sender, RoutedEventArgs e)
@@ -217,7 +227,7 @@ namespace DownloadComics.windows
                     comic.Priority = priority;
 
                 ClearSelectedComic();
-                comicsURLsList.SelectedIndex = -1;
+                
                 WriteBackup();
             }
         }

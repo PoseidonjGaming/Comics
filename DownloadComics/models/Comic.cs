@@ -6,6 +6,14 @@ namespace DownloadComics.models
 {
     public partial class Comic : INotifyPropertyChanged
     {
+        public static Comic FallBack = new Comic(
+                "https://exemple_url.com",
+                "https://exemple_baseurl.com",
+                "package name",
+                "filename",
+                "host.com",
+                0,
+                "author");
         public long UUID { get; set; }
         public List<long> LinksUUId { get; set; } = [];
 

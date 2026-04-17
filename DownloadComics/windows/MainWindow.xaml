@@ -182,12 +182,12 @@
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch">
                 <StackPanel Orientation="Vertical" Margin="10" VerticalAlignment="Center">
                     <Label Content="{res:Loc Key=Comic_Enabled_Label,Format={}{0}:}" FontSize="16" HorizontalAlignment="Left" VerticalAlignment="Center"/>
-                    <CheckBox Name="enabledCB" VerticalAlignment="Center" HorizontalAlignment="Center" IsChecked="{Binding Enabled}"/>
+                    <CheckBox Name="enabledCB" VerticalAlignment="Center" HorizontalAlignment="Center"/>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal" Margin="10" VerticalAlignment="Center">
                     <Label Content="{res:Loc Key=Comic_Priority_Label,Format={}{0}:}" FontSize="16" HorizontalAlignment="Stretch" VerticalAlignment="Center"/>
                     <ComboBox Name="priorityCombo" ItemsSource="{Binding Source={StaticResource EnumDataSource}, Mode=OneWay}" FontSize="16"
-                              VerticalContentAlignment="Center" SelectedItem="{Binding Priority, FallbackValue={x:Static enum:Priority.DEFAULT}}" >
+                              VerticalContentAlignment="Center">
                         <ComboBox.ItemTemplate>
                             <DataTemplate>
                                 <TextBlock Text="{Binding Converter={StaticResource EnumConverter}}"/>

@@ -7,7 +7,8 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <UseWPF>true</UseWPF>
     <ApplicationIcon>download comics.ico</ApplicationIcon>
-    <FileVersion>2.8.0.0</FileVersion>
+    <FileVersion>2.8.0.2</FileVersion>
+    <StartupObject>DownloadComics.App</StartupObject>
   </PropertyGroup>
 
   <ItemGroup>
@@ -161,7 +162,7 @@
       <LastGenOutput>PriorityStrings.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Update="resources\settings\SettingsStrings.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
+      <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>SettingsStrings.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Update="resources\verify\VerifyStrings.resx">

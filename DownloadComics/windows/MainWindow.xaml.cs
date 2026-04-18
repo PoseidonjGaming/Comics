@@ -25,6 +25,7 @@ namespace DownloadComics.windows
     public partial class MainWindow : Window
     {
         public static AppState State => AppStateStore.Instance;
+        private readonly JdownloaderService jdownloaderService = JdownloaderService.Instance;
 
         private readonly ICollectionView CollectionView;
         public string Filter { get; set; } = "";
@@ -350,9 +351,10 @@ namespace DownloadComics.windows
             settings.ShowDialog();
         }
 
-        private void SearchBTN_Click(object sender, RoutedEventArgs e)
+        private async void SearchBTN_Click(object sender, RoutedEventArgs e)
         {
-            ComicUtility.SearchComic(authorTXT.Text, comicNameTXT.Text.Trim());
+            string? jd = await jdownloaderService.GetComicJdownloader(authorTXT.Text.Trim(), comicNameTXT.Text.Trim());
+            ComicUtility.SearchComic(authorTXT.Text, comicNameTXT.Text.Trim(), jd: jd);
         }
 
         private void ExportSettingsItem_Click(object sender, RoutedEventArgs e)

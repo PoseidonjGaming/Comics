@@ -74,9 +74,7 @@ namespace DownloadComics.windows
             progressBar.IsIndeterminate = true;
             jobToggleBtn.IsChecked = true;
             jobToggleBtn.Content = VerifyStrings.Verify_Stop_Button;
-            _listenerService.StartAsync(_jdownloaderService.IsFinished,
-                () => _jdownloaderService.StartingCount.ToString(),
-                () => State.GetComics().Count.ToString());
+            _listenerService.StartAsync(_jdownloaderService.IsFinished);
             RunVerify();
         }
 

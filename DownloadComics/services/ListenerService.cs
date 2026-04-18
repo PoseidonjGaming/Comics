@@ -46,11 +46,11 @@ namespace DownloadComics.services
                         {
                             case "/finished":
                                 {
-                                    using StreamWriter writer=new(context.Response.OutputStream);
+                                    using StreamWriter writer = new(context.Response.OutputStream);
                                     using StreamReader reader = new(context.Request.InputStream);
 
                                     string response = reader.ReadToEnd();
-                                    
+
                                     writer.Write(finishedProvider.Invoke(response.Replace("data=", string.Empty)));
                                     writer.Flush();
                                     context.Response.Close();

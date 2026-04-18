@@ -23,14 +23,12 @@ namespace DownloadComics.services
             TaskCompletionSource = new TaskCompletionSource<List<OfflineLink>>();
         }
 
-        public Task? StartAsync(Func<string>? packageProvider = null, Func<string>? countProvider = null, int port = 12345)
+        public Task? StartAsync(Func<string, bool> finishedProvider, int port = 12345)
         {
             if (_listenTokenSource != null && !_listenTokenSource.IsCancellationRequested)
                 return null; // already started
 
             _listenTokenSource = new CancellationTokenSource();
-            packageProvider ??= (() => "0");
-            countProvider ??= (() => "0");
 
             _listener = new HttpListener();
             _listener.Prefixes.Add($"http://localhost:{port}/");
@@ -46,18 +44,14 @@ namespace DownloadComics.services
 
                         switch (context.Request.Url?.AbsolutePath)
                         {
-                            case "/package":
+                            case "/finished":
                                 {
-                                    using StreamWriter writer = new(context.Response.OutputStream);
-                                    writer.Write(packageProvider());
-                                    writer.Flush();
-                                    context.Response.Close();
-                                    break;
-                                }
-                            case "/count":
-                                {
-                                    using StreamWriter writer = new(context.Response.OutputStream);
-                                    writer.Write(countProvider());
+                                    using StreamWriter writer=new(context.Response.OutputStream);
+                                    using StreamReader reader = new(context.Request.InputStream);
+
+                                    string response = reader.ReadToEnd();
+                                    
+                                    writer.Write(finishedProvider.Invoke(response.Replace("data=", string.Empty)));
                                     writer.Flush();
                                     context.Response.Close();
                                     break;

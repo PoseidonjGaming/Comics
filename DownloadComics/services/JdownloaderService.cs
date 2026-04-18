@@ -11,7 +11,6 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Windows;
 using System.Windows.Threading;
-using System.Xml.Linq;
 
 namespace DownloadComics.services
 {
@@ -25,7 +24,7 @@ namespace DownloadComics.services
         public static readonly JdownloaderService Instance = _instance.Value;
 
         public int StartingCount = 0;
-        private readonly List<long> jobUUIds = [];
+        private int counter = 0;
         private static AppState State
         {
             get
@@ -103,7 +102,7 @@ namespace DownloadComics.services
 
         }
 
-        public async Task AddLinks(Comic comic, bool autoStart,Action<string> stateAction)
+        public async Task AddLinks(Comic comic, bool autoStart, Action<string> stateAction)
         {
             JDownloaderClient client = await GetInstanceAsync();
             AddLinksQuery query = new()
@@ -118,7 +117,6 @@ namespace DownloadComics.services
             };
 
             LinkCollectingJob job = await client.LinkGrabberV2.AddLinks(query);
-            jobUUIds.Add(job.Id);
             comic.UUID = job.Id;
             stateAction.Invoke($"{VerifyStrings.Verify_Add} {comic.PackageName}");
         }
@@ -134,7 +132,7 @@ namespace DownloadComics.services
                 MaxResults = -1,
                 Url = true,
                 BytesTotal = true,
-                JobUUIDs = UUID == null ? [..jobUUIds] : [UUID.Value],
+                JobUUIDs = UUID == null ? [.. State.GetComicsId()] : [UUID.Value],
             };
             return await client.LinkGrabberV2.QueryLinks(query);
         }
@@ -150,12 +148,13 @@ namespace DownloadComics.services
             StartingCount = await GetCrawledPackageCount();
         }
 
-        public void ClearJobs()
+        public async Task Reset()
         {
-            jobUUIds.Clear();
+            counter = 0;
+            await SetCrawledPackageCount();
         }
 
-        public async  Task<List<JobLinkCrawler>> GetCrawlJobs()
+        public async Task<List<JobLinkCrawler>> GetCrawlJobs()
         {
             JDownloaderClient client = await GetInstanceAsync();
             return await client.LinkGrabberV2.QueryLinkCrawlerJobs(new(State.GetComicsId())
@@ -225,6 +224,20 @@ namespace DownloadComics.services
                 .Where(dl => filePackages.Contains(dl.PackageUUID))];
 
             return filterLinks.FirstOrDefault()?.Comment;
+        }
+
+        public bool IsFinished(string count)
+        {
+            if (long.TryParse(count, out var uuid))
+            {
+                Comic? comic = State.GetComics().FirstOrDefault(c => c.UUID == uuid);
+                if (comic != null)
+                {
+                    counter++;
+                }
+            }
+
+            return counter == State.GetComics().Count;
         }
     }
 }

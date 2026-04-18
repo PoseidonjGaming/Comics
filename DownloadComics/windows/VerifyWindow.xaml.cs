@@ -74,7 +74,8 @@ namespace DownloadComics.windows
             progressBar.IsIndeterminate = true;
             jobToggleBtn.IsChecked = true;
             jobToggleBtn.Content = VerifyStrings.Verify_Stop_Button;
-            _listenerService.StartAsync(() => _jdownloaderService.StartingCount.ToString(),
+            _listenerService.StartAsync(_jdownloaderService.IsFinished,
+                () => _jdownloaderService.StartingCount.ToString(),
                 () => State.GetComics().Count.ToString());
             RunVerify();
         }
@@ -109,9 +110,8 @@ namespace DownloadComics.windows
                            tryLBL.Content = $"{VerifyStrings.Verify_Try_Label} {_try}";
                            progressBar.IsIndeterminate = false;
                        });
-                       _jdownloaderService.ClearJobs();
+                       await _jdownloaderService.Reset();
 
-                       await _jdownloaderService.SetCrawledPackageCount();
                        await AddLinks(comic => false, ct);
 
                        try { await Task.Delay(1000); } catch (OperationCanceledException) { break; }
@@ -150,7 +150,7 @@ namespace DownloadComics.windows
                        progressBar.Value = progressBar.Maximum;
                    });
 
-                   await AddLinks(comic => !options.Confirms.Contains(comic.Host), ct);
+                   await AddLinks(comic => /*!options.Confirms.Contains(comic.Host)*/ false, ct);
 
                    Dispatcher.Invoke(() => _states.Add(VerifyStrings.Verify_Wait));
                    offlineLinks = await _listenerService.WaitJob();
@@ -223,7 +223,7 @@ namespace DownloadComics.windows
 
         private async Task AddLinks(Func<Comic, bool> autoStart, CancellationToken ct)
         {
-            _jdownloaderService.ClearJobs();
+            _jdownloaderService.Reset();
             Dispatcher.Invoke(() =>
             {
                 progressBar.Value = 0;

@@ -23,7 +23,7 @@ namespace DownloadComics.services
             TaskCompletionSource = new TaskCompletionSource<List<OfflineLink>>();
         }
 
-        public Task? StartAsync(Func<string, bool> finishedProvider, int port = 12345)
+        public Task? StartAsync(Func<Task<bool>> finishedProvider, int port = 12345)
         {
             if (_listenTokenSource != null && !_listenTokenSource.IsCancellationRequested)
                 return null; // already started
@@ -51,7 +51,8 @@ namespace DownloadComics.services
 
                                     string response = reader.ReadToEnd();
 
-                                    writer.Write(finishedProvider.Invoke(response.Replace("data=", string.Empty)));
+                                    bool isFinished = await finishedProvider.Invoke();
+                                    writer.Write(isFinished);
                                     writer.Flush();
                                     context.Response.Close();
                                     break;

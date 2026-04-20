@@ -24,7 +24,6 @@ namespace DownloadComics.services
         public static readonly JdownloaderService Instance = _instance.Value;
 
         public int StartingCount = 0;
-        private int counter = 0;
         private static AppState State
         {
             get
@@ -150,7 +149,6 @@ namespace DownloadComics.services
 
         public async Task Reset()
         {
-            counter = 0;
             await SetCrawledPackageCount();
         }
 
@@ -226,18 +224,12 @@ namespace DownloadComics.services
             return filterLinks.FirstOrDefault()?.Comment;
         }
 
-        public bool IsFinished(string count)
+        public async Task<bool> IsFinished()
         {
-            if (long.TryParse(count, out var uuid))
-            {
-                Comic? comic = State.GetComics().FirstOrDefault(c => c.UUID == uuid);
-                if (comic != null)
-                {
-                    counter++;
-                }
-            }
+            JDownloaderClient client = await GetInstanceAsync();
+            int packages = await client.LinkGrabberV2.GetPackageCount();
 
-            return counter == State.GetComics().Count;
+            return packages - StartingCount == State.GetComics().Count;
         }
     }
 }

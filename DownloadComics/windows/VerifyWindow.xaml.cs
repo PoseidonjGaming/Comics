@@ -68,13 +68,13 @@ namespace DownloadComics.windows
             }
         }
 
-        private void Window_Loaded(object sender, RoutedEventArgs e)
+        private async void Window_Loaded(object sender, RoutedEventArgs e)
         {
             _verifyTokenSource = new CancellationTokenSource();
             progressBar.IsIndeterminate = true;
             jobToggleBtn.IsChecked = true;
             jobToggleBtn.Content = VerifyStrings.Verify_Stop_Button;
-            _listenerService.StartAsync(_jdownloaderService.IsFinished);
+            _ = _listenerService.StartAsync(() => _jdownloaderService.IsFinished());
             RunVerify();
         }
 
@@ -148,7 +148,7 @@ namespace DownloadComics.windows
                        progressBar.Value = progressBar.Maximum;
                    });
 
-                   await AddLinks(comic => /*!options.Confirms.Contains(comic.Host)*/ false, ct);
+                   await AddLinks(comic => !options.Confirms.Contains(comic.Host), ct);
 
                    Dispatcher.Invoke(() => _states.Add(VerifyStrings.Verify_Wait));
                    offlineLinks = await _listenerService.WaitJob();

@@ -129,8 +129,8 @@
   <data name="Main_Export_Settings_Menu_Item" xml:space="preserve">
     <value>Exporter les paramètres</value>
   </data>
-  <data name="Main_Generate_Menu_Item" xml:space="preserve">
-    <value>Générer</value>
+  <data name="Main_Submit_Menu_Item" xml:space="preserve">
+    <value>Envoyer</value>
   </data>
   <data name="Main_Import_Menu_Item" xml:space="preserve">
     <value>Importer des liens</value>

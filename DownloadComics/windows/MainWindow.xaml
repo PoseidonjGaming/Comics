@@ -37,7 +37,7 @@
         </Grid.ColumnDefinitions>
 
         <Menu Grid.Row="0" Grid.ColumnSpan="2" VerticalAlignment="Top" Height="21">
-            <MenuItem Header="{res:Loc Main_Generate_Menu_Item}" Click="GenerateBTN_Click" FontSize="14"/>
+            <MenuItem Header="{res:Loc Main_Submit_Menu_Item}" Click="GenerateBTN_Click" FontSize="14"/>
             <MenuItem Header="{res:Loc Main_Backup_Menu_Item}" FontSize="14">
                 <MenuItem Header="{res:Loc Main_Restore_Backup_Menu_Item}" Click="RestoreBackup" FontSize="14"/>
                 <MenuItem Header="{res:Loc Main_Clear_Session_MenuItem}" Click="ClearPrevSession" FontSize="14" />

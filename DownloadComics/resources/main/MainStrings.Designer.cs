@@ -115,15 +115,6 @@ namespace DownloadComics.resources.main {
         }
         
         /// <summary>
-        ///   Recherche une chaîne localisée semblable à Generate.
-        /// </summary>
-        public static string Main_Generate_Menu_Item {
-            get {
-                return ResourceManager.GetString("Main_Generate_Menu_Item", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Recherche une chaîne localisée semblable à Import links.
         /// </summary>
         public static string Main_Import_Menu_Item {
@@ -201,6 +192,15 @@ namespace DownloadComics.resources.main {
         public static string Main_Settings_Menu_Item {
             get {
                 return ResourceManager.GetString("Main_Settings_Menu_Item", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Submit.
+        /// </summary>
+        public static string Main_Submit_Menu_Item {
+            get {
+                return ResourceManager.GetString("Main_Submit_Menu_Item", resourceCulture);
             }
         }
         

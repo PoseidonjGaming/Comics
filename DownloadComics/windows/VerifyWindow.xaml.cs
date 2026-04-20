@@ -77,14 +77,6 @@ namespace DownloadComics.windows
             _ = _listenerService.StartAsync(() => _jdownloaderService.IsFinished());
             RunVerify();
         }
-
-        private async void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
-        {
-            _verifyTokenSource?.Cancel();
-            _verifyTokenSource?.Dispose();
-            _verifyTokenSource = null;
-            _listenerService.Dispose();
-        }
         private void RunVerify()
         {
             if (_verifyTokenSource == null) return;
@@ -109,6 +101,7 @@ namespace DownloadComics.windows
                            progressBar.IsIndeterminate = false;
                        });
                        await _jdownloaderService.Reset();
+                       _listenerService.Count = 0;
 
                        await AddLinks(comic => false, ct);
 
@@ -141,6 +134,7 @@ namespace DownloadComics.windows
                        await _jdownloaderService.RemoveLinks();
                    } while (offlineLinks != null && offlineLinks.Count != 0);
 
+                   _listenerService.Count = 0;
                    Dispatcher.Invoke(() =>
                    {
                        _states.Add(VerifyStrings.Verify_No_More_Offline);
@@ -148,7 +142,7 @@ namespace DownloadComics.windows
                        progressBar.Value = progressBar.Maximum;
                    });
 
-                   await AddLinks(comic => !options.Confirms.Contains(comic.Host), ct);
+                   await AddLinks(comic => /*!options.Confirms.Contains(comic.Host)*/ false, ct);
 
                    Dispatcher.Invoke(() => _states.Add(VerifyStrings.Verify_Wait));
                    offlineLinks = await _listenerService.WaitJob();
@@ -221,7 +215,7 @@ namespace DownloadComics.windows
 
         private async Task AddLinks(Func<Comic, bool> autoStart, CancellationToken ct)
         {
-            _jdownloaderService.Reset();
+            await _jdownloaderService.Reset();
             Dispatcher.Invoke(() =>
             {
                 progressBar.Value = 0;
@@ -253,6 +247,11 @@ namespace DownloadComics.windows
                     break;
                 }
             }
+        }
+
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            _listenerService.Dispose();
         }
     }
 }

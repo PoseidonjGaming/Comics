@@ -1,9 +1,7 @@
 ﻿using DownloadComics.models;
 using Newtonsoft.Json;
-using System.Collections.Concurrent;
 using System.IO;
 using System.Net;
-using System.Windows;
 
 namespace DownloadComics.services
 {
@@ -12,6 +10,26 @@ namespace DownloadComics.services
         private CancellationTokenSource? _listenTokenSource;
         private HttpListener? _listener;
         public TaskCompletionSource<List<OfflineLink>> TaskCompletionSource;
+        private readonly AppState State = AppStateStore.Instance;
+        private readonly Lock _countLock = new();
+        private int _count;
+        public int Count
+        {
+            get
+            {
+                using (_countLock.EnterScope())
+                {
+                    return _count;
+                }
+            }
+            set
+            {
+                using (_countLock.EnterScope())
+                {
+                    _count = value;
+                }
+            }
+        }
 
         private static readonly Lazy<ListenerService> _instance = new(() => new ListenerService());
 
@@ -36,95 +54,61 @@ namespace DownloadComics.services
 
             return Task.Run(async () =>
             {
-                try
+                while (!_listenTokenSource.Token.IsCancellationRequested)
                 {
-                    while (!_listenTokenSource.Token.IsCancellationRequested)
+                    HttpListenerContext context = await _listener.GetContextAsync();
+
+                    switch (context.Request.Url?.AbsolutePath)
                     {
-                        HttpListenerContext context = await _listener.GetContextAsync();
+                        case "/finished":
+                            {
+                                using StreamWriter writer = new(context.Response.OutputStream);
+                                using StreamReader reader = new(context.Request.InputStream);
 
-                        switch (context.Request.Url?.AbsolutePath)
-                        {
-                            case "/finished":
+                                string response = reader.ReadToEnd();
+                                if (int.TryParse(response.Replace("data=", string.Empty), out int requestCount))
                                 {
-                                    using StreamWriter writer = new(context.Response.OutputStream);
-                                    using StreamReader reader = new(context.Request.InputStream);
-
-                                    string response = reader.ReadToEnd();
-
-                                    bool isFinished = await finishedProvider.Invoke();
-                                    writer.Write(isFinished);
-                                    writer.Flush();
-                                    context.Response.Close();
-                                    break;
+                                    Count += requestCount;
                                 }
-                            case "/offline":
-                                {
-                                    using StreamReader reader = new(context.Request.InputStream);
-                                    string response = reader.ReadToEnd();
-
-                                    TaskCompletionSource.TrySetResult(JsonConvert.DeserializeObject<List<OfflineLink>>(response.Replace("data=", string.Empty)) ?? []);
-
-                                    using StreamWriter writer = new(context.Response.OutputStream);
-                                    writer.Write("OK");
-                                    writer.Flush();
-                                    context.Response.Close();
-                                }
-
-                                break;
-                            default:
-                                context.Response.StatusCode = 404;
+                                writer.Write(Count == State.GetComics().Count);
+                                writer.Flush();
                                 context.Response.Close();
                                 break;
-                        }
-                    }
-                }
-                catch (HttpListenerException)
-                {
-
-                }
-                catch (OperationCanceledException ex)
-                {
-                    Application.Current.Dispatcher.Invoke(() => MessageBox.Show(ex.Message));
-                }
-                finally
-                {
-                    try
-                    {
-                        if (_listener != null)
-                        {
-                            try
-                            {
-                                if (_listener.IsListening)
-                                    _listener.Stop();
                             }
-                            catch (ObjectDisposedException) { }
-                            catch (HttpListenerException) { }
-                            catch (InvalidOperationException) { }
+                        case "/offline":
+                            {
+                                using StreamReader reader = new(context.Request.InputStream);
+                                string response = reader.ReadToEnd();
 
-                            try { _listener.Close(); } catch { }
-                        }
+                                TaskCompletionSource.TrySetResult(JsonConvert.DeserializeObject<List<OfflineLink>>(response.Replace("data=", string.Empty)) ?? []);
+
+                                using StreamWriter writer = new(context.Response.OutputStream);
+                                writer.Write("OK");
+                                writer.Flush();
+                                context.Response.Close();
+                            }
+
+                            break;
+                        default:
+                            context.Response.StatusCode = 404;
+                            context.Response.Close();
+                            break;
                     }
-                    finally
-                    {
-                        _listener = null;
-                    }
+
+                    await Task.Delay(2000);
                 }
             }, _listenTokenSource.Token);
         }
 
-        public void Cancel()
-        {
-            if (_listenTokenSource == null) return;
-            _listenTokenSource.Cancel();
-        }
-
         public void Dispose()
         {
-            Cancel();
-            try { _listener?.Close(); } catch { }
-            _listener = null;
-            _listenTokenSource?.Dispose();
+
+            _listener?.Stop();
+            _listenTokenSource?.Cancel();
+
+            _listener?.Close();
             _listenTokenSource = null;
+            _listener = null;
         }
 
         public async Task<List<OfflineLink>> WaitJob()

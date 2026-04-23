@@ -105,8 +105,6 @@ namespace DownloadComics.windows
 
                        await AddLinks(comic => false, ct);
 
-                       try { await Task.Delay(1000); } catch (OperationCanceledException) { break; }
-
                        Dispatcher.Invoke(() =>
                        {
                            _states.Add(VerifyStrings.Verify_Wait);
@@ -142,7 +140,7 @@ namespace DownloadComics.windows
                        progressBar.Value = progressBar.Maximum;
                    });
 
-                   await AddLinks(comic => /*!options.Confirms.Contains(comic.Host)*/ false, ct);
+                   await AddLinks(comic => !options.Confirms.Contains(comic.Host), ct);
 
                    Dispatcher.Invoke(() => _states.Add(VerifyStrings.Verify_Wait));
                    offlineLinks = await _listenerService.WaitJob();

@@ -421,6 +421,7 @@ namespace DownloadComics.windows
                         ImportWindows? importWindow = Application.Current.Windows.OfType<ImportWindows>().FirstOrDefault();
 
                         importWindow?.Navigate(comic.BaseURL);
+                        PopulateFilterCombo();
                     }
                 };
                 changeSourceWindow.ShowDialog();

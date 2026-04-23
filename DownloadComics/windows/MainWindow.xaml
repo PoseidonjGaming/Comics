@@ -98,7 +98,7 @@
                     <Button Content="{res:Loc Common_Search_Comic_Button}" Name="searchBtn" Click="SearchBTN_Click"
                             Height="30" FontSize="16" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="10,0,0,0" Padding="10,0,10,0"/>
                     <Button Content="{res:Loc Main_Clear_Comics_Button}" Name="clearComicsBtn" Click="ClearComicsBTN_Click"
-        Height="30" FontSize="16" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="10,0,0,0" Padding="10,0,10,0"/>
+                            Height="30" FontSize="16" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="10,0,0,0" Padding="10,0,10,0"/>
                 </StackPanel>
             </StackPanel>
         </StackPanel>

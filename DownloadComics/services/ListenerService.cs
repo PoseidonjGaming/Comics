@@ -94,8 +94,6 @@ namespace DownloadComics.services
                             context.Response.Close();
                             break;
                     }
-
-                    await Task.Delay(2000);
                 }
             }, _listenTokenSource.Token);
         }
@@ -107,7 +105,6 @@ namespace DownloadComics.services
             _listenTokenSource?.Cancel();
 
             _listener?.Close();
-            _listenTokenSource = null;
             _listener = null;
         }
 

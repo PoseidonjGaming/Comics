@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Window
+    x:Class="ModernDownladComics.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:ModernDownladComics"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Title="ModernDownladComics">
+
+    <Window.SystemBackdrop>
+        <MicaBackdrop />
+    </Window.SystemBackdrop>
+
+    <Grid>
+        <NavigationView x:Name="navView" PaneDisplayMode="LeftCompact"
+                        SelectionChanged="NavigationView_SelectionChanged">
+            <NavigationView.MenuItems>
+                <NavigationViewItem Content="Home" Tag="home" Icon="Home"/>
+                <NavigationViewItem Content="Send" Tag="send" Icon="Upload"/>
+
+                <NavigationViewItem Content="Add" SelectsOnInvoked="False" Icon="Add">
+                    <NavigationViewItem.MenuItems>
+                        <NavigationViewItem Content="Add on link" Tag="add" Icon="Add"/>
+                        <NavigationViewItem Content="Import" Tag="import" Icon="Import"/>
+                    </NavigationViewItem.MenuItems>
+
+                </NavigationViewItem>
+                <NavigationViewItem Content="Archive" Tag="archive" Icon="Folder"/>
+
+            </NavigationView.MenuItems>
+
+            <Frame x:Name="frame"/>
+        </NavigationView>
+
+
+        <Rectangle x:Name="dimmingOverlay"
+                   Fill="#80000000"
+                   Visibility="Collapsed"
+                   IsHitTestVisible="False"/>
+    </Grid>
+</Window>
+

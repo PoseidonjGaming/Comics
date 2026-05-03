@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Page
+    x:Class="ModernDownladComics.Pages.AddPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:ModernDownladComics.Pages"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:src="using:ComicsLib.Models"
+    mc:Ignorable="d" DataContext="{Binding RelativeSource={RelativeSource Self}}">
+
+    <Page.Resources>
+        <CollectionViewSource
+            x:Key="Comics" Source="{x:Bind src:AppStateStore.Instance.Comics}"/>
+    </Page.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <StackPanel Orientation="Vertical"
+                    HorizontalAlignment="Center" VerticalAlignment="Top">
+            <StackPanel Orientation="Vertical" Margin="10">
+                <TextBlock Text="URL:" FontSize="16" Margin="0,0,0,5"
+                           HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                <TextBox x:Name="urlTXT" FontSize="16"
+                         TextWrapping="NoWrap" Width="615" Text="{Binding Comic.BaseURL, Mode=TwoWay}"
+                         HorizontalAlignment="Left" VerticalContentAlignment="Center" />
+            </StackPanel>
+
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                <StackPanel Orientation="Vertical" HorizontalAlignment="Center" Margin="10">
+                    <TextBlock Text="Author:" FontSize="16" Margin="0,0,0,5"
+                               HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                    <TextBox x:Name="authorTXT" FontSize="16" Text="{Binding Comic.Author, Mode=TwoWay}"
+                             TextWrapping="NoWrap" Width="200"
+                             HorizontalAlignment="Left" VerticalContentAlignment="Center" />
+                </StackPanel>
+                <StackPanel Orientation="Vertical" HorizontalAlignment="Center" Margin="10">
+                    <TextBlock Text="Name:" FontSize="16" Margin="0,0,0,5" 
+                               HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                    <TextBox Grid.Row="1" x:Name="nameTXT" FontSize="16" 
+                             Text="{Binding Comic.PackageName, Mode=TwoWay}"
+                             TextWrapping="NoWrap" Width="300"
+                             HorizontalAlignment="Left" VerticalContentAlignment="Center" />
+                </StackPanel>
+
+                <StackPanel Orientation="Vertical" HorizontalAlignment="Left" Margin="10">
+                    <TextBlock Text="Page:" FontSize="16" Margin="0,0,0,5"
+                               HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                    <TextBox x:Name="pageTXT" FontSize="16" TextWrapping="NoWrap" Width="75"
+                             Text="{Binding Comic.NumberPages, Mode=TwoWay}"
+                             HorizontalAlignment="Left" VerticalContentAlignment="Center"/>
+                </StackPanel>
+            </StackPanel>
+
+
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                <Button x:Name="addComicBTN" Content="Add Link" Margin="10"
+                        Background="{StaticResource AddButton}" Click="AddComicBTN_Click"/>
+
+                <Button x:Name="searchComicBTN" Content="Search Comics" Margin="10" 
+                        Background="{StaticResource StandardButton}" Click="SearchComicBTN_Click"/>
+
+                <Button x:Name="clearBTN" Content="Clear Link" Margin="10"
+                        Background="{StaticResource ClearButton}" Click="ClearBTN_Click"/>
+
+                <Button x:Name="deleteBTN" Content="Delete Link" FontSize="16" Margin="10"
+                        Background="{StaticResource DeleteButton}" Click="DeleteBTN_Click"/>
+            </StackPanel>
+        </StackPanel>
+
+        <ListView Grid.Column="1" Margin="10" x:Name="comicLST"
+                  ItemsSource="{Binding Source={StaticResource Comics}}"
+                  DisplayMemberPath="PackageName"/>
+    </Grid>
+</Page>

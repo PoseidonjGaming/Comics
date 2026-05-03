@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Window
+    x:Class="ModernDownladComics.windows.SettingsWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:ModernDownladComics.windows"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Title="SettingsWindow" Closed="Window_Closed">
+
+    <Window.SystemBackdrop>
+        <MicaBackdrop Kind="BaseAlt"/>
+    </Window.SystemBackdrop>
+
+    <NavigationView PaneDisplayMode="Left" SelectionChanged="NavigationView_SelectionChanged"
+                    IsSettingsVisible="False" IsPaneOpen="True" IsBackButtonVisible="Collapsed"
+                    IsPaneToggleButtonVisible="False" OpenPaneLength="200">
+        
+        <NavigationView.MenuItems>
+            <NavigationViewItemHeader Content="Settings"/>
+            <NavigationViewItem Content="Comic" Icon="Library"/>
+            <NavigationViewItem Content="Hosts" SelectsOnInvoked="False" Icon="Globe">
+                <NavigationViewItem.MenuItems>
+                    <NavigationViewItem Content="Search Hosts" Tag="search" Icon="Zoom"/>
+                    <NavigationViewItem Content="Confirm Hosts" Tag="confirm" Icon="Play"/>
+                    <NavigationViewItem Content="Exluded Hosts" Tag="excluded" Icon="Clear"/>
+                </NavigationViewItem.MenuItems>
+            </NavigationViewItem>
+            <NavigationViewItem Content="Path" Tag="path" Icon="Save"/>
+            <NavigationViewItem Content="Credentials" Tag="credentials" Icon="Permissions"/>
+        </NavigationView.MenuItems>
+        <Frame x:Name="settingsFrame"/>
+    </NavigationView>
+</Window>

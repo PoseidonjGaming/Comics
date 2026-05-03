@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Page
+    x:Class="ModernDownladComics.Pages.PathPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:ModernDownladComics.Pages"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d" DataContext="{Binding RelativeSource={RelativeSource Self}}"
+    Loaded="Page_Loaded" Unloaded="Page_Unloaded">
+
+    <Grid HorizontalAlignment="Center">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+        </Grid.ColumnDefinitions>
+
+        <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center"
+                    Margin="10">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Text="Path:" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                <StackPanel Grid.Column="1" Orientation="Horizontal" Margin="0,0,10,0"
+                            VerticalAlignment="Center">
+                    <ComboBox x:Name="rootCMB" Width="275" Margin="0,0,10,0" FontSize="16"
+                              ItemsSource="{x:Bind Path=Roots}" SelectedIndex="0"/>
+                    <TextBox x:Name="pathTXT" Text="{Binding ElementName=pathLST, Path=SelectedItem}" 
+                             HorizontalAlignment="Stretch" Width="200"/>
+                </StackPanel>
+            </Grid>
+        </StackPanel>
+
+        <ListView Grid.Row="1" x:Name="pathLST" ItemsSource="{x:Bind Paths}"/>
+
+        <Grid Grid.Row="2" Margin="10">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <Button x:Name="selectBTN" Width="100" Content="Select Path" FontSize="16"
+                    HorizontalAlignment="Center" Click="SelectBTN_Click" Background="#229c0a"/>
+            <Button x:Name="cancelBTN" Grid.Column="1" Width="100" Content="Cancel" FontSize="16"
+                    HorizontalAlignment="Center" Click="CancelBTN_Click" Background="#d91c20"/>
+        </Grid>
+    </Grid>
+</Page>

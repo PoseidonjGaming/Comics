@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Page
+    x:Class="ModernDownladComics.Pages.SettingsComicPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:ModernDownladComics.Pages"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:conv="using:ModernDownloadComics.Converters"
+    mc:Ignorable="d" DataContext="{Binding RelativeSource={RelativeSource Self}}">
+
+    <Page.Resources>
+        <conv:HostConverter x:Key="HostConverter"/>
+    </Page.Resources>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <StackPanel Orientation="Vertical">
+            <StackPanel Orientation="Vertical" Margin="10">
+                <TextBlock Text="Base URL:" FontSize="16"
+                           HorizontalAlignment="Left" Margin="0,0,0,5"/>
+                <TextBox FontSize="16" TextWrapping="NoWrap"
+                         Text="{Binding Comic.BaseURL, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" Margin="10" HorizontalAlignment="Stretch">
+                <StackPanel Orientation="Vertical" Margin="0,0,10,0">
+                    <TextBlock Text="URL:" FontSize="16" Margin="0,0,0,5" 
+                               HorizontalAlignment="Left"/>
+                    <TextBox FontSize="16" TextWrapping="NoWrap" Width="600"
+                             Text="{Binding Comic.URL, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                </StackPanel>
+                <StackPanel Orientation="Vertical" Margin="10,0,0,0">
+                    <TextBlock Text="Host:" FontSize="16" Margin="0,0,0,5" 
+                               HorizontalAlignment="Left"/>
+                    <TextBox IsReadOnly="True" FontSize="16" TextWrapping="NoWrap" Width="150"
+                             Text="{Binding Comic.Host, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource HostConverter}}"/>
+                </StackPanel>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <StackPanel Orientation="Vertical" Margin="10">
+                    <TextBlock Text="Author:" FontSize="16" Margin="0,0,0,5"
+                               HorizontalAlignment="Left" Width="150"/>
+                    <TextBox FontSize="16" TextWrapping="NoWrap"
+                             Text="{Binding Comic.Author, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                </StackPanel>
+                <StackPanel Orientation="Vertical" Margin="10">
+                    <TextBlock Text="Name:" FontSize="16" Margin="0,0,0,5"
+                               HorizontalAlignment="Left"/>
+                    <TextBox FontSize="16" TextWrapping="NoWrap" Width="300"
+                             Text="{Binding Comic.PackageName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                </StackPanel>
+                <StackPanel Orientation="Vertical" Margin="10">
+                    <TextBlock Text="Pages:" FontSize="16" Margin="0,0,0,5"
+                               HorizontalAlignment="Left"/>
+                    <TextBox FontSize="16" TextWrapping="NoWrap" Width="15"
+                             HorizontalAlignment="Left"
+                             Text="{Binding Comic.NumberPages, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                </StackPanel>
+                <StackPanel Orientation="Vertical" Margin="10">
+                    <TextBlock Text="Enabling:" FontSize="16" Margin="0,0,0,5"/>
+                    <ToggleSwitch OffContent="Disabled" OnContent="Enabled" FontSize="16"
+                                 IsOn="{Binding Comic.Enabled, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                </StackPanel>
+            </StackPanel>
+            <StackPanel Orientation="Vertical" Margin="10,0,10,0">
+                <TextBlock Text="Path:" FontSize="16" Margin="0,0,0,5"/>
+                <TextBox FontSize="16" TextWrapping="NoWrap"
+                         Text="{Binding Comic.Path, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+            </StackPanel>
+        </StackPanel>
+    </Grid>
+</Page>

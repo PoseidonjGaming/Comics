@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Page
+    x:Class="ModernDownladComics.Pages.SettingsHostsPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:ModernDownladComics.Pages"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:conv="using:ModernDownloadComics.Converters"
+    mc:Ignorable="d" DataContext="{Binding RelativeSource={RelativeSource Self}}">
+
+    <Page.Resources>
+        <conv:HostConverter x:Key="HostConverter"/>
+    </Page.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="75*"/>
+            <RowDefinition Height="359*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+            <StackPanel Orientation="Vertical" Margin="10">
+                <TextBlock Text="Host:" FontSize="16" VerticalAlignment="Center"
+                           Margin="0,0,0,5"/>
+                <StackPanel Orientation="Horizontal">
+                    <TextBox FontSize="16" Width="200" Text="{Binding Value.Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    <Button Content="Add" FontSize="16" Margin="10,0,10,0"
+                            Background="{StaticResource AddButton}"
+                            Click="AddHostBTN_Click"/>
+                    <Button Content="Remove" FontSize="16"
+                            Background="{StaticResource DeleteButton}"
+                            Click="DeleteHostBTN_Click"/>
+                </StackPanel>
+            </StackPanel>
+        </StackPanel>
+
+        <ListView Grid.Row="1" Margin="10" ItemsSource="{Binding Collection, Mode=TwoWay}"
+                  SelectedItem="{Binding SelectedHost, Mode=TwoWay}">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding Converter={StaticResource HostConverter}}"/>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+    </Grid>
+</Page>

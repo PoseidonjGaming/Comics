@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "ModernDownladComics (Package)": {
+      "commandName": "MsixPackage"
+    },
+    "ModernDownladComics (Unpackaged)": {
+      "commandName": "Project"
+    }
+  }
+}

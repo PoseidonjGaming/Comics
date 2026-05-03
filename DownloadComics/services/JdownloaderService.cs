@@ -24,6 +24,7 @@ namespace DownloadComics.services
         public static readonly JdownloaderService Instance = _instance.Value;
 
         public int StartingCount = 0;
+        private List<long> UUIDS = [];
         private static AppState State
         {
             get
@@ -117,23 +118,55 @@ namespace DownloadComics.services
 
             LinkCollectingJob job = await client.LinkGrabberV2.AddLinks(query);
             comic.UUID = job.Id;
+            UUIDS.Add(job.Id);
             stateAction.Invoke($"{VerifyStrings.Verify_Add} {comic.PackageName}");
         }
 
         public async Task<List<CrawledLink>> GetCrawledLink(long? UUID = null)
         {
             JDownloaderClient client = await GetInstanceAsync();
-            CrawledLinkQuery query = new()
+            try
             {
-                Availability = true,
-                Status = true,
-                StartAt = 0,
-                MaxResults = -1,
-                Url = true,
-                BytesTotal = true,
-                JobUUIDs = UUID == null ? [.. State.GetComicsId()] : [UUID.Value],
-            };
-            return await client.LinkGrabberV2.QueryLinks(query);
+
+                CrawledLinkQuery query = new()
+                {
+                    Availability = true,
+                    Status = true,
+                    StartAt = 0,
+                    MaxResults = -1,
+                    Url = true,
+                    BytesTotal = true,
+                    JobUUIDs = UUID == null ? [.. UUIDS] : [UUID.Value],
+                };
+                return await client.LinkGrabberV2.QueryLinks(query);
+            }
+            catch (Exception)
+            {
+                foreach (var comic in State.GetComics())
+                {
+                    try
+                    {
+                        CrawledLinkQuery query = new()
+                        {
+                            Availability = true,
+                            Status = true,
+                            StartAt = 0,
+                            MaxResults = -1,
+                            Url = true,
+                            BytesTotal = true,
+                            JobUUIDs = [comic.UUID],
+                        };
+                        List<CrawledLink> list = await client.LinkGrabberV2.QueryLinks(query);
+                    }
+                    catch (Exception ex)
+                    {
+                        Dispatcher.CurrentDispatcher.Invoke(() => MessageBox.Show(ex.Message));
+                    }
+
+                }
+
+                return [];
+            }
         }
 
         public async Task<int> GetCrawledPackageCount()

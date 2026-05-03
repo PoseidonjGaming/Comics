@@ -81,7 +81,6 @@ namespace DownloadComics.services
                                 string response = reader.ReadToEnd();
 
                                 TaskCompletionSource.TrySetResult(JsonConvert.DeserializeObject<List<OfflineLink>>(response.Replace("data=", string.Empty)) ?? []);
-
                                 using StreamWriter writer = new(context.Response.OutputStream);
                                 writer.Write("OK");
                                 writer.Flush();
@@ -111,8 +110,12 @@ namespace DownloadComics.services
         public async Task<List<OfflineLink>> WaitJob()
         {
             List<OfflineLink> links = await TaskCompletionSource.Task;
-            TaskCompletionSource = new();
             return links;
+        }
+
+        public void PrepareJob()
+        {
+            TaskCompletionSource = new(TaskCreationOptions.RunContinuationsAsynchronously);
         }
     }
 }

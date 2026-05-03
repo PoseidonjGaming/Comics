@@ -101,6 +101,7 @@ namespace DownloadComics.windows
                            progressBar.IsIndeterminate = false;
                        });
                        await _jdownloaderService.Reset();
+                       _listenerService.PrepareJob();
                        _listenerService.Count = 0;
 
                        await AddLinks(comic => false, ct);

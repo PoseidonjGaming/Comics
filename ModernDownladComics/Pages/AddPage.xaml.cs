@@ -9,6 +9,7 @@ using ModernDownladComics.Models;
 using SearchComicsLib;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 
 // To learn more about WinUI, the WinUI project structure,
@@ -22,6 +23,7 @@ namespace ModernDownladComics.Pages
     public sealed partial class AddPage : Page
     {
         public Comic Comic { get; set; }
+        public ObservableCollection<Comic> Comics { get; set; }
         private readonly ComicService comicService;
         private readonly JdownloaderService jdownloaderService;
 
@@ -30,6 +32,7 @@ namespace ModernDownladComics.Pages
             InitializeComponent();
 
             Comic = new();
+            Comics = new(AppStateStore.Instance.Comics);
 
             comicService = new(comic => Frame.Navigate(typeof(PathPage),
                 new PathPageArgs(comic, typeof(AddPage))),

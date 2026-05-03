@@ -11,8 +11,6 @@
     mc:Ignorable="d" DataContext="{Binding RelativeSource={RelativeSource Mode=Self}}">
 
     <Page.Resources>
-        <CollectionViewSource
-            x:Key="Comics" Source="{x:Bind src:AppStateStore.Instance.Comics}"/>
         <conv:HostConverter x:Key="HostConverter"/>
     </Page.Resources>
     <Grid>
@@ -25,7 +23,7 @@
         </Grid.ColumnDefinitions>
 
         <ListView x:Name="comicsLST" Grid.Row="0" Margin="10"
-                  ItemsSource="{Binding Source={StaticResource Comics}}"
+                  ItemsSource="{Binding Comics}"
                   DisplayMemberPath="PackageName"/>
 
         <StackPanel Grid.Column="1" Orientation="Vertical" Margin="10">

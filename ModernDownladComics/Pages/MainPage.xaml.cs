@@ -3,6 +3,7 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using ModernDownladComics.windows;
 using System;
+using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 
 // To learn more about WinUI, the WinUI project structure,
@@ -15,15 +16,16 @@ namespace ModernDownladComics.Pages
     /// </summary>
     public sealed partial class MainPage : Page
     {
-        //public Comic? Comic { get; set; }
-        public Array Priorities { get; set; } = Enum.GetValues(typeof(Priority));
-
+        public Array Priorities { get; set; }
+        public ObservableCollection<Comic> Comics { get; set; }
         public MainPage()
         {
             InitializeComponent();
+            Priorities = Enum.GetValues<Priority>();
+            Comics = new(AppStateStore.Instance.Comics);
         }
 
-        private async void changeSourceBTN_Click(object sender, RoutedEventArgs e)
+        private void changeSourceBTN_Click(object sender, RoutedEventArgs e)
         {
             if (comicsLST.SelectedItem is Comic comic)
             {
@@ -32,7 +34,7 @@ namespace ModernDownladComics.Pages
                 
         }
 
-        private async void UnselectBTN_Click(object sender, RoutedEventArgs e)
+        private void UnselectBTN_Click(object sender, RoutedEventArgs e)
         {
             comicsLST.SelectedIndex = -1;
         }

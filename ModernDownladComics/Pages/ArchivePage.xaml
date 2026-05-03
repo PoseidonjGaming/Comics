@@ -28,7 +28,7 @@
         </StackPanel>
 
         <TreeView x:Name="folderTree" Grid.Row="1" Margin="10" CanDrag="False"
-                  ItemsSource="{x:Bind Items, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                  ItemsSource="{Binding Items, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
                   SelectedItem="{x:Bind SelectedItem, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
             <TreeView.ItemTemplate>
                 <DataTemplate x:DataType="local:TreeItem">

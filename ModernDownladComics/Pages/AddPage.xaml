@@ -9,10 +9,6 @@
     xmlns:src="using:ComicsLib.Models"
     mc:Ignorable="d" DataContext="{Binding RelativeSource={RelativeSource Self}}">
 
-    <Page.Resources>
-        <CollectionViewSource
-            x:Key="Comics" Source="{x:Bind src:AppStateStore.Instance.Comics}"/>
-    </Page.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
@@ -75,7 +71,7 @@
         </StackPanel>
 
         <ListView Grid.Column="1" Margin="10" x:Name="comicLST"
-                  ItemsSource="{Binding Source={StaticResource Comics}}"
+                  ItemsSource="{Binding Comics}"
                   DisplayMemberPath="PackageName"/>
     </Grid>
 </Page>

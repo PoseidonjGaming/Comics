@@ -1,6 +1,8 @@
 ﻿
 
 using FuzzierSharp;
+using FuzzierSharp.Extractor;
+using SearchComicsLib;
 using System.IO.Pipes;
 
 const string ComicsDirectory = @"E:\Manga Scan\Manga\hentai";
@@ -17,7 +19,7 @@ if (args.Length == 0)
         string? autor = Console.ReadLine();
 
         string authorPath = !string.IsNullOrEmpty(autor) ?
-            GetAuthorPath(autor, ComicsDirectory) : ComicsDirectory;
+          SearchUtility.GetAuthorPath(autor, ComicsDirectory) : ComicsDirectory;
 
         Console.WriteLine("Search (S) or List (L)");
         ConsoleKey key = Console.ReadKey(true).Key;
@@ -36,7 +38,7 @@ if (args.Length == 0)
         }
         else if (key == ConsoleKey.L)
         {
-            BrowseFolder(authorPath);
+            SearchUtility.BrowseFolder(authorPath, ComicsDirectory);
         }
 
 
@@ -49,7 +51,7 @@ if (args.Length == 0)
 else
 {
     string author = FindArg("--author");
-    string path = GetAuthorPath(author, ComicsDirectory);
+    string path = SearchUtility.GetAuthorPath(author, ComicsDirectory);
 
     string comic = FindArg("--comic");
 
@@ -58,7 +60,7 @@ else
 
     if (!string.IsNullOrEmpty(toCompare))
     {
-        path = GetAuthorPath(author, toCompare);
+        path = SearchUtility.GetAuthorPath(author, toCompare);
         Start(path, comic, toCompare);
     }
 
@@ -95,17 +97,6 @@ else
         Console.WriteLine("Press Enter to end the program");
         Console.ReadLine();
     }
-
-    
-
-}
-
-static string GetAuthorPath(string author, string path)
-{
-    var result = Process.ExtractOne(author,
-        Directory.EnumerateDirectories(path, "*", SearchOption.TopDirectoryOnly),
-        s => Path.GetFileNameWithoutExtension(s).ToLower());
-    return result != null ? result.Value : ComicsDirectory;
 }
 
 string FindArg(string arg)
@@ -120,62 +111,9 @@ string FindArg(string arg)
     return string.Empty;
 }
 
-static int CountPage(string path)
-{
-    int pages = 0;
-    var dirs = new Stack<string>();
-    dirs.Push(path);
-
-    while (dirs.Count > 0)
-    {
-        var current = dirs.Pop();
-        try
-        {
-            foreach (var _ in Directory.EnumerateFiles(current))
-                pages++;
-
-            foreach (var dir in Directory.GetDirectories(current))
-                dirs.Push(dir);
-        }
-        catch { /* Ignore inaccessible folders */ }
-    }
-    return pages;
-}
-
-static void BrowseFolder(string path)
-{
-    foreach (var folder in Directory.EnumerateDirectories(path, "*", SearchOption.TopDirectoryOnly))
-    {
-        string relative = folder.StartsWith(ComicsDirectory) && folder.Length > ComicsDirectory.Length
-            ? folder[ComicsDirectory.Length..].TrimStart(Path.DirectorySeparatorChar)
-            : folder;
-        bool hasSubDirs = false;
-        try
-        {
-            using var enumerator = Directory.EnumerateDirectories(folder).GetEnumerator();
-            hasSubDirs = enumerator.MoveNext();
-        }
-        catch { /* Ignore inaccessible folders */ }
-
-        if (hasSubDirs)
-        {
-            BrowseFolder(folder);
-        }
-        else
-        {
-            Console.WriteLine($"{relative}: {CountPage(folder)} pages");
-        }
-
-
-    }
-}
-
 void Start(string authorPath, string comic, string path)
 {
-    IEnumerable<string> dirs = Directory.EnumerateDirectories(authorPath, "*", SearchOption.AllDirectories);
-
-    var result = Process.ExtractSorted(comic, dirs, s => Path.GetFileNameWithoutExtension(s).ToLower()
-    .Replace("\\W", ""), cutoff: 100);
+    IEnumerable<ExtractedResult<string>> result = SearchUtility.GetComics(authorPath, comic);
 
     if (result.Any())
     {
@@ -184,9 +122,9 @@ void Start(string authorPath, string comic, string path)
             string fromPath = res.Value.Replace(path, string.Empty)[1..];
 
             if (path.StartsWith(ComicsDirectory))
-                Console.WriteLine($"From Manga: {CountPage(res.Value)} pages - {fromPath}");
+                Console.WriteLine($"From Manga: {SearchUtility.CountPage(res.Value)} pages - {fromPath}");
             else
-                Console.WriteLine($"From Backup: {CountPage(res.Value)} pages - {fromPath}");
+                Console.WriteLine($"From Backup: {SearchUtility.CountPage(res.Value)} pages - {fromPath}");
         }
     }
     else

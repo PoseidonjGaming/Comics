@@ -113,7 +113,7 @@ namespace ComicsLib.Services
                 {
                     stateAction.Invoke($"New url for {comic.PackageName}");
 
-                    HtmlNode? node = ComicService.LoadBody(comic.HtmlBody);
+                    /*HtmlNode? node = ComicService.LoadBody(comic.HtmlBody);
                     if (node != null)
                     {
                         string? nextUrl = ComicService.GetUrlByHost(node, host);
@@ -130,7 +130,7 @@ namespace ComicsLib.Services
                             State.RemoveTrack(track);
                             State.Comics.Remove(comic);
                         }
-                    }
+                    }*/
                 }
                 else
                 {

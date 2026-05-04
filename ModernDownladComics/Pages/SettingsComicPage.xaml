@@ -34,7 +34,7 @@
                     <TextBlock Text="Host:" FontSize="16" Margin="0,0,0,5" 
                                HorizontalAlignment="Left"/>
                     <TextBox IsReadOnly="True" FontSize="16" TextWrapping="NoWrap" Width="150"
-                             Text="{Binding Comic.Host, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource HostConverter}}"/>
+                             Text="{Binding Comic.URL, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource HostConverter}}"/>
                 </StackPanel>
             </StackPanel>
             <StackPanel Orientation="Horizontal">
@@ -58,15 +58,27 @@
                              Text="{Binding Comic.NumberPages, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                 </StackPanel>
                 <StackPanel Orientation="Vertical" Margin="10">
-                    <TextBlock Text="Enabling:" FontSize="16" Margin="0,0,0,5"/>
-                    <ToggleSwitch OffContent="Disabled" OnContent="Enabled" FontSize="16"
-                                 IsOn="{Binding Comic.Enabled, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                    <TextBlock Text="Filename:" FontSize="16" Margin="0,0,0,5"/>
+                    <TextBox FontSize="16" TextWrapping="NoWrap" Width="200"
+                        Text="{Binding Comic.Filename, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                 </StackPanel>
             </StackPanel>
             <StackPanel Orientation="Vertical" Margin="10,0,10,0">
                 <TextBlock Text="Path:" FontSize="16" Margin="0,0,0,5"/>
                 <TextBox FontSize="16" TextWrapping="NoWrap"
                          Text="{Binding Comic.Path, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal">
+                <StackPanel Orientation="Vertical" Margin="10">
+                    <TextBlock Text="Enabling:" FontSize="16" Margin="0,0,0,5"/>
+                    <ToggleSwitch OffContent="Disabled" OnContent="Enabled" FontSize="16"
+                                  IsOn="{Binding Comic.Enabled, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                </StackPanel>
+                <StackPanel Orientation="Vertical" Margin="10">
+                    <TextBlock Text="Priority:" FontSize="16" Margin="0,0,0,5"/>
+                    <ComboBox ItemsSource="{Binding Priorities}" 
+                              SelectedItem="{Binding Comic.Priority, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                </StackPanel>
             </StackPanel>
         </StackPanel>
     </Grid>

@@ -1,5 +1,7 @@
-﻿using ComicsLib.Factories;
+﻿using ComicsInfraLib.Services;
+using ComicsLib.Factories;
 using ComicsLib.Services;
+using ComicsServiceLib;
 using JDownloader;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
@@ -19,7 +21,7 @@ namespace ModernDownladComics
     public partial class App : Application
     {
         private Window? _window;
-        public static IServiceProvider Services { get; private set; }
+        public static ServiceProvider Services { get; private set; }
 
         /// <summary>
         /// Initializes the singleton application object.  This is the first line of authored code
@@ -53,6 +55,10 @@ namespace ModernDownladComics
 
             service.AddSingleton<ISettingsService, OptionService>();
             service.AddSingleton<ICredentialsService, CredentialsService>();
+            service.AddSingleton<IHostService, HostSelectionService>();
+            service.AddSingleton<IHtmlParserService, HtmlParserService>();
+            service.AddSingleton<IWebService, WebService>();
+            service.AddSingleton<IComicsBuilderService, ComicsBuilderService>();
            
             service.AddSingleton(provider => new Lazy<Task<JDownloaderClient>>(()=>
                 JDownloaderFactory.CreateAsnc(provider.GetRequiredService<ICredentialsService>()), 

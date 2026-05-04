@@ -1,5 +1,7 @@
+using ComicsInfraLib.Helpers;
 using ComicsLib.Models;
 using ComicsLib.Services;
+using ComicsServiceLib;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI;
 using Microsoft.UI.Windowing;
@@ -35,7 +37,7 @@ namespace ModernDownladComics.windows
         public SettingsWindow()
         {
             InitializeComponent();
-            AppWindow.Resize(new(1000, 700));
+            AppWindow.Resize(new(1050, 700));
             AppWindow.TitleBar.PreferredTheme = TitleBarTheme.UseDefaultAppMode;
             WindowService.SetOwner(this);
             WindowService.Center(this);
@@ -47,7 +49,7 @@ namespace ModernDownladComics.windows
 
             AppWindow.SetPresenter(presenter);
 
-            AppWindow.TitleBar.ExtendsContentIntoTitleBar= true;
+            AppWindow.TitleBar.ExtendsContentIntoTitleBar = true;
             AppWindow.TitleBar.PreferredHeightOption = TitleBarHeightOption.Tall;
             AppWindow.TitleBar.ButtonBackgroundColor = Colors.Transparent;
             AppWindow.TitleBar.ButtonInactiveBackgroundColor = Colors.Transparent;
@@ -63,7 +65,7 @@ namespace ModernDownladComics.windows
 
             credentials = App.Services.GetRequiredService<ICredentialsService>().GetCredentials();
 
-            settingsFrame.Navigate(typeof(SettingsComicPage), 
+            settingsFrame.Navigate(typeof(SettingsComicPage),
                 new SettingsPageArgs<Comic?>(options.Comic, false));
         }
 
@@ -94,7 +96,7 @@ namespace ModernDownladComics.windows
                             new SettingsPageArgs<JDCredentials>(credentials, false));
                         break;
                     default:
-                        settingsFrame.Navigate(typeof(SettingsComicPage), 
+                        settingsFrame.Navigate(typeof(SettingsComicPage),
                             new SettingsPageArgs<Comic?>(options.Comic, false));
                         break;
                 }
@@ -104,9 +106,12 @@ namespace ModernDownladComics.windows
         private void Window_Closed(object sender, WindowEventArgs args)
         {
             options.Hosts = [.. Host];
-            options.Confirms= [.. Confirm];
+            options.Confirms = [.. Confirm];
             options.ExcludedHosts = [.. Excluded];
             options.Paths = [.. Path];
+            Comic? comic = options.Comic;
+            if (comic != null)
+                comic.Host = RegexUtility.HostRegex().Match(comic.URL).Value;
             App.Services.GetRequiredService<ISettingsService>().SaveOptions();
 
             App.Services.GetRequiredService<ICredentialsService>().SaveCredentials();

@@ -1,4 +1,4 @@
-﻿using ComicsLib.Utilities;
+﻿using ComicsInfraLib.Helpers;
 using Microsoft.UI.Xaml.Data;
 using System;
 
@@ -17,7 +17,8 @@ namespace ModernDownloadComics.Converters
                 }
                 catch
                 {
-                    return host.Replace("https://", string.Empty)
+                    return RegexUtility.HostRegex().Match(host).Value
+                        .Replace("https://", string.Empty)
                         .Replace("http://", string.Empty).TrimEnd('/');
                 }
             }

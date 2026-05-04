@@ -1,6 +1,7 @@
+using ComicsInfraLib.Helpers;
 using ComicsLib.Models;
 using ComicsLib.Services;
-using ComicsLib.Utilities;
+using ComicsServiceLib;
 using FuzzierSharp;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml.Controls;
@@ -10,6 +11,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -23,9 +25,9 @@ namespace ModernDownladComics.Pages
     /// </summary>
     public sealed partial class PathPage : Page
     {
-        public Comic? Comic { get; set; }
-        public ObservableCollection<string> Roots = [];
-        public ObservableCollection<string> Paths = [];
+        private Comic? Comic { get; set; }
+        public ObservableCollection<string> Roots { get; set; }
+        public ObservableCollection<string> Paths { get; set; }
         private readonly ISettingsService settingsService;
         private CancellationTokenSource? _scanCts;
         private Type? _typePage;
@@ -33,12 +35,10 @@ namespace ModernDownladComics.Pages
         public PathPage()
         {
             InitializeComponent();
+            Paths = [];
 
             settingsService = App.Services.GetRequiredService<ISettingsService>();
-            foreach (var path in settingsService.GetOptions().Paths)
-            {
-                Roots.Add(path);
-            }
+            Roots = new ObservableCollection<string>(settingsService.GetOptions().Paths);
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
@@ -62,7 +62,7 @@ namespace ModernDownladComics.Pages
                 {
                     try
                     {
-                        /*if (Directory.Exists(Comic.Path))
+                        if (Directory.Exists(Comic.Path))
                         {
                             string destPath = Comic.Path.Replace(root, FileService.BackupDirPath);
 
@@ -80,7 +80,7 @@ namespace ModernDownladComics.Pages
                             {
                                 Directory.Move(Comic.Path, destPath);
                             }
-                        }*/
+                        }
                     }
                     catch (IOException) { }
                     catch (UnauthorizedAccessException) { }
@@ -88,6 +88,12 @@ namespace ModernDownladComics.Pages
                     {
                         State.Comics.Add(Comic);
                         State.AddTrack(new(Comic.BaseURL, Comic.URL, Comic.Host));
+                       
+                        FileService.WriteFile<List<Comic>>(FileService.BackupFilePath,
+                           [.. State.Comics]);
+                        FileService.WriteFile<List<Track>>(FileService.TrackFilePath,
+                            State.Tracks);
+
                         Frame.Navigate(_typePage);
                     }
                 }
@@ -232,7 +238,7 @@ namespace ModernDownladComics.Pages
                 {
                     DispatcherQueue.TryEnqueue(() =>
                     Paths.Add(comicsResult.Value.Replace(root, string.Empty)
-                    .Replace(prevChapter, Comic.PackageName)));
+                    .Replace(prevChapter, Comic.PackageName)[1..]));
                 }
                 else if (numChapter >= 1)
                 {

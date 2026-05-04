@@ -1,6 +1,6 @@
 ﻿using System.Text.RegularExpressions;
 
-namespace ComicsLib.Utilities
+namespace ComicsInfraLib.Helpers
 {
     public static partial class RegexUtility
     {

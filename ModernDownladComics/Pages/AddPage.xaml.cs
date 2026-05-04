@@ -1,11 +1,13 @@
 using ComicsLib.Models;
 using ComicsLib.Services;
+using ComicsServiceLib;
 using FuzzierSharp.Extractor;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
 using ModernDownladComics.Models;
+using ModernDownladComics.Services;
 using SearchComicsLib;
 using System;
 using System.Collections.Generic;
@@ -24,7 +26,7 @@ namespace ModernDownladComics.Pages
     {
         public Comic Comic { get; set; }
         public ObservableCollection<Comic> Comics { get; set; }
-        private readonly ComicService comicService;
+        private readonly IComicsBuilderService comicService;
         private readonly JdownloaderService jdownloaderService;
 
         public AddPage()
@@ -34,10 +36,7 @@ namespace ModernDownladComics.Pages
             Comic = new();
             Comics = new(AppStateStore.Instance.Comics);
 
-            comicService = new(comic => Frame.Navigate(typeof(PathPage),
-                new PathPageArgs(comic, typeof(AddPage))),
-                (s, ret, source) => Frame.Navigate(typeof(BrowserPage),
-                new WebPageArgs(s, ret, source)));
+            comicService = App.Services.GetRequiredService<IComicsBuilderService>();
             jdownloaderService = App.Services.GetRequiredService<JdownloaderService>();
         }
 
@@ -59,13 +58,9 @@ namespace ModernDownladComics.Pages
             };
 
             var res = await dialog.ShowAsync();
-            if (res == ContentDialogResult.Primary)
-            {
-                comicService.MakeComic(Comic.BaseURL, Comic.Author, Comic.PackageName, Comic.NumberPages,
-               res == ContentDialogResult.Primary, App.Services?.GetRequiredService<ISettingsService>());
-
-                Comic.Reset();
-            }
+            Comic? comic = await comicService.MakeComics(Comic.BaseURL, Comic.Author.Trim(), Comic.PackageName.Trim(), Comic.NumberPages,
+                  res == ContentDialogResult.Primary);
+            Frame.Navigate(typeof(PathPage), new PathPageArgs(comic, typeof(AddPage)));
 
         }
 

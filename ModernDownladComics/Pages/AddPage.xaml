@@ -71,7 +71,7 @@
         </StackPanel>
 
         <ListView Grid.Column="1" Margin="10" x:Name="comicLST"
-                  ItemsSource="{Binding Comics}"
+                  ItemsSource="{Binding Comics, Mode=TwoWay}"
                   DisplayMemberPath="PackageName"/>
     </Grid>
 </Page>

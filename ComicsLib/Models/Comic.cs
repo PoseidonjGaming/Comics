@@ -1,5 +1,4 @@
 ﻿using ComicsLib.Services;
-using ComicsLib.Utilities;
 using Newtonsoft.Json;
 using System.ComponentModel;
 
@@ -18,9 +17,11 @@ namespace ComicsLib.Models
             get { return _url; }
             set
             {
-                _url = value;
-                OnPropertyChanged(nameof(URL));
-                Host = RegexUtility.HostRegex().Match(value).Value;
+                if (_url != value) {
+                    _url = value;
+                    OnPropertyChanged(nameof(URL));
+                }
+                
             }
         }
         private string _baseURL;
@@ -49,7 +50,7 @@ namespace ComicsLib.Models
             {
                 if (_packageName != value)
                 {
-                    _packageName = value;
+                    _packageName = value.Trim();
                     OnPropertyChanged(nameof(PackageName));
                 }
             }
@@ -93,8 +94,12 @@ namespace ComicsLib.Models
             get => _author;
             set
             {
-                _author = value;
-                OnPropertyChanged(nameof(Author));
+                if (_author!= value)
+                {
+                    _author = value.Trim();
+                    OnPropertyChanged(nameof(Author));
+                }
+               
             }
         }
 

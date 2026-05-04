@@ -1,9 +1,11 @@
 using ComicsLib.Models;
 using ComicsLib.Services;
+using ComicsServiceLib;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using ModernDownladComics.Pages;
+using ModernDownladComics.Services;
 using ModernDownladComics.windows;
 using ModernDownloadComics.Services;
 using System.Threading.Tasks;
@@ -23,6 +25,8 @@ namespace ModernDownladComics
             InitializeComponent();
 
             WindowService.Instance.InitOwner(this);
+            var webService = App.Services.GetRequiredService<IWebService>() as WebService;
+            webService?.Init(frame);
             frame.Navigate(typeof(MainPage));
         }
 

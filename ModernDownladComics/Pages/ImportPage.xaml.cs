@@ -1,6 +1,7 @@
 using ComicsLib.Models;
 using ComicsLib.Services;
 using ComicsLib.Utilities;
+using ComicsServiceLib;
 using FuzzierSharp.Extractor;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
@@ -27,7 +28,7 @@ public sealed partial class ImportPage : Page
     public ObservableCollection<string> Files { get; set; }
     public Comic Comic { get; set; }
 
-    private readonly ComicService comicService;
+    private readonly IComicsBuilderService comicService;
     private readonly JdownloaderService jdownloaderService;
 
     public ImportPage()
@@ -35,10 +36,7 @@ public sealed partial class ImportPage : Page
         InitializeComponent();
         Comic = new Comic();
 
-        comicService = new(comic => Frame.Navigate(typeof(PathPage),
-            new PathPageArgs(comic, typeof(ImportPage))),
-                (s, ret, source) => Frame.Navigate(typeof(BrowserPage),
-                new WebPageArgs(s, ret, source)));
+        comicService = App.Services.GetRequiredService<IComicsBuilderService>();
 
         Files = new ObservableCollection<string>(Directory.GetFiles(FileService.ComicsDir)
            .OrderBy(File.GetLastWriteTimeUtc).Select(dir => Path.GetFileName(dir)));
@@ -59,13 +57,12 @@ public sealed partial class ImportPage : Page
         };
 
         var res = await dialog.ShowAsync();
-        if (res == ContentDialogResult.Primary)
-        {
-            comicService.MakeComic(Comic.BaseURL, Comic.Author, Comic.PackageName, Comic.NumberPages,
-           res == ContentDialogResult.Primary, App.Services?.GetRequiredService<ISettingsService>());
+        Comic? comic = await comicService.MakeComics(Comic.BaseURL, Comic.Author, Comic.PackageName, Comic.NumberPages,
+            res == ContentDialogResult.Primary);
 
-            Comic.Reset();
-        }
+        Frame.Navigate(typeof(PathPage), new PathPageArgs(comic, typeof(ImportPage)));
+
+        Comic.Reset();
     }
 
     private void ClearBTN_Click(object sender, RoutedEventArgs e)
@@ -106,7 +103,7 @@ public sealed partial class ImportPage : Page
 
     private void AddComic()
     {
-        
+
     }
 
     private string AddToPanel(string path, string from)

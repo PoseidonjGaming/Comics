@@ -31,7 +31,8 @@
                 <StackPanel Grid.Column="1" Orientation="Horizontal" Margin="0,0,10,0"
                             VerticalAlignment="Center">
                     <ComboBox x:Name="rootCMB" Width="275" Margin="0,0,10,0" FontSize="16"
-                              ItemsSource="{x:Bind Path=Roots, Mode=TwoWay}"/>
+                              ItemsSource="{x:Bind Path=Roots, Mode=TwoWay}"
+                              SelectedIndex="0"/>
                     <TextBox x:Name="pathTXT" Text="{Binding ElementName=pathLST, Path=SelectedItem}" 
                              HorizontalAlignment="Stretch" Width="750"/>
                 </StackPanel>

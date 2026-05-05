@@ -2,7 +2,7 @@
 using Newtonsoft.Json;
 using System.Net;
 
-namespace ComicsLib.Services
+namespace ComicsInfraLib.Services
 {
     public class ListenerService
     {

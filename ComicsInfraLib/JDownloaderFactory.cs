@@ -1,9 +1,9 @@
 ﻿using ComicsLib.Models;
-using ComicsLib.Services;
+using ComicsServiceLib;
 using JDownloader;
 using JDownloader.Model;
 
-namespace ComicsLib.Factories
+namespace ComicsInfraLib
 {
     public static class JDownloaderFactory
     {

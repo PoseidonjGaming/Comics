@@ -1,9 +1,11 @@
 using ComicsLib.Models;
+using ComicsLib.Services;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using ModernDownladComics.windows;
 using System;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading.Tasks;
 
 // To learn more about WinUI, the WinUI project structure,
@@ -22,10 +24,10 @@ namespace ModernDownladComics.Pages
         {
             InitializeComponent();
             Priorities = Enum.GetValues<Priority>();
-            Comics = new(AppStateStore.Instance.Comics);
+            Comics = AppStateStore.Instance.Comics;
         }
 
-        private void changeSourceBTN_Click(object sender, RoutedEventArgs e)
+        private void ChangeSourceBTN_Click(object sender, RoutedEventArgs e)
         {
             if (comicsLST.SelectedItem is Comic comic)
             {
@@ -37,6 +39,16 @@ namespace ModernDownladComics.Pages
         private void UnselectBTN_Click(object sender, RoutedEventArgs e)
         {
             comicsLST.SelectedIndex = -1;
+        }
+
+        private void DeleteBTN_Click(object sender, RoutedEventArgs e)
+        {
+            if (comicsLST.SelectedItem is Comic comic) { 
+                comicsLST.SelectedIndex = -1;
+                Comics.Remove(comic);
+
+                FileService.WriteFile(FileService.BackupFilePath, Comics.ToList());
+            }
         }
     }
 }

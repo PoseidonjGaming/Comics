@@ -8,6 +8,8 @@ using ModernDownladComics.Pages;
 using ModernDownladComics.Services;
 using ModernDownladComics.windows;
 using ModernDownloadComics.Services;
+using System.Collections.Generic;
+using System.IO;
 using System.Threading.Tasks;
 
 // To learn more about WinUI, the WinUI project structure,
@@ -27,7 +29,10 @@ namespace ModernDownladComics
             WindowService.Instance.InitOwner(this);
             var webService = App.Services.GetRequiredService<IWebService>() as WebService;
             webService?.Init(frame);
+            AppStateStore.Instance.Init();
             frame.Navigate(typeof(MainPage));
+            
+
         }
 
         private async void NavigationView_SelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs args)

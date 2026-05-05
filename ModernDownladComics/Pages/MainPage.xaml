@@ -85,10 +85,12 @@
             <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
                 <Button x:Name="changeSourceBTN" Content="Change Source" FontSize="16"
                         Margin="0,0,10,0" Padding="5"
-                        Click="changeSourceBTN_Click"/>
+                        Click="ChangeSourceBTN_Click"/>
                 <Button x:Name="unselectBTN" Content="Unselect" FontSize="16"
                         Margin="10,0,10,0" Padding="5"
                         Click="UnselectBTN_Click"/>
+                <Button Content="Delete Comics" Padding="5" FontSize="16"
+                        Click="DeleteBTN_Click"/>
             </StackPanel>
         </StackPanel>
     </Grid>

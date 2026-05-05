@@ -1,6 +1,8 @@
+using ComicsInfraLib.Helpers;
 using ComicsLib.Models;
 using ComicsLib.Services;
 using ComicsServiceLib;
+using HtmlAgilityPack;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
@@ -36,7 +38,7 @@ namespace ModernDownladComics.windows
             presenter.SetBorderAndTitleBar(true, false);
 
             AppWindow.SetPresenter(presenter);
-            
+
             foreach (var host in App.Services.GetRequiredService<ISettingsService>().GetOptions().Hosts)
             {
                 Hosts.Add(host);
@@ -52,9 +54,19 @@ namespace ModernDownladComics.windows
             Close();
         }
 
-        private void comicsHostCMB_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void ComicsHostCMB_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-
+            var service = App.Services.GetRequiredService<IHtmlParserService>();
+            HtmlNode? bodyNode= service.LoadBody(Comic.HtmlBody ?? "");
+            if (bodyNode != null) { 
+                HtmlNode? node = service.FindNodeWithAttribute(bodyNode, comicsHostCMB.Text, "href");
+                if (node != null) {
+                    string newUrl = node.GetAttributeValue("href", "");
+                    Comic.URL = newUrl;
+                    Comic.Host = RegexUtility.HostRegex().Match(newUrl).Value;
+                }
+            }
+            
         }
     }
 }

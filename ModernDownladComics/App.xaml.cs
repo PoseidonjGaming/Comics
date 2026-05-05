@@ -1,5 +1,5 @@
-﻿using ComicsInfraLib.Services;
-using ComicsLib.Factories;
+﻿using ComicsInfraLib;
+using ComicsInfraLib.Services;
 using ComicsLib.Services;
 using ComicsServiceLib;
 using JDownloader;

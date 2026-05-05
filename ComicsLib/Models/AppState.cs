@@ -1,4 +1,5 @@
-﻿using System.Collections.ObjectModel;
+﻿using ComicsLib.Services;
+using System.Collections.ObjectModel;
 
 namespace ComicsLib.Models
 {
@@ -68,38 +69,13 @@ namespace ComicsLib.Models
             }
         }
 
-        //public ObservableCollection<Comic> GetComics()
-        //{
-        //    return Application.Current.Dispatcher.Invoke(() => Comics);
-        //}
+        public void Init()
+        {
+            if (File.Exists(FileService.BackupFilePath))
+                Comics = new(FileService.ReadFile<List<Comic>>(FileService.BackupFilePath) ?? []);
 
-        //public Comic? GetComicByUrl(string url)
-        //{
-        //    return Application.Current.Dispatcher.Invoke(() => Comics.FirstOrDefault(comic => comic.URL == url));
-        //}
-        //public void AddComic(Comic comic)
-        //{
-        //    Application.Current.Dispatcher.Invoke(() => Comics.Add(comic));
-        //}
-        //public void RemoveComic(Comic comic)
-        //{
-        //    Application.Current.Dispatcher.Invoke(() =>
-        //    {
-        //        Comics.Remove(comic);
-        //    });
-        //}
-
-        //public void ClearComics()
-        //{
-        //    Application.Current.Dispatcher.Invoke(() =>
-        //    {
-        //        Comics.Clear();
-        //    });
-        //}
-
-        //public long[] GetComicsId()
-        //{
-        //    return [.. Application.Current.Dispatcher.Invoke(() => Comics.Select(c => c.UUID))];
-        //}
+            if (File.Exists(FileService.TrackFilePath))
+                Tracks = FileService.ReadFile<List<Track>>(FileService.TrackFilePath) ?? [];
+        }
     }
 }

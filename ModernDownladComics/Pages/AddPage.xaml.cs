@@ -1,3 +1,4 @@
+using ComicsInfraLib.Services;
 using ComicsLib.Models;
 using ComicsLib.Services;
 using ComicsServiceLib;
@@ -5,9 +6,7 @@ using FuzzierSharp.Extractor;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using Microsoft.UI.Xaml.Controls.Primitives;
 using ModernDownladComics.Models;
-using ModernDownladComics.Services;
 using SearchComicsLib;
 using System;
 using System.Collections.Generic;
@@ -34,7 +33,7 @@ namespace ModernDownladComics.Pages
             InitializeComponent();
 
             Comic = new();
-            Comics = new(AppStateStore.Instance.Comics);
+            Comics = AppStateStore.Instance.Comics;
 
             comicService = App.Services.GetRequiredService<IComicsBuilderService>();
             jdownloaderService = App.Services.GetRequiredService<JdownloaderService>();
@@ -112,7 +111,15 @@ namespace ModernDownladComics.Pages
         private void DeleteBTN_Click(object sender, RoutedEventArgs e)
         {
             if (comicLST.SelectedItem is Comic comic)
+            {
                 AppStateStore.Instance.Comics.Remove(comic);
+                
+                FileService.WriteFile(FileService.TrackFilePath,
+                    AppStateStore.Instance.Tracks);
+                FileService.WriteFile(FileService.BackupFilePath,
+                    AppStateStore.Instance.Comics);
+            }
+                
         }
     }
 }

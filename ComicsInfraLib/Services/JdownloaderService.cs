@@ -4,16 +4,15 @@ using HtmlAgilityPack;
 using JDownloader;
 using JDownloader.Model;
 
-namespace ComicsLib.Services
+namespace ComicsInfraLib.Services
 {
-    public class JdownloaderService
+    public class JdownloaderService(Lazy<Task<JDownloaderClient>> jdClient)
     {
-        private readonly Lazy<Task<JDownloaderClient>> _client;
-        public Task<JDownloaderClient> GetClient()=> _client.Value;
+        public Task<JDownloaderClient> GetClient()=> jdClient.Value;
 
         private static AppState State => AppStateStore.Instance;
 
-        private readonly ReaderWriterLockSlim _startingCountLock;
+        private readonly ReaderWriterLockSlim _startingCountLock = new();
         private int _startingCount;
         public int StartingCount
         {
@@ -45,11 +44,6 @@ namespace ComicsLib.Services
 
         }
 
-        public JdownloaderService(Lazy<Task<JDownloaderClient>> jdClient) { 
-            _client = jdClient;
-            _startingCountLock = new();
-        }
-
         public async Task<string?> GetComicJdownloader(string author, string name)
         {
             JDownloaderClient client = await GetClient();
@@ -79,7 +73,7 @@ namespace ComicsLib.Services
 
         public async Task<int> GetCrawledPackageCount()
         {
-            JDownloaderClient client = await _client.Value;
+            JDownloaderClient client = await jdClient.Value;
             return await client.LinkGrabberV2.GetPackageCount();
         }
 

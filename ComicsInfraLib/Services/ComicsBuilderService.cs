@@ -54,10 +54,13 @@ namespace ComicsInfraLib.Services
                     .Replace("_", " ") : name;
 
                 comic.Populate(url, baseUrl, name, filename, numberPage, author.Trim(), html);
+                comic.Host = RegexUtility.HostRegex().Match(url).Value;
+                comic.NumberPages = numberPage;
             }
             else
             {
                 comic.Populate(baseUrl, name, RegexUtility.HostRegex().Match(baseUrl).Value, author.Trim(), "");
+                comic.Host = RegexUtility.HostRegex().Match(baseUrl).Value;
                 comic.NumberPages = numberPage;
             }
 

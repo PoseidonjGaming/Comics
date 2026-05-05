@@ -1,4 +1,6 @@
+using ComicsInfraLib.Services;
 using ComicsLib.Services;
+using ComicsServiceLib;
 using FuzzierSharp.Extractor;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
@@ -111,20 +113,12 @@ namespace ModernDownladComics.Pages
 
             if (res == null)
                 return "Empty";
-           
+
             string fromPath = res.Value.Replace(authorPath, string.Empty)[1..];
 
             return $"From {from}: {SearchUtility.CountPage(res.Value)} pages - {fromPath}";
         }
 
-        private static TextBlock CreateTextBlock(string text)
-        {
-            return new()
-            {
-                Text = text,
-                FontSize = 16
-            };
-        }
         private async void RestoreBTN_Click(object sender, RoutedEventArgs e)
         {
             if (SelectedItem != null)
@@ -144,7 +138,8 @@ namespace ModernDownladComics.Pages
                 {
                     string destPath = SelectedItem.Path.Replace(FileService.BackupDirPath,
                         FileService.ComicsDirectory);
-                    Directory.Delete(destPath, true);
+                    if (Directory.Exists(destPath))
+                        Directory.Delete(destPath, true);
                     Directory.Move(SelectedItem.Path, destPath);
                     DeleteItem();
 
@@ -162,10 +157,13 @@ namespace ModernDownladComics.Pages
                 {
                     Items.Remove(SelectedItem);
                 }
-                else if (SelectedItem.Remove() && item.Parent != null)
+                else
                 {
-                    Items.Remove(item.Parent);
-                    Directory.Delete(item.Parent.Path, true);
+                    TreeItem? itemRoot = SelectedItem.Remove();
+                    if (itemRoot != null)
+                        Items.Remove(itemRoot);
+                    if (Directory.Exists(item.Path))
+                        Directory.Delete(item.Path, true);
                 }
             }
 
@@ -190,7 +188,7 @@ namespace ModernDownladComics.Pages
                 .Split(System.IO.Path.DirectorySeparatorChar).First();
         }
 
-        public bool Remove()
+        public TreeItem? Remove()
         {
             if (Parent != null)
             {
@@ -203,12 +201,12 @@ namespace ModernDownladComics.Pages
                 }
                 else
                 {
-                    return false;
+                    return this;
                 }
             }
             else
             {
-                return true;
+                return this;
             }
 
         }

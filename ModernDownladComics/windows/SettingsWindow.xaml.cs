@@ -1,6 +1,5 @@
 using ComicsInfraLib.Helpers;
 using ComicsLib.Models;
-using ComicsLib.Services;
 using ComicsServiceLib;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI;

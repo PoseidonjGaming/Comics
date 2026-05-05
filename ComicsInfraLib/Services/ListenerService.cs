@@ -50,10 +50,10 @@ namespace ComicsInfraLib.Services
             TaskCompletionSource = new TaskCompletionSource<List<OfflineLink>>();
         }
 
-        public Task? StartAsync(int port = 12345)
+        public void StartAsync(int port = 12345)
         {
             if (_listenTokenSource != null && !_listenTokenSource.IsCancellationRequested)
-                return null; // already started
+                return; // already started
 
             _listenTokenSource = new CancellationTokenSource();
 
@@ -61,7 +61,7 @@ namespace ComicsInfraLib.Services
             _listener.Prefixes.Add($"http://localhost:{port}/");
             _listener.Start();
 
-            return Task.Run(async () =>
+            Task.Run(async () =>
             {
                 while (!_listenTokenSource.Token.IsCancellationRequested)
                 {

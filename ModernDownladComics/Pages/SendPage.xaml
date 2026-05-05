@@ -18,10 +18,9 @@
         </Grid.RowDefinitions>
 
         <StackPanel>
-            <ToggleButton x:Name="jobToggleBTN" Margin="10" Content="{Binding JobBTNContent, Mode=TwoWay}"
-                          Checked="jobToggleBTN_Checked" Unchecked="jobToggleBTN_Unchecked"
-                          HorizontalAlignment="Center" FontSize="20" Padding="15"
-                          IsChecked="{Binding IsBtnChecked, Mode=TwoWay}"/>
+            <ToggleButton x:Name="jobToggleBTN" Margin="10"
+                          Checked="JobToggleBTN_Checked" Unchecked="jobToggleBTN_Unchecked"
+                          HorizontalAlignment="Center" FontSize="20" Padding="15"/>
             <ProgressBar x:Name="progressbar" Height="20" Minimum="0" 
                          Maximum="{x:Bind src:AppStateStore.Instance.Comics.Count}"/>
         </StackPanel>

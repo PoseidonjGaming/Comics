@@ -1,4 +1,4 @@
-﻿namespace ComicsServiceLib
+﻿namespace ComicsServiceLib.UI
 {
     public interface IDialogService
     {

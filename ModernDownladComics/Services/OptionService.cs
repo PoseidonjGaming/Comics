@@ -1,6 +1,6 @@
 ﻿using ComicsLib.Models;
 using ComicsLib.Services;
-using ComicsServiceLib;
+using ComicsServiceLib.UI;
 using System;
 using System.IO;
 

@@ -1,7 +1,7 @@
 using ComicsInfraLib.Helpers;
 using ComicsLib.Models;
 using ComicsLib.Services;
-using ComicsServiceLib;
+using ComicsServiceLib.UI;
 using FuzzierSharp;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml.Controls;
@@ -62,7 +62,7 @@ namespace ModernDownladComics.Pages
                 {
                     try
                     {
-                        if (Directory.Exists(Comic.Path))
+                        /*if (Directory.Exists(Comic.Path))
                         {
                             string destPath = Comic.Path.Replace(root, FileService.BackupDirPath);
 
@@ -80,7 +80,7 @@ namespace ModernDownladComics.Pages
                             {
                                 Directory.Move(Comic.Path, destPath);
                             }
-                        }
+                        }*/
                     }
                     catch (IOException) { }
                     catch (UnauthorizedAccessException) { }

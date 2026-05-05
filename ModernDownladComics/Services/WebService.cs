@@ -1,5 +1,5 @@
 ﻿using ComicsLib.Models;
-using ComicsServiceLib;
+using ComicsServiceLib.UI;
 using Microsoft.UI.Xaml.Controls;
 using ModernDownladComics.Models;
 using ModernDownladComics.Pages;

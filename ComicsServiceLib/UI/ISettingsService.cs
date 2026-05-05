@@ -1,6 +1,6 @@
 ﻿using ComicsLib.Models;
 
-namespace ComicsServiceLib
+namespace ComicsServiceLib.UI
 {
     public interface ISettingsService
     {

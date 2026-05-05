@@ -1,6 +1,6 @@
 using ComicsLib.Models;
 using ComicsLib.Services;
-using ComicsServiceLib;
+using ComicsServiceLib.UI;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
@@ -27,7 +27,7 @@ namespace ModernDownladComics
             InitializeComponent();
 
             WindowService.Instance.InitOwner(this);
-            var webService = App.Services.GetRequiredService<IWebService>() as WebService;
+            var webService = App.Services?.GetRequiredService<IWebService>() as WebService;
             webService?.Init(frame);
             AppStateStore.Instance.Init();
             frame.Navigate(typeof(MainPage));
@@ -59,7 +59,11 @@ namespace ModernDownladComics
                         break;
                     case "send":
                         if (AppStateStore.Instance.Comics.Count > 0)
+                        {
                             frame.Navigate(typeof(SendPage));
+                            navView.SelectedItem = null;
+                        }
+                            
                         break;
                     default:
                         frame.Navigate(typeof(MainPage));

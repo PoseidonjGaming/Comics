@@ -1,12 +1,13 @@
 using ComicsLib.Models;
-using ComicsLib.Services;
+using ComicsLib.Utility;
+using ComicsServiceLib.UI;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using ModernDownladComics.windows;
 using System;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Threading.Tasks;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -43,11 +44,12 @@ namespace ModernDownladComics.Pages
 
         private void DeleteBTN_Click(object sender, RoutedEventArgs e)
         {
+            var pathService = App.Services.GetRequiredService<IPathService>();
             if (comicsLST.SelectedItem is Comic comic) { 
                 comicsLST.SelectedIndex = -1;
                 Comics.Remove(comic);
 
-                FileService.WriteFile(FileService.BackupFilePath, Comics.ToList());
+                FileUtility.WriteFile(pathService.BackupFilePath, Comics.ToList());
             }
         }
     }

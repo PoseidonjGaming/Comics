@@ -1,6 +1,7 @@
 using ComicsInfraLib.Services;
-using ComicsLib.Services;
+using ComicsLib.Utility;
 using ComicsServiceLib;
+using ComicsServiceLib.UI;
 using FuzzierSharp.Extractor;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
@@ -11,7 +12,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -28,19 +28,20 @@ namespace ModernDownladComics.Pages
 
         private readonly JdownloaderService jdownloaderService;
         private readonly ICredentialsService credentialsService;
+        private readonly IPathService pathService;
         public ArchivePage()
         {
             InitializeComponent();
 
             jdownloaderService = App.Services.GetRequiredService<JdownloaderService>();
             credentialsService = App.Services.GetRequiredService<ICredentialsService>();
-
+            pathService = App.Services.GetRequiredService<IPathService>();
 
         }
 
         private void Page_Loaded(object sender, RoutedEventArgs e)
         {
-            foreach (var dir in Directory.GetDirectories(FileService.BackupDirPath))
+            foreach (var dir in Directory.GetDirectories(pathService.BackupDirPath))
             {
                 Items.Add(BuildTree(dir));
             }
@@ -85,8 +86,8 @@ namespace ModernDownladComics.Pages
             ContentDialog dialog = new()
             {
                 Title = "Search",
-                Content = new SearchPage(AddToPanel(FileService.ComicsDirectory, "Manga"),
-                    AddToPanel(FileService.BackupDirPath, "Backup"), jd ?? "Download not found",
+                Content = new SearchPage(AddToPanel(FileUtility.ComicsDirectory, "Manga"),
+                    AddToPanel(pathService.BackupDirPath, "Backup"), jd ?? "Download not found",
                     $"Do you want to delete the backup of {SelectedItem.Name}"),
                 PrimaryButtonText = "Yes",
                 DefaultButton = ContentDialogButton.Primary,
@@ -136,8 +137,8 @@ namespace ModernDownladComics.Pages
                 ContentDialogResult res = await dialog.ShowAsync();
                 if (res == ContentDialogResult.Primary)
                 {
-                    string destPath = SelectedItem.Path.Replace(FileService.BackupDirPath,
-                        FileService.ComicsDirectory);
+                    string destPath = SelectedItem.Path.Replace(pathService.BackupDirPath,
+                        FileUtility.ComicsDirectory);
                     if (Directory.Exists(destPath))
                         Directory.Delete(destPath, true);
                     Directory.Move(SelectedItem.Path, destPath);
@@ -184,7 +185,8 @@ namespace ModernDownladComics.Pages
 
         public string GetAuthor()
         {
-            return Path.Replace(FileService.BackupDirPath, string.Empty)[1..]
+            var pathService =App.Services.GetRequiredService<IPathService>();
+            return Path.Replace(pathService.BackupDirPath, string.Empty)[1..]
                 .Split(System.IO.Path.DirectorySeparatorChar).First();
         }
 

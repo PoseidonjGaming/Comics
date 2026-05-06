@@ -1,7 +1,8 @@
 using ComicsInfraLib.Services;
 using ComicsLib.Models;
-using ComicsLib.Services;
+using ComicsLib.Utility;
 using ComicsServiceLib;
+using ComicsServiceLib.UI;
 using FuzzierSharp.Extractor;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
@@ -27,6 +28,7 @@ namespace ModernDownladComics.Pages
         public ObservableCollection<Comic> Comics { get; set; }
         private readonly IComicsBuilderService? comicService;
         private readonly JdownloaderService? jdownloaderService;
+        private readonly IPathService pathService;
 
         public AddPage()
         {
@@ -37,6 +39,7 @@ namespace ModernDownladComics.Pages
 
             comicService = App.Services?.GetRequiredService<IComicsBuilderService>();
             jdownloaderService = App.Services?.GetRequiredService<JdownloaderService>();
+            pathService = App.Services.GetRequiredService<IPathService>();
         }
 
         private async void AddComicBTN_Click(object sender, RoutedEventArgs e)
@@ -75,8 +78,8 @@ namespace ModernDownladComics.Pages
             ContentDialog dialog = new()
             {
                 Title = "Search",
-                Content = new SearchPage(AddToPanel(FileService.ComicsDirectory, "Manga"),
-                    AddToPanel(FileService.BackupDirPath, "Backup"), jd ?? "Download not found",
+                Content = new SearchPage(AddToPanel(FileUtility.ComicsDirectory, "Manga"),
+                    AddToPanel(pathService.BackupDirPath, "Backup"), jd ?? "Download not found",
                     $"Do you want to add {Comic.PackageName}"),
                 PrimaryButtonText = "Yes",
                 DefaultButton = ContentDialogButton.Primary,
@@ -118,10 +121,10 @@ namespace ModernDownladComics.Pages
             if (comicLST.SelectedItem is Comic comic)
             {
                 AppStateStore.Instance.Comics.Remove(comic);
-                
-                FileService.WriteFile(FileService.TrackFilePath,
+
+                FileUtility.WriteFile(pathService.TrackFilePath,
                     AppStateStore.Instance.Tracks);
-                FileService.WriteFile(FileService.BackupFilePath,
+                FileUtility.WriteFile(pathService.BackupFilePath,
                     AppStateStore.Instance.Comics);
             }
                 

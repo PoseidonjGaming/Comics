@@ -1,5 +1,5 @@
 ﻿using ComicsLib.Models;
-using ComicsLib.Services;
+using ComicsLib.Utility;
 using ComicsServiceLib.UI;
 using System;
 using System.IO;
@@ -14,9 +14,9 @@ namespace ModernDownladComics.Services
         public readonly string _optionPath;
         private readonly string _optionDirectory;
 
-        public OptionService()
+        public OptionService(IPathService pathService)
         {
-            _optionDirectory = Path.Combine(FileService.CurrentDir, "Settings");
+            _optionDirectory = Path.Combine(pathService.GetAppRoot(), "Settings");
             _optionPath = Path.Combine(_optionDirectory,
                 $"{Environment.UserName}_settings.json");
             _options = new(LoadOption);
@@ -29,9 +29,9 @@ namespace ModernDownladComics.Services
                 return new();
             }
 
-            FileService.CreateFolder(_optionDirectory);
+            FileUtility.CreateFolder(_optionDirectory);
 
-            return FileService.ReadFile<Options>(_optionPath) ?? new();
+            return FileUtility.ReadFile<Options>(_optionPath) ?? new();
         }
         public Options GetOptions()
         {
@@ -40,7 +40,7 @@ namespace ModernDownladComics.Services
 
         public void SaveOptions()
         {
-            FileService.WriteFile<Options>(_optionPath, Options);
+            FileUtility.WriteFile<Options>(_optionPath, Options);
         }
     }
 }

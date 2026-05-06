@@ -1,6 +1,6 @@
 using ComicsInfraLib.Services;
 using ComicsLib.Models;
-using ComicsLib.Services;
+using ComicsLib.Utility;
 using ComicsServiceLib.UI;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
@@ -8,7 +8,6 @@ using Microsoft.UI.Xaml.Controls;
 using ModernDownladComics.Models.View;
 using ModernDownladComics.Services;
 using System;
-using System.Collections.ObjectModel;
 using System.Threading;
 
 // To learn more about WinUI, the WinUI project structure,
@@ -77,8 +76,9 @@ namespace ModernDownladComics.Pages
             {
                 await _jobService.RunAsync(_verifyTokenSource.Token);
                 AppStateStore.Instance.Comics.Clear();
-                jobToggleBTN.IsChecked = false;
-                FileService.WriteFile(FileService.BackupFilePath,
+                ViewModel.IsDetermined = true;
+                var pathService= App.Services.GetRequiredService<IPathService>();
+                FileUtility.WriteFile(pathService.BackupFilePath,
                     AppStateStore.Instance.Comics);
                 Frame.Navigate(typeof(MainPage));
             }

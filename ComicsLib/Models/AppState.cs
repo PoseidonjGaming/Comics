@@ -1,4 +1,4 @@
-﻿using ComicsLib.Services;
+﻿using ComicsLib.Utility;
 using System.Collections.ObjectModel;
 
 namespace ComicsLib.Models
@@ -67,15 +67,6 @@ namespace ComicsLib.Models
             {
                 _trackLock.ExitReadLock();
             }
-        }
-
-        public void Init()
-        {
-            if (File.Exists(FileService.BackupFilePath))
-                Comics = new(FileService.ReadFile<List<Comic>>(FileService.BackupFilePath) ?? []);
-
-            if (File.Exists(FileService.TrackFilePath))
-                Tracks = FileService.ReadFile<List<Track>>(FileService.TrackFilePath) ?? [];
         }
     }
 }

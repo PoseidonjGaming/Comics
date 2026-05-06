@@ -1,5 +1,4 @@
-﻿using ComicsLib.Services;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using System.ComponentModel;
 
 namespace ComicsLib.Models
@@ -181,7 +180,7 @@ namespace ComicsLib.Models
             this.Host = host;
             this.NumberPages = pages;
             this.Author = author;
-            this.Path = System.IO.Path.Combine(FileService.ComicsDirectory, author.Trim(), packageName.Trim());
+            this.Path = System.IO.Path.Combine(author.Trim(), packageName.Trim());
         }
 
         public Comic()

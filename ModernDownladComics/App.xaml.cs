@@ -1,6 +1,6 @@
 ﻿using ComicsInfraLib;
 using ComicsInfraLib.Services;
-using ComicsLib.Services;
+using ComicsLib.Utility;
 using ComicsServiceLib;
 using ComicsServiceLib.UI;
 using JDownloader;
@@ -32,8 +32,7 @@ namespace ModernDownladComics
         {
             InitializeComponent();
             ConfigureService();
-            FileService.CreateFolder(FileService.BackupDirPath);
-            FileService.CreateFolder(FileService.ComicsDir);
+            
 
         }
 
@@ -45,7 +44,6 @@ namespace ModernDownladComics
         /// <param name="args">Details about the launch request and process.</param>
         protected override void OnLaunched(Microsoft.UI.Xaml.LaunchActivatedEventArgs args)
         {
-            FileService.CurrentDir = AppContext.BaseDirectory;
             _window = new MainWindow();
             _window.Activate();
         }
@@ -61,6 +59,7 @@ namespace ModernDownladComics
             service.AddSingleton<IWebService, WebService>();
             service.AddSingleton<IComicsBuilderService, ComicsBuilderService>();
             service.AddSingleton<IJobState, JobState>();
+            service.AddSingleton<IPathService, PathService>();
            
             service.AddSingleton(provider => new Lazy<Task<JDownloaderClient>>(()=>
                 JDownloaderFactory.CreateAsnc(provider.GetRequiredService<ICredentialsService>()), 

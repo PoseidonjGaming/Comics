@@ -1,6 +1,7 @@
 ﻿using ComicsLib.Models;
-using ComicsLib.Services;
+using ComicsLib.Utility;
 using ComicsServiceLib;
+using ComicsServiceLib.UI;
 using Newtonsoft.Json;
 using System;
 using System.IO;
@@ -17,9 +18,9 @@ namespace ModernDownladComics.Services
         private readonly string _credentialsPath;
         private readonly string _credentialsDirectory;
 
-        public CredentialsService()
+        public CredentialsService(IPathService pathService)
         {
-            _credentialsDirectory = Path.Combine(FileService.CurrentDir, "Settings");
+            _credentialsDirectory = Path.Combine(pathService.GetAppRoot(), "Settings");
             _credentialsPath = Path.Combine(_credentialsDirectory, $"{Environment.UserName}_credentials.json");
             _credentials = new(LoadCredentials);
         }
@@ -32,7 +33,7 @@ namespace ModernDownladComics.Services
                 return defaultCredentials;
             }
 
-            FileService.CreateFolder(_credentialsDirectory);
+            FileUtility.CreateFolder(_credentialsDirectory);
             string baseCredential = File.ReadAllText(_credentialsPath);
             
             byte[] bytes = Convert.FromBase64String(baseCredential);
@@ -62,7 +63,7 @@ namespace ModernDownladComics.Services
 
             string baseCredentials = Convert.ToBase64String(credentialsData);
             
-            FileService.CreateFolder(_credentialsDirectory);
+            FileUtility.CreateFolder(_credentialsDirectory);
             File.WriteAllText(_credentialsPath, baseCredentials);
         }
 

@@ -2,6 +2,7 @@
 using ComicsServiceLib.UI;
 using JDownloader;
 using JDownloader.Model;
+using Newtonsoft.Json.Linq;
 
 namespace ComicsInfraLib.Services
 {
@@ -17,10 +18,27 @@ namespace ComicsInfraLib.Services
             listenerService.StartAsync();
 
             await RetryLoop(token);
-
+           
+            try
+            {
+                await Task.Delay(1000, token);
+            }
+            catch 
+            {
+               
+            }
             await AddLinks(token);
 
-            await FinalizeLinks();
+            try
+            {
+                await Task.Delay(1000, token);
+            }
+            catch
+            {
+
+            }
+
+            await FinalizeLinks(token);
             
         }
 
@@ -34,7 +52,7 @@ namespace ComicsInfraLib.Services
                 tryCount++;
                 PrepareTry(tryCount);
                 await ResetTry();
-
+                
                 await TryAddLinks(token);
 
                 offlineLinks = await listenerService.WaitJob();
@@ -94,14 +112,32 @@ namespace ComicsInfraLib.Services
             await listenerService.WaitJob();
         }
 
-        private async Task FinalizeLinks()
+        private async Task FinalizeLinks(CancellationToken token)
         {
             JDownloaderClient client = await jdownloaderService.GetClient();
             jobState.UpdateState("Set links disabled", false);
             await DisableLinks(client);
+            
+            try
+            {
+                await Task.Delay(1000, token);
+            }
+            catch
+            {
+
+            }
 
             jobState.UpdateState("Sort links", false);
             await SortPackages(client);
+
+            try
+            {
+                await Task.Delay(1000, token);
+            }
+            catch
+            {
+
+            }
 
             jobState.UpdateState("Set name and comment", false);
             await FinishedLink(client);

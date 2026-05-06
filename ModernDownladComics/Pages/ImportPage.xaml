@@ -59,7 +59,7 @@
                         Margin="10,0,10,0" Padding="10,0,10,0"
                         Height="30" FontSize="16"
                         Background="{StaticResource StandardButton}" 
-                        Click="searchBTN_Click"/>
+                        Click="SearchBTN_Click"/>
                 <Button x:Name="clearBTN" Content="Clear Link"
                         Margin="10,0,0,0" Padding="10,0,10,0"
                         Height="30" FontSize="16" 

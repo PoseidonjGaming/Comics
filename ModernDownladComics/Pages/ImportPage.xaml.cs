@@ -1,8 +1,9 @@
 using ComicsInfraLib.Services;
 using ComicsLib.Models;
-using ComicsLib.Services;
 using ComicsLib.Utilities;
+using ComicsLib.Utility;
 using ComicsServiceLib;
+using ComicsServiceLib.UI;
 using FuzzierSharp.Extractor;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
@@ -31,15 +32,17 @@ public sealed partial class ImportPage : Page
 
     private readonly IComicsBuilderService? comicService;
     private readonly JdownloaderService? jdownloaderService;
+    private readonly IPathService pathService;
 
     public ImportPage()
     {
         InitializeComponent();
         Comic = new Comic();
 
+        pathService = App.Services.GetRequiredService<IPathService>();
         comicService = App.Services?.GetRequiredService<IComicsBuilderService>();
 
-        Files = new ObservableCollection<string>(Directory.GetFiles(FileService.ComicsDir)
+        Files = new ObservableCollection<string>(Directory.GetFiles(pathService.ComicsDir)
            .OrderBy(File.GetLastWriteTimeUtc).Select(dir => Path.GetFileName(dir)));
 
         jdownloaderService = App.Services?.GetRequiredService<JdownloaderService>();
@@ -78,12 +81,12 @@ public sealed partial class ImportPage : Page
     {
         if (sender is ComboBox box && box.SelectedValue is string file)
         {
-            string path = Path.Combine(FileService.ComicsDir, file);
+            string path = Path.Combine(pathService.ComicsDir, file);
             URLS = new ObservableCollection<string>(JsonUtility.GetURLS(File.ReadAllText(path)));
         }
     }
 
-    private async void searchBTN_Click(object sender, RoutedEventArgs e)
+    private async void SearchBTN_Click(object sender, RoutedEventArgs e)
     {
         if (jdownloaderService == null)
             return;
@@ -93,8 +96,8 @@ public sealed partial class ImportPage : Page
         ContentDialog dialog = new()
         {
             Title = "Search",
-            Content = new SearchPage(AddToPanel(FileService.ComicsDirectory, "Manga"),
-                AddToPanel(FileService.BackupDirPath, "Backup"), jd ?? "Download not found",
+            Content = new SearchPage(AddToPanel(FileUtility.ComicsDirectory, "Manga"),
+                AddToPanel(pathService.BackupDirPath, "Backup"), jd ?? "Download not found",
                 $"Do you want to add {Comic.PackageName}"),
             PrimaryButtonText = "Yes",
             DefaultButton = ContentDialogButton.Primary,
@@ -104,13 +107,8 @@ public sealed partial class ImportPage : Page
         ContentDialogResult dialogRes = await dialog.ShowAsync();
         if (dialogRes == ContentDialogResult.Primary)
         {
-            AddComic();
+           
         }
-    }
-
-    private void AddComic()
-    {
-
     }
 
     private string AddToPanel(string path, string from)

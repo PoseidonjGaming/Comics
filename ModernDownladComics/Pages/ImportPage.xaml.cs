@@ -29,24 +29,27 @@ public sealed partial class ImportPage : Page
     public ObservableCollection<string> Files { get; set; }
     public Comic Comic { get; set; }
 
-    private readonly IComicsBuilderService comicService;
-    private readonly JdownloaderService jdownloaderService;
+    private readonly IComicsBuilderService? comicService;
+    private readonly JdownloaderService? jdownloaderService;
 
     public ImportPage()
     {
         InitializeComponent();
         Comic = new Comic();
 
-        comicService = App.Services.GetRequiredService<IComicsBuilderService>();
+        comicService = App.Services?.GetRequiredService<IComicsBuilderService>();
 
         Files = new ObservableCollection<string>(Directory.GetFiles(FileService.ComicsDir)
            .OrderBy(File.GetLastWriteTimeUtc).Select(dir => Path.GetFileName(dir)));
 
-        jdownloaderService = App.Services.GetRequiredService<JdownloaderService>();
+        jdownloaderService = App.Services?.GetRequiredService<JdownloaderService>();
     }
 
     private async void AddBTN_Click(object sender, RoutedEventArgs e)
     {
+        if (comicService == null)
+            return;
+
         ContentDialog dialog = new()
         {
             Title = "Scan the url",
@@ -82,6 +85,9 @@ public sealed partial class ImportPage : Page
 
     private async void searchBTN_Click(object sender, RoutedEventArgs e)
     {
+        if (jdownloaderService == null)
+            return;
+
         string? jd = await jdownloaderService.GetComicJdownloader(Comic.Author, Comic.PackageName);
 
         ContentDialog dialog = new()

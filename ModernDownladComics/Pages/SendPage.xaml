@@ -7,7 +7,9 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:src="using:ComicsLib.Models"
-    mc:Ignorable="d" DataContext="{Binding RelativeSource={RelativeSource Self}}"
+    xmlns:vw="using:ModernDownladComics.Models.View"
+    mc:Ignorable="d"
+    d:DataContext="{d:DesignInstance Type=vw:SendViewModel}"
     Loaded="Page_Loaded">
 
     <Grid>
@@ -21,12 +23,13 @@
             <ToggleButton x:Name="jobToggleBTN" Margin="10"
                           Checked="JobToggleBTN_Checked" Unchecked="jobToggleBTN_Unchecked"
                           HorizontalAlignment="Center" FontSize="20" Padding="15"/>
-            <ProgressBar x:Name="progressbar" Height="20" Minimum="0" 
+            <ProgressBar Height="20" Minimum="0" Value="{Binding ProgessValue}"
+                         IsIndeterminate="{Binding IsDetermined}"
                          Maximum="{x:Bind src:AppStateStore.Instance.Comics.Count}"/>
         </StackPanel>
 
-        <TextBlock x:Name="tryTXT" Grid.Row="1" FontSize="16" Margin="10,10,10,5"/>
+        <TextBlock Text="{Binding StateJob}" Grid.Row="1" FontSize="16" Margin="10,10,10,5"/>
 
-        <ListBox Grid.Row="2" Margin="10,0,10,0" ItemsSource="{Binding States, Mode=TwoWay}"/>
+        <ListBox Grid.Row="2" Margin="10,0,10,0" ItemsSource="{Binding States}"/>
     </Grid>
 </Page>

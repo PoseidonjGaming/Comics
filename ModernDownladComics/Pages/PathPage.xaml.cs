@@ -28,7 +28,7 @@ namespace ModernDownladComics.Pages
         private Comic? Comic { get; set; }
         public ObservableCollection<string> Roots { get; set; }
         public ObservableCollection<string> Paths { get; set; }
-        private readonly ISettingsService settingsService;
+        private readonly ISettingsService? settingsService;
         private CancellationTokenSource? _scanCts;
         private Type? _typePage;
         private static AppState State => AppStateStore.Instance;
@@ -37,7 +37,8 @@ namespace ModernDownladComics.Pages
             InitializeComponent();
             Paths = [];
 
-            settingsService = App.Services.GetRequiredService<ISettingsService>();
+            settingsService = App.Services?.GetRequiredService<ISettingsService>();
+
             Roots = new ObservableCollection<string>(settingsService.GetOptions().Paths);
         }
 
@@ -62,7 +63,7 @@ namespace ModernDownladComics.Pages
                 {
                     try
                     {
-                        /*if (Directory.Exists(Comic.Path))
+                        if (Directory.Exists(Comic.Path))
                         {
                             string destPath = Comic.Path.Replace(root, FileService.BackupDirPath);
 
@@ -80,7 +81,7 @@ namespace ModernDownladComics.Pages
                             {
                                 Directory.Move(Comic.Path, destPath);
                             }
-                        }*/
+                        }
                     }
                     catch (IOException) { }
                     catch (UnauthorizedAccessException) { }

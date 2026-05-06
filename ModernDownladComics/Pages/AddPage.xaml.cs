@@ -25,8 +25,8 @@ namespace ModernDownladComics.Pages
     {
         public Comic Comic { get; set; }
         public ObservableCollection<Comic> Comics { get; set; }
-        private readonly IComicsBuilderService comicService;
-        private readonly JdownloaderService jdownloaderService;
+        private readonly IComicsBuilderService? comicService;
+        private readonly JdownloaderService? jdownloaderService;
 
         public AddPage()
         {
@@ -35,8 +35,8 @@ namespace ModernDownladComics.Pages
             Comic = new();
             Comics = AppStateStore.Instance.Comics;
 
-            comicService = App.Services.GetRequiredService<IComicsBuilderService>();
-            jdownloaderService = App.Services.GetRequiredService<JdownloaderService>();
+            comicService = App.Services?.GetRequiredService<IComicsBuilderService>();
+            jdownloaderService = App.Services?.GetRequiredService<JdownloaderService>();
         }
 
         private async void AddComicBTN_Click(object sender, RoutedEventArgs e)
@@ -46,6 +46,9 @@ namespace ModernDownladComics.Pages
 
         private async void AddComic()
         {
+            if (comicService == null)
+                return;
+
             ContentDialog dialog = new()
             {
                 Title = "Scan the url",
@@ -65,6 +68,8 @@ namespace ModernDownladComics.Pages
 
         private async void SearchComicBTN_Click(object sender, RoutedEventArgs e)
         {
+            if(jdownloaderService == null) return;
+
             string? jd = await jdownloaderService.GetComicJdownloader(Comic.Author, Comic.PackageName);
 
             ContentDialog dialog = new()

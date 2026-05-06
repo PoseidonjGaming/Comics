@@ -5,6 +5,7 @@ using ComicsServiceLib.UI;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using ModernDownladComics.Models.View;
 using ModernDownladComics.Services;
 using System;
 using System.Collections.ObjectModel;
@@ -20,21 +21,22 @@ namespace ModernDownladComics.Pages
     /// </summary>
     public sealed partial class SendPage : Page
     {
-        public ObservableCollection<string> States { get; set; } = [];
 
         private CancellationTokenSource? _verifyTokenSource;
 
         private readonly JDownloadJobService? _jobService;
+        public readonly SendViewModel ViewModel;
 
         public SendPage()
         {
             InitializeComponent();
-            jobToggleBTN.Content = "Start";
-            tryTXT.Text = "Job not started";
+            ViewModel = new("Start", "Job not started");
 
             _jobService = App.Services?.GetRequiredService<JDownloadJobService>();
             var service = App.Services?.GetRequiredService<IJobState>() as JobState;
-            service?.InitPage(this, tryTXT, progressbar);
+
+            service?.InitPage(ViewModel);
+            DataContext = ViewModel;
         }
 
         private async void JobToggleBTN_Checked(object sender, RoutedEventArgs e)
@@ -44,7 +46,7 @@ namespace ModernDownladComics.Pages
                 _verifyTokenSource?.Dispose();
                 _verifyTokenSource = new CancellationTokenSource();
 
-                progressbar.IsIndeterminate = true;
+                ViewModel.IsDetermined = false;
 
                 jobToggleBTN.IsChecked = true;
                 jobToggleBTN.Content = "Stop";
@@ -67,13 +69,14 @@ namespace ModernDownladComics.Pages
         private async void Page_Loaded(object sender, RoutedEventArgs e)
         {
             _verifyTokenSource = new CancellationTokenSource();
-            progressbar.IsIndeterminate = true;
+            ViewModel.IsDetermined = false;
             jobToggleBTN.IsChecked = true;
             jobToggleBTN.Content = "Stop";
 
             if (_jobService != null)
             {
                 await _jobService.RunAsync(_verifyTokenSource.Token);
+                AppStateStore.Instance.Comics.Clear();
                 jobToggleBTN.IsChecked = false;
                 FileService.WriteFile(FileService.BackupFilePath,
                     AppStateStore.Instance.Comics);

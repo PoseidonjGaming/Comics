@@ -57,10 +57,10 @@ namespace ModernDownladComics.windows
 
         private void ComicsHostCMB_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            var service = App.Services.GetRequiredService<IHtmlParserService>();
-            HtmlNode? bodyNode= service.LoadBody(Comic.HtmlBody ?? "");
+            var service = App.Services?.GetRequiredService<IHtmlParserService>();
+            HtmlNode? bodyNode= service?.LoadBody(Comic.HtmlBody ?? "");
             if (bodyNode != null) { 
-                HtmlNode? node = service.FindNodeWithAttribute(bodyNode, comicsHostCMB.Text, "href");
+                HtmlNode? node = service?.FindNodeWithAttribute(bodyNode, comicsHostCMB.Text, "href");
                 if (node != null) {
                     string newUrl = node.GetAttributeValue("href", "");
                     Comic.URL = newUrl;

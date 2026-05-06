@@ -1,6 +1,7 @@
 ﻿using ComicsLib.Models;
 using ComicsServiceLib.UI;
 using Microsoft.UI.Xaml.Controls;
+using ModernDownladComics.Models.View;
 using ModernDownladComics.Pages;
 using System;
 
@@ -8,15 +9,11 @@ namespace ModernDownladComics.Services
 {
     public class JobState : IJobState
     {
-        public SendPage? _page;
-        private TextBlock? _textBlock;
-        private ProgressBar? _progressBar;
+        public SendViewModel? _viewModel;
 
-        public void InitPage(SendPage page, TextBlock textBlock, ProgressBar progressBar)
+        public void InitPage(SendViewModel page)
         {
-            _page = page;
-            _textBlock = textBlock;
-            _progressBar = progressBar;
+            _viewModel = page;
         }
 
         
@@ -25,28 +22,22 @@ namespace ModernDownladComics.Services
             if (clear)
                 ClearState();
 
-            _page?.DispatcherQueue.TryEnqueue(() => _page.States.Add(message));
+            _viewModel?.States.Add(message);
         }
         public void ClearState()
         {
-            _page?.States.Clear();
+            _viewModel?.States.Clear();
         }
 
-        public void UpdateTry(string tr)
+        public void UpdateTry(string stateJob)
         {
-            if (_textBlock != null)
-                _textBlock.Text = tr;
+            _viewModel?.StateJob = stateJob;
         }
 
         public void UpdateProgess(int progress, bool IsDetermined)
         {
-            if(_progressBar != null)
-            {
-                _progressBar.Value = progress;
-                _progressBar.IsIndeterminate = IsDetermined;
-                _progressBar.Maximum = AppStateStore.Instance.Comics.Count;
-            }
-                
+            _viewModel?.ProgessValue = progress;
+            _viewModel?.IsDetermined = IsDetermined;                
         }
 
         

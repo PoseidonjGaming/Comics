@@ -16,56 +16,87 @@ namespace ComicsInfraLib.Services
         {
             listenerService.StartAsync();
 
-            List<OfflineLink> offlineLinks = [];
-            JDownloaderClient client = await jdownloaderService.GetClient();
-            int addTry = 0;
+            await RetryLoop(token);
+
+            await AddLinks(token);
+
+            await FinalizeLinks();
+            
+        }
+
+        private async Task RetryLoop(CancellationToken token)
+        {
+            List<OfflineLink> offlineLinks;
+            int tryCount = 0;
 
             do
             {
-                addTry++;
-                progress = 0;
-                jobState.UpdateState("Starting job", true);
-                jobState.UpdateTry($"Try {addTry}");
-                jobState.UpdateProgess(progress, false);
+                tryCount++;
+                PrepareTry(tryCount);
+                await ResetTry();
 
-
-
-                await jdownloaderService.Reset();
-                listenerService.Count = 0;
-
-                await AddLinks(comic => false, token);
-
-                jobState.UpdateState("Wait to finished job", false);
-                jobState.UpdateProgess(progress, false);
-                
+                await TryAddLinks(token);
 
                 offlineLinks = await listenerService.WaitJob();
-
-                offlineLinks.ForEach(async ol =>
-                {
-                    JdownloaderService.ChangeUrl(State.Comics.First(c => c.UUID == ol.JobUUID),
-                        settingsService.GetOptions().Hosts, state =>
-                    jobState.UpdateState(state, false));
-                });
-
-                progress = 0;
-                jobState.UpdateProgess(progress, true);
+                await FixLinks(offlineLinks);
 
                 await jdownloaderService.RemoveLinks();
             } while (offlineLinks != null && offlineLinks.Count != 0);
+        }
 
+        private void PrepareTry(int tryCount)
+        {
+            progress = 0;
+            jobState.UpdateState("Starting job", true);
+            jobState.UpdateTry($"Try {tryCount}");
+            jobState.UpdateProgess(progress, false);
+        }
+
+        private async Task ResetTry()
+        {
+            await jdownloaderService.Reset();
+            listenerService.Count = 0;
+        }
+
+        private async Task TryAddLinks(CancellationToken token)
+        {
+            await AddLinks(comic => false, token);
+
+            jobState.UpdateState("Wait to finished job", false);
+            jobState.UpdateProgess(progress, false);
+        }
+
+        private async Task FixLinks(List<OfflineLink> offlineLinks)
+        {
+            offlineLinks.ForEach(async ol =>
+            {
+                JdownloaderService.ChangeUrl(State.Comics.First(c => c.UUID == ol.JobUUID),
+                    settingsService.GetOptions().Hosts, state =>
+                jobState.UpdateState(state, false));
+            });
+
+            progress = 0;
+            jobState.UpdateProgess(progress, true);
+        }
+
+        private async Task AddLinks(CancellationToken token)
+        {
             listenerService.Count = 0;
             jobState.ClearState();
             jobState.UpdateTry("Final try");
             jobState.UpdateProgess(State.Comics.Count, true);
-            
+
 
             await AddLinks(comic =>
             !settingsService.GetOptions().Confirms.Contains(comic.Host), token);
 
             jobState.UpdateState("Wait to finished job", false);
-            offlineLinks = await listenerService.WaitJob();
+            await listenerService.WaitJob();
+        }
 
+        private async Task FinalizeLinks()
+        {
+            JDownloaderClient client = await jdownloaderService.GetClient();
             jobState.UpdateState("Set links disabled", false);
             await DisableLinks(client);
 
@@ -88,7 +119,6 @@ namespace ComicsInfraLib.Services
                     {
                         break;
                     }
-
 
 
                     await jdownloaderService.AddLinks(comic, autoStart.Invoke(comic), state =>

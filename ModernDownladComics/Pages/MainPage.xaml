@@ -8,7 +8,9 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:conv="using:ModernDownloadComics.Converters"
     xmlns:src="using:ComicsLib.Models"
-    mc:Ignorable="d" DataContext="{Binding RelativeSource={RelativeSource Mode=Self}}">
+    xmlns:vw="using:ModernDownladComics.Models.View"
+    d:DataContext="{d:DesignInstance Type=vw:MainPageViewModel}"
+    mc:Ignorable="d">
 
     <Page.Resources>
         <conv:HostConverter x:Key="HostConverter"/>
@@ -24,73 +26,73 @@
 
         <ListView x:Name="comicsLST" Grid.Row="0" Margin="10"
                   ItemsSource="{Binding Comics}"
+                  SelectedItem="{Binding SelectedComic, Mode=TwoWay}"
                   DisplayMemberPath="PackageName"/>
 
         <StackPanel Grid.Column="1" Orientation="Vertical" Margin="10">
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch">
                 <StackPanel Orientation="Vertical" Margin="0,0,20,0">
                     <TextBlock Text="URL:" FontSize="16" Margin="0,0,0,5"/>
-                    <TextBox Text="{Binding ElementName=comicsLST, Path=SelectedItem.URL, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                             FontSize="16" Width="500"
+                    <TextBox Text="{Binding SelectedComic.URL}"
+                             FontSize="16" Width="750"
                              HorizontalAlignment="Left" VerticalAlignment="Top"/>
                 </StackPanel>
                 <StackPanel Orientation="Vertical">
                     <TextBlock Text="Host:" FontSize="16" Margin="0,0,0,5"/>
-                    <TextBox FontSize="16" Width="250" TextWrapping="NoWrap"
-                             Text="{Binding ElementName=comicsLST, Path=SelectedItem.URL, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource HostConverter}}"/>
+                    <TextBox FontSize="16" Width="150" TextWrapping="NoWrap"
+                             Text="{Binding SelectedComic.URL, Converter={StaticResource HostConverter}}"/>
                 </StackPanel>
             </StackPanel>
 
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch" Margin="0,10,0,0">
                 <StackPanel Orientation="Vertical">
                     <TextBlock Text="Author:" FontSize="16" Margin="0,0,0,5"/>
-                    <TextBox Text="{Binding ElementName=comicsLST, Path=SelectedItem.Author, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                    <TextBox Text="{Binding SelectedComic.Author}"
                              Width="150" TextWrapping="NoWrap"/>
                 </StackPanel>
                 <StackPanel Orientation="Vertical" Margin="20,0,20,0">
-                    <TextBlock Text="Package name" FontSize="16" Margin="0,0,0,5"/>
-                    <TextBox Text="{Binding ElementName=comicsLST, Path=SelectedItem.PackageName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                    <TextBlock Text="Package Name" FontSize="16" Margin="0,0,0,5"/>
+                    <TextBox Text="{Binding SelectedComic.PackageName}"
                              FontSize="16" Width="300" TextWrapping="NoWrap"/>
                 </StackPanel>
                 <StackPanel Orientation="Vertical">
                     <TextBlock Text="Filename" FontSize="16" Margin="0,0,0,5"/>
-                    <TextBox Text="{Binding ElementName=comicsLST, Path=SelectedItem.Filename, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                    <TextBox Text="{Binding SelectedComic.Filename}"
                              FontSize="16" Width="250" TextWrapping="NoWrap"/>
                 </StackPanel>
             </StackPanel>
             <StackPanel Orientation="Vertical" Margin="0,10,0,0">
                 <TextBlock Text="Path:" FontSize="16" Margin="0,0,0,5"/>
-                <TextBox Text="{Binding ElementName=comicsLST, Path=SelectedItem.Path, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                <TextBox Text="{Binding SelectedComic.Path}"
                          FontSize="16" Width="700" TextWrapping="NoWrap" HorizontalAlignment="Left"/>
             </StackPanel>
 
             <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
                 <StackPanel Orientation="Vertical">
                     <TextBlock Text="Number of pages:" FontSize="16" Margin="0,0,0,5"/>
-                    <TextBox Text="{Binding ElementName=comicsLST, Path=SelectedItem.NumberPages, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                    <TextBox Text="{Binding SelectedComic.NumberPages}"
                              FontSize="16" Width="75" TextWrapping="NoWrap" HorizontalAlignment="Left"/>
                 </StackPanel>
                 <StackPanel Orientation="Vertical" Margin="20,0,20,0">
                     <TextBlock Text="Enabled:" FontSize="16" Margin="0,0,0,5"/>
                     <CheckBox
-                        IsChecked="{Binding ElementName=comicsLST, Path=SelectedItem.Enabled, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                        IsChecked="{Binding SelectedComic.Enabled}"/>
                 </StackPanel>
                 <StackPanel Orientation="Vertical" VerticalAlignment="Center">
                     <TextBlock Text="Priority:" FontSize="16" Margin="0,0,0,5"/>
                     <ComboBox ItemsSource="{Binding Priorities}"
-                              SelectedItem="{Binding ElementName=comicsLST, Path=SelectedItem.Priority, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                              SelectedItem="{Binding SelectedComic.Priority, Mode=TwoWay}"/>
                 </StackPanel>
             </StackPanel>
 
             <StackPanel Orientation="Horizontal" Margin="0,20,0,0">
                 <Button x:Name="changeSourceBTN" Content="Change Source" FontSize="16"
-                       Padding="5"
-                        Click="ChangeSourceBTN_Click"/>
+                       Padding="5" Command="{Binding ChangeSourceCommand}"/>
                 <Button x:Name="unselectBTN" Content="Unselect" FontSize="16"
                         Margin="20,0,20,0" Padding="5"
-                        Click="UnselectBTN_Click"/>
+                        Command="{Binding UnselectCommand}"/>
                 <Button Content="Delete Comics" Padding="5" FontSize="16"
-                        Click="DeleteBTN_Click"/>
+                        Command="{Binding DeleteCommand}"/>
             </StackPanel>
         </StackPanel>
     </Grid>

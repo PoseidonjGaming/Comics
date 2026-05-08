@@ -4,6 +4,7 @@ using ComicsServiceLib.UI;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using ModernDownladComics.Models.View;
 using ModernDownladComics.windows;
 using System;
 using System.Collections.ObjectModel;
@@ -19,38 +20,11 @@ namespace ModernDownladComics.Pages
     /// </summary>
     public sealed partial class MainPage : Page
     {
-        public Array Priorities { get; set; }
-        public ObservableCollection<Comic> Comics { get; set; }
         public MainPage()
         {
             InitializeComponent();
-            Priorities = Enum.GetValues<Priority>();
-            Comics = AppStateStore.Instance.Comics;
-        }
+            DataContext = App.Current.Services.GetRequiredService<MainPageViewModel>();
 
-        private void ChangeSourceBTN_Click(object sender, RoutedEventArgs e)
-        {
-            if (comicsLST.SelectedItem is Comic comic)
-            {
-                ChangeSourceWindow changeSourceWindow = new(comic);
-            }
-                
-        }
-
-        private void UnselectBTN_Click(object sender, RoutedEventArgs e)
-        {
-            comicsLST.SelectedIndex = -1;
-        }
-
-        private void DeleteBTN_Click(object sender, RoutedEventArgs e)
-        {
-            var pathService = App.Services.GetRequiredService<IPathService>();
-            if (comicsLST.SelectedItem is Comic comic) { 
-                comicsLST.SelectedIndex = -1;
-                Comics.Remove(comic);
-
-                FileUtility.WriteFile(pathService.BackupFilePath, Comics.ToList());
-            }
         }
     }
 }

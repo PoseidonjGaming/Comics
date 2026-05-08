@@ -57,13 +57,13 @@ namespace ModernDownladComics.windows
 
             AppWindow.Show();
 
-            options = App.Services.GetRequiredService<ISettingsService>().GetOptions();
+            options = App.Current.Services.GetRequiredService<ISettingsService>().GetOptions();
             Host = new(options.Hosts);
             Confirm = new(options.Confirms);
             Excluded = new(options.ExcludedHosts);
             Path = new(options.Paths);
 
-            credentials = App.Services.GetRequiredService<ICredentialsService>().GetCredentials();
+            credentials = App.Current.Services.GetRequiredService<ICredentialsService>().GetCredentials();
 
             settingsFrame.Navigate(typeof(SettingsComicPage),
                 new SettingsPageArgs<Comic?>(options.Comic, false));
@@ -110,11 +110,10 @@ namespace ModernDownladComics.windows
             options.ExcludedHosts = [.. Excluded];
             options.Paths = [.. Path];
             Comic? comic = options.Comic;
-            if (comic != null)
-                comic.Host = RegexUtility.HostRegex().Match(comic.URL).Value;
-            App.Services.GetRequiredService<ISettingsService>().SaveOptions();
+            comic?.Host = RegexUtility.HostRegex().Match(comic.URL).Value;
+            App.Current.Services.GetRequiredService<ISettingsService>().SaveOptions();
 
-            App.Services.GetRequiredService<ICredentialsService>().SaveCredentials();
+            App.Current.Services.GetRequiredService<ICredentialsService>().SaveCredentials();
         }
     }
 }

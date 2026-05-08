@@ -9,6 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using ModernDownladComics.Models;
+using ModernDownladComics.Models.View;
 using SearchComicsLib;
 using System;
 using System.Collections.Generic;
@@ -26,106 +27,56 @@ namespace ModernDownladComics.Pages;
 /// </summary>
 public sealed partial class ImportPage : Page
 {
-    public ObservableCollection<string> URLS { get; set; } = [];
-    public ObservableCollection<string> Files { get; set; }
-    public Comic Comic { get; set; }
-
-    private readonly IComicsBuilderService? comicService;
-    private readonly JdownloaderService? jdownloaderService;
-    private readonly IPathService pathService;
+    public ImportPageViewModel ViewModel { get; set; }
 
     public ImportPage()
     {
         InitializeComponent();
-        Comic = new Comic();
-
-        pathService = App.Services.GetRequiredService<IPathService>();
-        comicService = App.Services?.GetRequiredService<IComicsBuilderService>();
-
-        Files = new ObservableCollection<string>(Directory.GetFiles(pathService.ComicsDir)
-           .OrderBy(File.GetLastWriteTimeUtc).Select(dir => Path.GetFileName(dir)));
-
-        jdownloaderService = App.Services?.GetRequiredService<JdownloaderService>();
-    }
-
-    private async void AddBTN_Click(object sender, RoutedEventArgs e)
-    {
-        if (comicService == null)
-            return;
-
-        ContentDialog dialog = new()
+        ViewModel = App.Current.Services.GetRequiredService<ImportPageViewModel>();
+        ViewModel.ScanEvent += async () =>
         {
-            Title = "Scan the url",
-            Content = "Do you want to scan the url",
-            DefaultButton = ContentDialogButton.Primary,
-            PrimaryButtonText = "Yes",
-            SecondaryButtonText = "No",
-            XamlRoot = this.XamlRoot
+            ContentDialog dialog = new()
+            {
+                Title = "Scan the url",
+                Content = "Do you want to scan the url",
+                DefaultButton = ContentDialogButton.Primary,
+                PrimaryButtonText = "Yes",
+                SecondaryButtonText = "No",
+                XamlRoot = this.XamlRoot
+            };
+
+            var res = await dialog.ShowAsync();
+            return res == ContentDialogResult.Primary;
+        };
+        ViewModel.SearchDialogEvent += async (jd, pathService, name) =>
+        {
+            ContentDialog dialog = new()
+            {
+                Title = "Search",
+                Content = new SearchPage(ViewModel.AddToPanel(FileUtility.ComicsDirectory, "Manga"),
+              ViewModel.AddToPanel(pathService.BackupDirPath, "Backup"), jd ?? "Download not found",
+                $"Do you want to add {name}"),
+                PrimaryButtonText = "Yes",
+                DefaultButton = ContentDialogButton.Primary,
+                CloseButtonText = "No",
+                XamlRoot = this.XamlRoot
+            };
+            ContentDialogResult dialogRes = await dialog.ShowAsync();
+            return dialogRes == ContentDialogResult.Primary;
+        };
+        ViewModel.PathEvent += comic =>
+        {
+            Frame.Navigate(typeof(PathPage), new PathPageArgs(comic, typeof(ImportPage)));
         };
 
-        var res = await dialog.ShowAsync();
-        Comic? comic = await comicService.MakeComics(Comic.BaseURL, Comic.Author, Comic.PackageName, Comic.NumberPages,
-            res == ContentDialogResult.Primary);
-
-        Frame.Navigate(typeof(PathPage), new PathPageArgs(comic, typeof(ImportPage)));
-
-        Comic.Reset();
-    }
-
-    private void ClearBTN_Click(object sender, RoutedEventArgs e)
-    {
-        Comic.Reset();
+        DataContext = ViewModel;
     }
 
     private void FileCMB_SelectionChanged(object sender, SelectionChangedEventArgs e)
     {
-        if (sender is ComboBox box && box.SelectedValue is string file)
-        {
-            string path = Path.Combine(pathService.ComicsDir, file);
-            URLS = new ObservableCollection<string>(JsonUtility.GetURLS(File.ReadAllText(path)));
-        }
+        ViewModel.FileChanged();
     }
 
-    private async void SearchBTN_Click(object sender, RoutedEventArgs e)
-    {
-        if (jdownloaderService == null)
-            return;
 
-        string? jd = await jdownloaderService.GetComicJdownloader(Comic.Author, Comic.PackageName);
-
-        ContentDialog dialog = new()
-        {
-            Title = "Search",
-            Content = new SearchPage(AddToPanel(FileUtility.ComicsDirectory, "Manga"),
-                AddToPanel(pathService.BackupDirPath, "Backup"), jd ?? "Download not found",
-                $"Do you want to add {Comic.PackageName}"),
-            PrimaryButtonText = "Yes",
-            DefaultButton = ContentDialogButton.Primary,
-            CloseButtonText = "No",
-            XamlRoot = this.XamlRoot
-        };
-        ContentDialogResult dialogRes = await dialog.ShowAsync();
-        if (dialogRes == ContentDialogResult.Primary)
-        {
-           
-        }
-    }
-
-    private string AddToPanel(string path, string from)
-    {
-        if (Comic == null)
-            return "null";
-        string authorPath = SearchUtility.GetAuthorPath(Comic.Author, path);
-
-        IEnumerable<ExtractedResult<string>> results = SearchUtility.GetComics(authorPath,
-            Comic.PackageName);
-        ExtractedResult<string>? res = results.FirstOrDefault();
-
-        if (res == null)
-            return "Comic not found";
-
-        string fromPath = res.Value.Replace(authorPath, string.Empty)[1..];
-
-        return $"From {from}: {SearchUtility.CountPage(res.Value)} pages - {fromPath}";
-    }
+    
 }

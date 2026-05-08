@@ -31,8 +31,8 @@ namespace ModernDownladComics.Pages
             InitializeComponent();
             ViewModel = new("Start", "Job not started");
 
-            _jobService = App.Services?.GetRequiredService<JDownloadJobService>();
-            var service = App.Services?.GetRequiredService<IJobState>() as JobState;
+            _jobService = App.Current.Services.GetRequiredService<JDownloadJobService>();
+            var service = App.Current.Services.GetRequiredService<IJobState>() as JobState;
 
             service?.InitPage(ViewModel);
             DataContext = ViewModel;
@@ -77,7 +77,7 @@ namespace ModernDownladComics.Pages
                 await _jobService.RunAsync(_verifyTokenSource.Token);
                 AppStateStore.Instance.Comics.Clear();
                 ViewModel.IsDetermined = true;
-                var pathService= App.Services.GetRequiredService<IPathService>();
+                var pathService= App.Current.Services.GetRequiredService<IPathService>();
                 FileUtility.WriteFile(pathService.BackupFilePath,
                     AppStateStore.Instance.Comics);
                 Frame.Navigate(typeof(MainPage));

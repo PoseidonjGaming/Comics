@@ -6,7 +6,9 @@
     xmlns:local="using:ModernDownladComics.Pages"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    mc:Ignorable="d" DataContext="{Binding RelativeSource={RelativeSource Self}}"
+    xmlns:view="using:ModernDownladComics.Models.View" 
+    d:DataContext="{d:DesignInstance Type=view:PathPageViewModel}"
+    mc:Ignorable="d"
     Loaded="Page_Loaded" Unloaded="Page_Unloaded">
 
     <Grid HorizontalAlignment="Center">
@@ -31,15 +33,16 @@
                 <StackPanel Grid.Column="1" Orientation="Horizontal" Margin="0,0,10,0"
                             VerticalAlignment="Center">
                     <ComboBox x:Name="rootCMB" Width="275" Margin="0,0,10,0" FontSize="16"
-                              ItemsSource="{x:Bind Path=Roots, Mode=TwoWay}"
-                              SelectedIndex="0"/>
-                    <TextBox x:Name="pathTXT" Text="{Binding ElementName=pathLST, Path=SelectedItem}" 
+                              ItemsSource="{Binding Roots, Mode=TwoWay}"
+                              SelectedItem="{Binding SelectedRoot, Mode=TwoWay}"/>
+                    <TextBox x:Name="pathTXT" Text="{Binding SelectedPath, Mode=TwoWay}" 
                              HorizontalAlignment="Stretch" Width="750"/>
                 </StackPanel>
             </Grid>
         </StackPanel>
 
-        <ListView Grid.Row="1" x:Name="pathLST" ItemsSource="{x:Bind Paths, Mode=TwoWay}"/>
+        <ListView Grid.Row="1" x:Name="pathLST" ItemsSource="{Binding Paths, Mode=TwoWay}"
+                  SelectedItem="{Binding SelectedPath, Mode=TwoWay}"/>
 
         <Grid Grid.Row="2" Margin="10">
             <Grid.RowDefinitions>
@@ -50,10 +53,11 @@
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
 
-            <Button x:Name="selectBTN" Width="100" Content="Select Path" FontSize="16"
-                    HorizontalAlignment="Center" Click="SelectBTN_Click" Background="#229c0a"/>
-            <Button x:Name="cancelBTN" Grid.Column="1" Width="100" Content="Cancel" FontSize="16"
-                    HorizontalAlignment="Center" Click="CancelBTN_Click" Background="#d91c20"/>
+            <Button Width="100" Content="Select Path" FontSize="16" HorizontalAlignment="Center" 
+                    Command="{Binding SelectCommand}" Background="#229c0a"/>
+            <Button Grid.Column="1" Width="100" Content="Cancel" FontSize="16" 
+                    HorizontalAlignment="Center" Command="{Binding CancelCommand}"
+                    Background="#d91c20"/>
         </Grid>
     </Grid>
 </Page>

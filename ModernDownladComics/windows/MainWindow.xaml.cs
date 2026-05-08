@@ -27,7 +27,7 @@ namespace ModernDownladComics
             InitializeComponent();
 
             WindowService.Instance.InitOwner(this);
-            var webService = App.Services?.GetRequiredService<IWebService>() as WebService;
+            var webService = App.Current.Services.GetRequiredService<IWebService>() as WebService;
             webService?.Init(frame);
             Init();
             frame.Navigate(typeof(MainPage));
@@ -78,7 +78,7 @@ namespace ModernDownladComics
 
         public static void Init()
         {
-            var pathService = App.Services.GetRequiredService<IPathService>();
+            var pathService = App.Current.Services.GetRequiredService<IPathService>();
             if (File.Exists(pathService.BackupFilePath))
               AppStateStore.Instance.Comics = 
                     new(FileUtility.ReadFile<List<Comic>>(pathService.BackupFilePath) ?? []);

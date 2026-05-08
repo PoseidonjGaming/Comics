@@ -1,18 +1,19 @@
-﻿using ComicsInfraLib;
+﻿
+// To learn more about WinUI, the WinUI project structure,
+// and more about our project templates, see: http://aka.ms/winui-project-info.
+
+using ComicsInfraLib;
 using ComicsInfraLib.Services;
-using ComicsLib.Utility;
 using ComicsServiceLib;
 using ComicsServiceLib.UI;
 using JDownloader;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
+using ModernDownladComics.Models.View;
 using ModernDownladComics.Services;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-
-// To learn more about WinUI, the WinUI project structure,
-// and more about our project templates, see: http://aka.ms/winui-project-info.
 
 namespace ModernDownladComics
 {
@@ -22,7 +23,9 @@ namespace ModernDownladComics
     public partial class App : Application
     {
         private Window? _window;
-        public static ServiceProvider? Services { get; private set; }
+        public ServiceProvider Services { get; }
+
+        public new static App Current => (App)Application.Current;
 
         /// <summary>
         /// Initializes the singleton application object.  This is the first line of authored code
@@ -31,9 +34,7 @@ namespace ModernDownladComics
         public App()
         {
             InitializeComponent();
-            ConfigureService();
-            
-
+            Services = ConfigureService();
         }
 
 
@@ -48,28 +49,44 @@ namespace ModernDownladComics
             _window.Activate();
         }
 
-        private static void ConfigureService()
+        private static ServiceProvider ConfigureService()
         {
             ServiceCollection service = new();
 
-            service.AddSingleton<ISettingsService, OptionService>();
-            service.AddSingleton<ICredentialsService, CredentialsService>();
-            service.AddSingleton<IHostService, HostSelectionService>();
-            service.AddSingleton<IHtmlParserService, HtmlParserService>();
-            service.AddSingleton<IWebService, WebService>();
-            service.AddSingleton<IComicsBuilderService, ComicsBuilderService>();
-            service.AddSingleton<IJobState, JobState>();
-            service.AddSingleton<IPathService, PathService>();
-           
-            service.AddSingleton(provider => new Lazy<Task<JDownloaderClient>>(()=>
-                JDownloaderFactory.CreateAsnc(provider.GetRequiredService<ICredentialsService>()), 
+            AddServices(service);
+
+            service.AddSingleton(provider => new Lazy<Task<JDownloaderClient>>(() =>
+                JDownloaderFactory.CreateAsnc(provider.GetRequiredService<ICredentialsService>()),
                 LazyThreadSafetyMode.ExecutionAndPublication));
 
             service.AddSingleton<JdownloaderService>();
             service.AddSingleton<ListenerService>();
             service.AddSingleton<JDownloadJobService>();
 
-            Services = service.BuildServiceProvider();
+            AddViewModels(service);
+
+            return service.BuildServiceProvider();
+        }
+
+        private static void AddViewModels(ServiceCollection service)
+        {
+            service.AddSingleton<MainPageViewModel>();
+            service.AddTransient<ArchivePageViewModel>();
+            service.AddTransient<ImportPageViewModel>();
+            service.AddTransient<AddPageViewModel>();
+            service.AddTransient<PathPageViewModel>();
+        }
+
+        private static void AddServices(ServiceCollection services)
+        {
+            services.AddSingleton<ISettingsService, OptionService>();
+            services.AddSingleton<ICredentialsService, CredentialsService>();
+            services.AddSingleton<IHostService, HostSelectionService>();
+            services.AddSingleton<IHtmlParserService, HtmlParserService>();
+            services.AddSingleton<IWebService, WebService>();
+            services.AddSingleton<IComicsBuilderService, ComicsBuilderService>();
+            services.AddSingleton<IJobState, JobState>();
+            services.AddSingleton<IPathService, PathService>();
         }
     }
 }

@@ -39,7 +39,7 @@ namespace ModernDownladComics.windows
 
             AppWindow.SetPresenter(presenter);
 
-            foreach (var host in App.Services.GetRequiredService<ISettingsService>().GetOptions().Hosts)
+            foreach (var host in App.Current.Services.GetRequiredService<ISettingsService>().GetOptions().Hosts)
             {
                 Hosts.Add(host);
             }
@@ -56,7 +56,7 @@ namespace ModernDownladComics.windows
 
         private void ComicsHostCMB_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            var service = App.Services?.GetRequiredService<IHtmlParserService>();
+            var service = App.Current.Services.GetRequiredService<IHtmlParserService>();
             HtmlNode? bodyNode= service?.LoadBody(Comic.HtmlBody ?? "");
             if (bodyNode != null) { 
                 HtmlNode? node = service?.FindNodeWithAttribute(bodyNode, comicsHostCMB.Text, "href");

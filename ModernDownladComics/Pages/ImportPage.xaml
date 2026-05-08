@@ -6,7 +6,9 @@
     xmlns:local="using:ModernDownladComics.Pages"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    mc:Ignorable="d" DataContext="{Binding RelativeSource={RelativeSource Self}}">
+    xmlns:vw="using:ModernDownladComics.Models.View"
+    d:DataContext="{d:DesignInstance Type=vw:ImportPageViewModel}"
+    mc:Ignorable="d">
 
     
     <Grid>
@@ -22,7 +24,8 @@
         <StackPanel Orientation="Vertical" Grid.RowSpan="2">
             <ComboBox Margin="10" FontSize="16" HorizontalAlignment="Stretch"
                       VerticalAlignment="Center" ItemsSource="{Binding Files, Mode=TwoWay}"
-                      SelectedIndex="0" SelectionChanged="FileCMB_SelectionChanged"/>
+                      SelectedItem="{Binding SelectedFile}"
+                      SelectionChanged="FileCMB_SelectionChanged"/>
             <ListView x:Name="urlLST" Margin="10" ItemsSource="{Binding URLS, Mode=TwoWay}"
                       SelectedItem="{Binding Comic.BaseURL, Mode=TwoWay}"/>
         </StackPanel>
@@ -54,17 +57,17 @@
             <StackPanel Orientation="Horizontal" Margin="10,10,10,12" VerticalAlignment="Bottom">
                 <Button x:Name="addBTN" Content="Add Link" Margin="10,0,10,0" Padding="10,0,10,0"
                         Height="30" FontSize="16" Background="{StaticResource AddButton}"
-                        Click="AddBTN_Click"/>
+                       Command="{Binding AddComicCommand}"/>
                 <Button x:Name="searchBTN" Content="Search Link" 
                         Margin="10,0,10,0" Padding="10,0,10,0"
                         Height="30" FontSize="16"
                         Background="{StaticResource StandardButton}" 
-                        Click="SearchBTN_Click"/>
+                        Command="{Binding SearchComicCommand}"/>
                 <Button x:Name="clearBTN" Content="Clear Link"
                         Margin="10,0,0,0" Padding="10,0,10,0"
                         Height="30" FontSize="16" 
                         Background="{StaticResource ClearButton}" 
-                        Click="ClearBTN_Click"/>
+                         Command="{Binding ResetComicCommand}"/>
             </StackPanel>
             
         </StackPanel>

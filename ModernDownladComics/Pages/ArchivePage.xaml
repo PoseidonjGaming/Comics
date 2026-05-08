@@ -6,8 +6,11 @@
     xmlns:local="using:ModernDownladComics.Pages"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    mc:Ignorable="d" DataContext="{Binding RelativeSource={RelativeSource Self}}"
-    Loaded="Page_Loaded">
+    xmlns:vw="using:ModernDownladComics.Models.View"
+    xmlns:m="using:ModernDownladComics.Models"
+    mc:Ignorable="d"
+    d:DataContext="{d:DesignInstance Type=vw:ArchivePageViewModel}"
+    Loaded="Page_Loaded" DataContext="{x:Bind ModelView}">
 
     <Grid>
         <Grid.RowDefinitions>
@@ -21,17 +24,18 @@
 
         <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center"
                     Margin="10">
-            <Button x:Name="searchBTN" Content="Search" FontSize="16" Click="SearchBTN_Click"/>
-            <Button x:Name="restoreBTN" Content="Restore" FontSize="16" Click="RestoreBTN_Click"
-                     Margin="10,0,10,0"/>
-            <Button x:Name="deleteBTN" Content="Delete" FontSize="16" Click="DeleteBTN_Click"/>
+            <Button x:Name="searchBTN" Content="Search" FontSize="16" 
+                    Command="{Binding SearchCommand}"/>
+            <Button Content="Restore" FontSize="16" Margin="10,0,10,0"
+                    Command="{Binding RestoreCommand}"/>
+            <Button Content="Delete" FontSize="16" Command="{Binding DeleteItemCommand}"/>
         </StackPanel>
 
         <TreeView x:Name="folderTree" Grid.Row="1" Margin="10" CanDrag="False"
-                  ItemsSource="{Binding Items, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
-                  SelectedItem="{x:Bind SelectedItem, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                  ItemsSource="{Binding Items, Mode=TwoWay}" 
+                  SelectedItem="{Binding SelectedItem, Mode=TwoWay}">
             <TreeView.ItemTemplate>
-                <DataTemplate x:DataType="local:TreeItem">
+                <DataTemplate x:DataType="m:TreeItem">
                     <TreeViewItem ItemsSource="{x:Bind Children}" Content="{x:Bind Name}"/>
                 </DataTemplate>
             </TreeView.ItemTemplate>

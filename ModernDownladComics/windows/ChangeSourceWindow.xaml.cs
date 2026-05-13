@@ -56,17 +56,26 @@ namespace ModernDownladComics.windows
 
         private void ComicsHostCMB_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            var service = App.Current.Services.GetRequiredService<IHtmlParserService>();
-            HtmlNode? bodyNode= service?.LoadBody(Comic.HtmlBody ?? "");
-            if (bodyNode != null) { 
-                HtmlNode? node = service?.FindNodeWithAttribute(bodyNode, comicsHostCMB.Text, "href");
-                if (node != null) {
-                    string newUrl = node.GetAttributeValue("href", "");
-                    Comic.URL = newUrl;
-                    Comic.Host = RegexUtility.HostRegex().Match(newUrl).Value;
+            if (comicsHostCMB.SelectedItem is string host)
+            {
+                var service = App.Current.Services.GetRequiredService<IHtmlParserService>();
+                HtmlNode? bodyNode = service?.LoadBody(Comic.HtmlBody ?? "");
+                if (bodyNode != null)
+                {
+                    HtmlNode? node = service?.FindNodeWithAttribute(bodyNode, host, "href");
+                    if (node != null)
+                    {
+                        string newUrl = node.GetAttributeValue("href", "");
+                        Comic.URL = newUrl;
+                        Comic.Host = RegexUtility.HostRegex().Match(newUrl).Value;
+                    }
                 }
             }
-            
+        }
+
+        private void Window_Closed(object sender, WindowEventArgs args)
+        {
+            App.Current.Services.GetRequiredService<IStateRepository>().Save();
         }
     }
 }

@@ -13,7 +13,8 @@
         <MicaBackdrop Kind="BaseAlt"/>
     </Window.SystemBackdrop>
 
-    <NavigationView PaneDisplayMode="Left" SelectionChanged="NavigationView_SelectionChanged"
+    <NavigationView x:Name="navView" PaneDisplayMode="Left" 
+                    SelectionChanged="NavigationView_SelectionChangedAsync"
                     IsSettingsVisible="False" IsPaneOpen="True" IsBackButtonVisible="Collapsed"
                     IsPaneToggleButtonVisible="False" OpenPaneLength="200">
         
@@ -30,6 +31,10 @@
             <NavigationViewItem Content="Path" Tag="path" Icon="Save"/>
             <NavigationViewItem Content="Credentials" Tag="credentials" Icon="Permissions"/>
         </NavigationView.MenuItems>
+        <NavigationView.FooterMenuItems>
+            <NavigationViewItem Content="Import Settigns" Tag="import_settings" Icon="OpenFile"/>
+            <NavigationViewItem Content="Export Settigns" Tag="export_settings" Icon="SaveLocal"/>
+        </NavigationView.FooterMenuItems>
         <Frame x:Name="settingsFrame"/>
     </NavigationView>
 </Window>

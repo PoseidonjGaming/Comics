@@ -87,6 +87,9 @@ namespace ModernDownladComics
             services.AddSingleton<IComicsBuilderService, ComicsBuilderService>();
             services.AddSingleton<IJobState, JobState>();
             services.AddSingleton<IPathService, PathService>();
+            services.AddSingleton<IStateRepository, StateRepository>();
+            services.AddTransient<ArchiveService>();
+            services.AddTransient<IScanService, ScanService>();
         }
     }
 }

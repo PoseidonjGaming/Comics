@@ -36,7 +36,7 @@
       Executable="$targetnametoken$.exe"
       EntryPoint="$targetentrypoint$">
       <uap:VisualElements
-        DisplayName="ModernDownladComics"
+        DisplayName="ModernDownloadComics"
         Description="ModernDownladComics"
         BackgroundColor="transparent"
         Square150x150Logo="Assets\Square150x150Logo.png"

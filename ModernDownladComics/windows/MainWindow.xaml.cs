@@ -2,14 +2,18 @@ using ComicsLib.Models;
 using ComicsLib.Utility;
 using ComicsServiceLib.UI;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.Windows.AppNotifications;
+using Microsoft.Windows.AppNotifications.Builder;
+using Microsoft.Windows.Storage.Pickers;
 using ModernDownladComics.Pages;
 using ModernDownladComics.Services;
 using ModernDownladComics.windows;
 using ModernDownloadComics.Services;
+using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 
 // To learn more about WinUI, the WinUI project structure,
@@ -25,7 +29,7 @@ namespace ModernDownladComics
         public MainWindow()
         {
             InitializeComponent();
-
+            AppWindow.SetIcon("Assets/download comics.ico");
             WindowService.Instance.InitOwner(this);
             var webService = App.Current.Services.GetRequiredService<IWebService>() as WebService;
             webService?.Init(frame);
@@ -61,8 +65,9 @@ namespace ModernDownladComics
                             frame.Navigate(typeof(SendPage));
                             navView.SelectedItem = null;
                         }
-                            
+
                         break;
+                   
                     default:
                         frame.Navigate(typeof(MainPage));
                         break;
@@ -80,15 +85,20 @@ namespace ModernDownladComics
         {
             var pathService = App.Current.Services.GetRequiredService<IPathService>();
             if (File.Exists(pathService.BackupFilePath))
-              AppStateStore.Instance.Comics = 
-                    new(FileUtility.ReadFile<List<Comic>>(pathService.BackupFilePath) ?? []);
+                AppStateStore.Instance.Comics =
+                      new(FileUtility.ReadFile<List<Comic>>(pathService.BackupFilePath) ?? []);
 
             if (File.Exists(pathService.TrackFilePath))
-                AppStateStore.Instance.Tracks = 
+                AppStateStore.Instance.Tracks =
                     FileUtility.ReadFile<List<Track>>(pathService.TrackFilePath) ?? [];
 
             FileUtility.CreateFolder(pathService.BackupDirPath);
             FileUtility.CreateFolder(pathService.ComicsDir);
+        }
+
+        private void Window_Closed(object sender, WindowEventArgs args)
+        {
+            App.Current.Services.GetRequiredService<IStateRepository>().Save();
         }
     }
 }

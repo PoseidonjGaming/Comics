@@ -7,7 +7,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:vw="using:ModernDownladComics.Models.View"
-    xmlns:m="using:ModernDownladComics.Models"
+    xmlns:m="using:ComicsLib.Models"
     mc:Ignorable="d"
     d:DataContext="{d:DesignInstance Type=vw:ArchivePageViewModel}"
     Loaded="Page_Loaded" DataContext="{x:Bind ModelView}">

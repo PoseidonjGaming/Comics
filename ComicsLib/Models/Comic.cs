@@ -55,12 +55,24 @@ namespace ComicsLib.Models
             }
         }
 
+        private string _filename;
         [JsonProperty]
-        public string Filename { get; set; } = "";
+        public string Filename { 
+            get => _filename;
+            set
+            {
+                if (_filename != value)
+                {
+                    _filename = value.Trim();
+                    OnPropertyChanged(nameof(Filename));
+                }
+            }
+        }
 
         public string Extansion { get; set; } = "";
 
         private string _host = "";
+        [JsonProperty]
         public string Host
         {
             get => _host;
@@ -122,7 +134,7 @@ namespace ComicsLib.Models
         public bool DeepAnalyze { get; set; } = true;
 
         private string? _htmlBody;
-
+        [JsonProperty]
         public string? HtmlBody
         {
             get => _htmlBody;

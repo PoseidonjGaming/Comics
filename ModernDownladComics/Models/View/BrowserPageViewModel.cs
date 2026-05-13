@@ -6,10 +6,9 @@ using System.Threading.Tasks;
 
 namespace ModernDownladComics.Models.View
 {
-    public partial class BrowserPageViewModel : ObservableObject
+    public class BrowserPageViewModel
     {
-        [ObservableProperty]
-        public partial string? URL { get; set; }
+        public string URL { get; set; } = "";
 
         private RetrieveSource? RetrieveSource { get; set; }
         private TaskCompletionSource<string>? CompletionSource { get; set; }
@@ -20,7 +19,6 @@ namespace ModernDownladComics.Models.View
             URL = args.Url;
             RetrieveSource = args.RetrieveSource;
             CompletionSource = args.Source;
-
         }
 
         public async Task OnNavigationCompleted(Func<string, Task<string>> getHtml, string currentUrl)
@@ -29,10 +27,10 @@ namespace ModernDownladComics.Models.View
 
             try
             {
+                string js = "document.documentElement.outerHTML";
+                string jsonResult = await getHtml(js);
                 if (RetrieveSource == ComicsLib.Models.RetrieveSource.HTML)
                 {
-                    string js = "document.documentElement.outerHTML";
-                    string jsonResult = await getHtml(js);
                     CompletionSource.TrySetResult(JsonSerializer.Deserialize<string>(jsonResult) ?? "empty");
                 }
                 else
@@ -40,15 +38,14 @@ namespace ModernDownladComics.Models.View
                     CompletionSource.TrySetResult(currentUrl);
                 }
 
-
+                return;
             }
             catch (Exception)
             {
             }
         }
 
-        public void Cleanup()
-        {
+        public void CleanUp() { 
             CompletionSource = null;
             RetrieveSource = null;
         }

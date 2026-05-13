@@ -10,6 +10,7 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using ModernDownladComics.Models;
 using ModernDownladComics.Models.View;
+using ModernDownladComics.Utilities;
 using SearchComicsLib;
 using System;
 using System.Collections.Generic;
@@ -48,14 +49,18 @@ public sealed partial class ImportPage : Page
             var res = await dialog.ShowAsync();
             return res == ContentDialogResult.Primary;
         };
-        ViewModel.SearchDialogEvent += async (jd, pathService, name) =>
+        ViewModel.SearchDialogEvent += async (args) =>
         {
+            string manga = ContentPageUtility.Search(args.Name, args.Author,
+                FileUtility.ComicsDirectory, "Manga");
+            string backup = ContentPageUtility.Search(args.Name, args.Author,
+              args.Path, "Backup");
             ContentDialog dialog = new()
             {
                 Title = "Search",
-                Content = new SearchPage(ViewModel.AddToPanel(FileUtility.ComicsDirectory, "Manga"),
-              ViewModel.AddToPanel(pathService.BackupDirPath, "Backup"), jd ?? "Download not found",
-                $"Do you want to add {name}"),
+                Content = new SearchPage(manga, backup,!string.IsNullOrEmpty(args.Jd)?
+                $"From JDownloader {args.Jd}" : "Download not found",
+                $"Do you want to add {args.Name}"),
                 PrimaryButtonText = "Yes",
                 DefaultButton = ContentDialogButton.Primary,
                 CloseButtonText = "No",
@@ -72,11 +77,8 @@ public sealed partial class ImportPage : Page
         DataContext = ViewModel;
     }
 
-    private void FileCMB_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    private void Page_Loaded(object sender, RoutedEventArgs e)
     {
-        ViewModel.FileChanged();
+        ViewModel.Load();
     }
-
-
-    
 }

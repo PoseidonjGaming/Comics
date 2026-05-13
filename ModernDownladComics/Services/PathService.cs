@@ -1,4 +1,5 @@
-﻿using ComicsServiceLib.UI;
+﻿using ComicsLib.Utility;
+using ComicsServiceLib.UI;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -21,6 +22,11 @@ namespace ModernDownladComics.Services
         public string GetAppRoot()
         {
             return Path.GetDirectoryName(Environment.ProcessPath) ?? "";
+        }
+
+        public void MoveComic(string destPath, string sourcePath)
+        {
+            Directory.Move(sourcePath, destPath);
         }
     }
 }

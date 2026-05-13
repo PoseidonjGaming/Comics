@@ -11,6 +11,7 @@ using Microsoft.Web.WebView2.Core;
 using ModernDownladComics.Models;
 using ModernDownladComics.Models.View;
 using System;
+using System.Threading.Tasks;
 using Windows.Foundation;
 
 namespace ModernDownladComics.Pages
@@ -53,6 +54,7 @@ namespace ModernDownladComics.Pages
 
             browser.CoreWebView2.Profile?.ClearBrowsingDataAsync(CoreWebView2BrowsingDataKinds.Cookies | CoreWebView2BrowsingDataKinds.CacheStorage | CoreWebView2BrowsingDataKinds.AllProfile);
 
+
             browser.CoreWebView2.Navigate(ModelView.URL);
         }
 
@@ -61,16 +63,14 @@ namespace ModernDownladComics.Pages
             if (args.IsSuccess)
             {
                 await ModelView.OnNavigationCompleted(
-                        async js => await browser.CoreWebView2.ExecuteScriptAsync(js),
-                        browser.Source.AbsoluteUri);
+                          async js => await browser.CoreWebView2.ExecuteScriptAsync(js),
+                          browser.Source.AbsoluteUri);
             }
         }
 
         private void Page_Unloaded(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
         {
-
-            ModelView.Cleanup();
-
+            ModelView.CleanUp();
             if (browser != null)
             {
                 try

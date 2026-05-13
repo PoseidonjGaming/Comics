@@ -36,7 +36,7 @@ namespace ModernDownladComics.Services
 
         public void UpdateProgess(int progress, bool IsDetermined)
         {
-            _viewModel?.ProgessValue = progress;
+            _viewModel?.ProgressValue = progress;
             _viewModel?.IsDetermined = IsDetermined;                
         }
 

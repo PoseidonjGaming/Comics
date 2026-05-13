@@ -8,7 +8,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:vw="using:ModernDownladComics.Models.View"
     d:DataContext="{d:DesignInstance Type=vw:ImportPageViewModel}"
-    mc:Ignorable="d">
+    mc:Ignorable="d" Loaded="Page_Loaded">
 
     
     <Grid>
@@ -21,15 +21,19 @@
             <ColumnDefinition Width="250*"/>
         </Grid.ColumnDefinitions>
 
-        <StackPanel Orientation="Vertical" Grid.RowSpan="2">
+        <Grid Grid.RowSpan="2">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
             <ComboBox Margin="10" FontSize="16" HorizontalAlignment="Stretch"
                       VerticalAlignment="Center" ItemsSource="{Binding Files, Mode=TwoWay}"
-                      SelectedItem="{Binding SelectedFile}"
-                      SelectionChanged="FileCMB_SelectionChanged"/>
-            <ListView x:Name="urlLST" Margin="10" ItemsSource="{Binding URLS, Mode=TwoWay}"
+                      SelectedItem="{Binding SelectedFile, Mode=TwoWay}"/>
+            <ListView Grid.Row="1" x:Name="urlLST" Margin="10" 
+                      ItemsSource="{Binding URLS, Mode=TwoWay}"
                       SelectedItem="{Binding Comic.BaseURL, Mode=TwoWay}"/>
-        </StackPanel>
-        
+        </Grid>
+
         <WebView2 x:Name="browser" Grid.Column="1" Margin="10" 
                   Source="{Binding Comic.BaseURL, Mode=TwoWay}"/>
 

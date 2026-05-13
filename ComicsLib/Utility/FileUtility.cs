@@ -23,5 +23,11 @@ namespace ComicsLib.Utility
                 Directory.CreateDirectory(path);
             }
         }
+
+        public static void DeleteFolder(string path)
+        {
+            if (Directory.Exists(path))
+                Directory.Delete(path, true);
+        }
     }
 }

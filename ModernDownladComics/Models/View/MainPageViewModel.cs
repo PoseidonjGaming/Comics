@@ -5,35 +5,22 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using ModernDownladComics.windows;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Text;
 
 namespace ModernDownladComics.Models.View
 {
-    public partial class MainPageViewModel : ObservableObject
+    public partial class MainPageViewModel(IPathService pathService,
+        IStateRepository stateRepository) : ObservableObject
     {
-        [ObservableProperty]
-        public partial Array Priorities { get; set; }
+        public Array Priorities { get; } = Enum.GetValues<Priority>();
 
-        [ObservableProperty]
-        public partial ObservableCollection<Comic> Comics { get; set; }
+        public ObservableCollection<Comic> Comics { get; } = AppStateStore.Instance.Comics;
 
-        [ObservableProperty]
-        public partial int SelectedIndex { get; set; }
+        public event Action<Comic>? ChangeSourceRequested;
+
 
         [ObservableProperty]
         public partial Comic? SelectedComic { get; set; }
-
-        private IPathService _pathService;
-
-        public MainPageViewModel(IPathService pathService)
-        {
-            _pathService = pathService;
-            Priorities = Enum.GetValues<Priority>();
-            Comics = AppStateStore.Instance.Comics;
-            SelectedComic = new();
-        }
 
         [RelayCommand]
         private void Unselect()
@@ -44,12 +31,10 @@ namespace ModernDownladComics.Models.View
         [RelayCommand]
         private void Delete()
         {
-
             if (SelectedComic != null)
             {
                 Comics.Remove(SelectedComic);
-
-                FileUtility.WriteFile(_pathService.BackupFilePath, Comics);
+                stateRepository.Save();
             }
         }
 
@@ -57,9 +42,7 @@ namespace ModernDownladComics.Models.View
         private void ChangeSource()
         {
             if (SelectedComic != null)
-            {
-                _ = new ChangeSourceWindow(SelectedComic);
-            }
+                ChangeSourceRequested?.Invoke(SelectedComic);
         }
     }
 }

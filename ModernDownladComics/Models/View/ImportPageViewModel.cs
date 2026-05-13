@@ -6,7 +6,6 @@ using ComicsServiceLib.UI;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using FuzzierSharp.Extractor;
-using Microsoft.UI.Xaml.Controls.Primitives;
 using ModernDownladComics.Services;
 using SearchComicsLib;
 using System;
@@ -18,38 +17,43 @@ using System.Threading.Tasks;
 
 namespace ModernDownladComics.Models.View
 {
-    public partial class ImportPageViewModel : ObservableObject
+    public partial class ImportPageViewModel(IComicsBuilderService comicService,
+        JdownloaderService jdownloaderService, IPathService pathService) : ObservableObject
     {
-        [ObservableProperty]
-        public partial ObservableCollection<string> URLS { get; set; }
-        public ObservableCollection<string> Files { get; }
+        public ObservableCollection<string> URLS { get; } = [];
+        public ObservableCollection<string> Files { get; } = [];
 
         [ObservableProperty]
-        public partial Comic Comic { get; set; }
+        public partial Comic Comic { get; set; } = new Comic();
 
-        [ObservableProperty]
-        public partial string SelectedFile { get; set; }
-
-        private readonly IComicsBuilderService _comicService;
-        private readonly JdownloaderService _jdownloaderService;
-        private readonly IPathService _pathService;
+        private string _selectedFile = "";
+        public string SelectedFile
+        {
+            get => _selectedFile;
+            set
+            {
+                if (SetProperty(ref _selectedFile, value))
+                {
+                    FileChanged();
+                }
+            }
+        }
 
         public event Func<Task<bool>>? ScanEvent;
-        public event Func<string?, IPathService, string, Task<bool>>? SearchDialogEvent;
+        public event Func<DialogArgs, Task<bool>>? SearchDialogEvent;
         public event Action<Comic?>? PathEvent;
 
-        public ImportPageViewModel(IComicsBuilderService comicService,
-            JdownloaderService jdownloaderService, IPathService pathService)
+        public void Load()
         {
-            URLS = [];
-            Files = new ObservableCollection<string>(Directory.GetFiles(pathService.ComicsDir)
-           .OrderBy(File.GetLastWriteTimeUtc).Select(dir => Path.GetFileName(dir)));
-            Comic = new Comic();
-            SelectedFile = Files.First();
+            Files.Clear();
+            foreach (var file in Directory.GetFiles(pathService.ComicsDir)
+                .OrderBy(File.GetLastWriteTimeUtc).Select(dir => Path.GetFileName(dir)))
+            {
+                Files.Add(file);
+            }
 
-            _comicService = comicService;
-            _jdownloaderService = jdownloaderService;
-            _pathService = pathService;
+            SelectedFile = Files.FirstOrDefault() ?? "";
+
         }
 
         [RelayCommand]
@@ -58,10 +62,10 @@ namespace ModernDownladComics.Models.View
             if (ScanEvent == null || PathEvent == null) return;
 
             bool res = await ScanEvent.Invoke();
-            Comic? comic = await _comicService.MakeComics(Comic.BaseURL,
+            Comic? comic = await comicService.MakeComics(Comic.BaseURL,
                 Comic.Author, Comic.PackageName, Comic.NumberPages, res);
-
-            PathEvent.Invoke(comic);
+            if (comic != null)
+                PathEvent.Invoke(comic);
 
             Comic.Reset();
         }
@@ -74,40 +78,35 @@ namespace ModernDownladComics.Models.View
 
         public void FileChanged()
         {
-            string path = Path.Combine(_pathService.ComicsDir, SelectedFile);
-            URLS = new ObservableCollection<string>(JsonUtility.GetURLS(File.ReadAllText(path)));
+            if (!string.IsNullOrEmpty(SelectedFile))
+            {
+                string path = Path.Combine(pathService.ComicsDir, SelectedFile);
+                if (File.Exists(path))
+                {
+                    URLS.Clear();
+                    JsonUtility.GetURLS(File.ReadAllText(path)).ForEach(URLS.Add);
+                }
+
+            }
+
         }
 
         [RelayCommand]
         public async Task SearchComic()
         {
             if (SelectedFile == null || SearchDialogEvent == null) return;
+            if (string.IsNullOrWhiteSpace(Comic.Author) || 
+                string.IsNullOrWhiteSpace(Comic.PackageName))
+                return;
 
-            string? jd = await _jdownloaderService.GetComicJdownloader(Comic.Author,
+            string? jd = await jdownloaderService.GetComicJdownloader(Comic.Author,
                Comic.PackageName);
-            bool res = await SearchDialogEvent.Invoke(jd, _pathService, Comic.PackageName);
+            bool res = await SearchDialogEvent.Invoke(new(Comic.PackageName, Comic.Author,
+                pathService.BackupDirPath, jd));
             if (res)
             {
                 await AddComic();
             }
-        }
-
-        public string AddToPanel(string path, string from)
-        {
-            if (Comic == null)
-                return "null";
-            string authorPath = SearchUtility.GetAuthorPath(Comic.Author, path);
-
-            IEnumerable<ExtractedResult<string>> results = SearchUtility.GetComics(authorPath,
-                Comic.PackageName);
-            ExtractedResult<string>? res = results.FirstOrDefault();
-
-            if (res == null)
-                return "Comic not found";
-
-            string fromPath = res.Value.Replace(authorPath, string.Empty)[1..];
-
-            return $"From {from}: {SearchUtility.CountPage(res.Value)} pages - {fromPath}";
         }
     }
 }

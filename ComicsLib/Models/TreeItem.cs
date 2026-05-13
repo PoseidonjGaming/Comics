@@ -1,13 +1,6 @@
-﻿using ComicsServiceLib.UI;
-using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.IO;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.ObjectModel;
 
-namespace ModernDownladComics.Models
+namespace ComicsLib.Models
 {
     public class TreeItem(string path, TreeItem? parent = null)
     {
@@ -16,12 +9,7 @@ namespace ModernDownladComics.Models
         public TreeItem? Parent = parent;
         public ObservableCollection<TreeItem> Children { get; set; } = [];
 
-        public string GetAuthor()
-        {
-            var pathService = App.Current.Services.GetRequiredService<IPathService>();
-            return Path.Replace(pathService.BackupDirPath, string.Empty)[1..]
-                .Split(System.IO.Path.DirectorySeparatorChar).First();
-        }
+        
 
         public TreeItem? Remove()
         {

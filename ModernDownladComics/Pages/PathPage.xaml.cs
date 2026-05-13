@@ -60,7 +60,7 @@ namespace ModernDownladComics.Pages
 
         private async void Page_Loaded(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
         {
-            ViewModel.Load(() => IsEnabled, state => IsEnabled = state);
+           await ViewModel.Load(() => IsEnabled, state => IsEnabled = state);
         }
 
 

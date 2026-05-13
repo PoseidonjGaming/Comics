@@ -11,6 +11,8 @@ namespace ComicsServiceLib.UI
 
         public string BackupFilePath { get; }
         public string TrackFilePath { get; }
+        
         string GetAppRoot();
+        void MoveComic(string destPath, string sourcePath);
     }
 }

@@ -8,8 +8,7 @@ namespace ModernDownladComics.Services
 {
     internal class OptionService : ISettingsService
     {
-        private readonly Lazy<Options> _options;
-        public Options Options => _options.Value;
+        public Options Options { get; set; }
 
         public readonly string _optionPath;
         private readonly string _optionDirectory;
@@ -19,7 +18,7 @@ namespace ModernDownladComics.Services
             _optionDirectory = Path.Combine(pathService.GetAppRoot(), "Settings");
             _optionPath = Path.Combine(_optionDirectory,
                 $"{Environment.UserName}_settings.json");
-            _options = new(LoadOption);
+            Options = LoadOption();
         }
         private Options LoadOption()
         {
@@ -35,7 +34,12 @@ namespace ModernDownladComics.Services
         }
         public Options GetOptions()
         {
-            return _options.Value;
+            return Options;
+        }
+
+        public void SetOptions(Options options)
+        {
+            Options = options;
         }
 
         public void SaveOptions()

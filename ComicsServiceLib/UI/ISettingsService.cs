@@ -5,6 +5,7 @@ namespace ComicsServiceLib.UI
     public interface ISettingsService
     {
         Options GetOptions();
+        void SetOptions(Options options);
         void SaveOptions();
     }
 }

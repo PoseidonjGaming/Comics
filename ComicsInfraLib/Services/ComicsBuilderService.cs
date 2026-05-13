@@ -19,13 +19,12 @@ namespace ComicsInfraLib.Services
             }
 
             Options options = settings.GetOptions();
-            Comic? comic = options.Comic;
+            Comic? comic = options.Comic?.Copy();
 
             if (comic == null)
             {
                 return await Task.FromResult<Comic?>(null);
             }
-            comic = comic.Copy();
             if (isScan)
             {
                 string html = await web.Resolve(baseUrl, RetrieveSource.HTML);
@@ -34,20 +33,24 @@ namespace ComicsInfraLib.Services
                 if (body == null)
                     return await nullResult;
 
+                Dictionary<string, string> nodes = options.Hosts
+                    .Select(h => h.Replace("https://", string.Empty)
+                                 .Replace("http://", string.Empty)
+                                 .Trim('/'))
+                    .Select(h => parser.FindNodeWithAttribute(body, h, "href"))
+                    .OfType<HtmlNode>()
+                    .Select(n => n.GetAttributeValue("href", "empty"))
+                    .ToDictionary(href => RegexUtility.HostRegex().Match(href).Value,
+                    href => href);
+
                 string host = hostSelector.SelectHost(AppStateStore.Instance.Comics,
-                    options.Hosts);
-                host = host.Replace("https://", string.Empty)
-                    .Replace("http://", string.Empty).TrimEnd('/');
+                   nodes.Keys);
 
-                HtmlNode? node = parser.FindNodeWithAttribute(body, host, "href");
-                if (node == null)
-                    return await nullResult;
 
-                string url = node.GetAttributeValue("href", "");
+                string url = nodes[host];
 
                 if (string.IsNullOrEmpty(url))
                     return await nullResult;
-
                 url = await web.Resolve(url, RetrieveSource.URL);
 
                 Match match = RegexUtility.FilenameRegex().Match(url);
@@ -67,5 +70,6 @@ namespace ComicsInfraLib.Services
 
             return comic;
         }
+
     }
 }

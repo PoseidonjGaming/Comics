@@ -1,11 +1,9 @@
-﻿using ComicsInfraLib.Helpers;
-using ComicsLib.Models;
+﻿using ComicsLib.Models;
 using ComicsLib.Utility;
+using ComicsServiceLib;
 using ComicsServiceLib.UI;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using FuzzierSharp;
-using Microsoft.UI.Xaml.Controls;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -18,17 +16,17 @@ namespace ModernDownladComics.Models.View
 {
     public partial class PathPageViewModel : ObservableObject
     {
-        [ObservableProperty]
-        private partial Comic Comic { get; set; }
-        public ObservableCollection<string> Roots { get; set; } = [];
+        private Comic Comic { get; set; }
+        public ObservableCollection<string> Roots { get; }
         [ObservableProperty]
         public partial string SelectedRoot { get; set; }
-        public ObservableCollection<string> Paths { get; set; }
+        public ObservableCollection<string> Paths { get; }
         [ObservableProperty]
         public partial string SelectedPath { get; set; }
 
         private readonly ISettingsService _settingsService;
         private readonly IPathService _pathService;
+        private readonly IScanService _scanService;
         private CancellationTokenSource? _scanCts;
         public Type? ReturnType;
 
@@ -36,12 +34,14 @@ namespace ModernDownladComics.Models.View
         public event Action<ObservableCollection<string>, string>? AddPathEvent;
 
         private static AppState State => AppStateStore.Instance;
-        public PathPageViewModel(ISettingsService settingsService, IPathService pathService)
+        public PathPageViewModel(ISettingsService settingsService, IPathService pathService,
+            IScanService scanService)
         {
             _settingsService = settingsService;
             _pathService = pathService;
+            _scanService = scanService;
             Roots = new ObservableCollection<string>(settingsService.GetOptions().Paths);
-            SelectedRoot = Roots.First();
+            SelectedRoot = Roots.FirstOrDefault() ?? "";
             Paths = [];
             SelectedPath = "";
             Comic = new();
@@ -62,7 +62,7 @@ namespace ModernDownladComics.Models.View
 
             try
             {
-                /*if (Directory.Exists(Comic.Path))
+                if (Directory.Exists(Comic.Path))
                 {
                     string destPath = Comic.Path.Replace(SelectedRoot,
                         _pathService.BackupDirPath);
@@ -79,9 +79,9 @@ namespace ModernDownladComics.Models.View
 
                     if (_pathService.BackupDirPath[0] == SelectedRoot[0])
                     {
-                        Directory.Move(Comic.Path, destPath);
+                        _pathService.MoveComic(destPath, Comic.Path);
                     }
-                }*/
+                }
             }
             catch (IOException) { }
             catch (UnauthorizedAccessException) { }
@@ -95,7 +95,8 @@ namespace ModernDownladComics.Models.View
                 FileUtility.WriteFile<List<Track>>(_pathService.TrackFilePath,
                     State.Tracks);
 
-                NavigateEvent(ReturnType);
+                if (ReturnType != null)
+                    NavigateEvent(ReturnType);
             }
         }
         [RelayCommand]
@@ -105,15 +106,20 @@ namespace ModernDownladComics.Models.View
             NavigateEvent(ReturnType);
         }
 
-        public async void Load(Func<bool> getPreviousState, Action<bool> setState)
+        public async Task Load(Func<bool> getPreviousState, Action<bool> setState)
         {
             _scanCts = new CancellationTokenSource();
             bool previousIsEnabled = getPreviousState();
             try
             {
                 setState(false);
+                var results = await _scanService.ScanAsync(Comic, Roots, _scanCts.Token);
+                foreach (var res in results)
+                {
+                    Paths.Add(res);
+                }
 
-                await Task.Run(() => Scan(_scanCts.Token)).ConfigureAwait(true);
+
             }
             catch (OperationCanceledException)
             {
@@ -130,121 +136,6 @@ namespace ModernDownladComics.Models.View
             if (_scanCts != null && !_scanCts.IsCancellationRequested)
             {
                 _scanCts.Cancel();
-            }
-        }
-
-        private async void Scan(CancellationToken ct)
-        {
-            if (Comic != null && AddPathEvent != null)
-            {
-                try
-                {
-                    foreach (string root in Roots)
-                    {
-                        ct.ThrowIfCancellationRequested();
-
-                        var author = Process.ExtractOne(Comic.Author,
-                            Directory.EnumerateDirectories(root), s => Path.GetFileName(s).ToLower());
-
-                        if (author != null && author.Score == 100)
-                        {
-                            IEnumerable<string> comics = Directory.EnumerateDirectories(author.Value, "*", SearchOption.AllDirectories);
-                            var comicsResult = Process.ExtractOne(Comic.PackageName, comics, s => Path.GetFileName(s).ToLower());
-
-                            //cas 1 -> comics exact
-                            if (comicsResult != null && comicsResult.Score == 100)
-                            {
-                                if (Comic.NumberPages > CountPage(comicsResult.Value))
-                                {
-                                    Paths.Add(comicsResult.Value.Replace(root, string.Empty)[1..]);
-                                }
-                                else
-                                {
-                                    ContentDialog dialog = new()
-                                    {
-                                        Title = "Alert",
-                                        Content = "No comcis found",
-                                        PrimaryButtonText = "Ok"
-                                    };
-                                    await dialog.ShowAsync();
-                                }
-                            }
-                            else
-                            {
-                                //cas 2 -> comics absant mais avec chapitre precedent
-                                FindPreviousChapter(Comic.PackageName, comics, root);
-                            }
-                        }
-                    }
-
-                    if (Paths.Count == 0)
-                    {
-                        if (RegexUtility.ChapterRegex().IsMatch(Comic.PackageName))
-                        {
-                            string comicName = RegexUtility.ChapterRegex()
-                            .Replace(Comic.PackageName, "").Trim();
-                            Paths.Add(Path.Combine(Comic.Author, comicName, Comic.PackageName));
-                        }
-                        else
-                        {
-                            AddPathEvent(Paths, Path.Combine(Comic.Author, Comic.PackageName));
-                        }
-                    }
-                }
-                catch { }
-            }
-        }
-
-        private static int CountPage(string path)
-        {
-            if (!Directory.Exists(path))
-                return 0;
-
-            int pages = 0;
-            var dirs = new Stack<string>();
-            dirs.Push(path);
-
-            while (dirs.Count > 0)
-            {
-                var current = dirs.Pop();
-                try
-                {
-                    using (var en = Directory.EnumerateDirectories(current).GetEnumerator())
-                    {
-                        while (en.MoveNext())
-                            pages++;
-                    }
-
-                    foreach (var dir in Directory.EnumerateDirectories(current))
-                    {
-                        dirs.Push(dir);
-                    }
-                }
-                catch (IOException) { }
-                catch (UnauthorizedAccessException) { }
-            }
-            return pages;
-        }
-
-        private void FindPreviousChapter(string comic, IEnumerable<string> comics, string root)
-        {
-            if (int.TryParse(RegexUtility.ChapterRegex().Match(comic).Value, out int numChapter)
-                && Comic != null)
-            {
-                numChapter--;
-
-                string prevChapter = RegexUtility.ChapterRegex().Replace(comic, numChapter.ToString());
-                var comicsResult = Process.ExtractOne(prevChapter, comics, Path.GetFileName, cutoff: 100);
-
-                if (comicsResult != null)
-                {
-                    Paths.Add(comicsResult.Value.Replace(root, string.Empty)
-                    .Replace(prevChapter, Comic.PackageName)[1..]);
-                }
-                else if (numChapter >= 1)
-                {
-                    FindPreviousChapter(prevChapter, comics, root);
-                }
             }
         }
     }

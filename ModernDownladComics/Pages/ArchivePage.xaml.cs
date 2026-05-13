@@ -3,6 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using ModernDownladComics.Models.View;
+using ModernDownladComics.Utilities;
 using System;
 
 // To learn more about WinUI, the WinUI project structure,
@@ -19,16 +20,20 @@ namespace ModernDownladComics.Pages
         public ArchivePage()
         {
             InitializeComponent();
+
             ModelView = App.Current.Services.GetRequiredService<ArchivePageViewModel>();
-            ModelView.SearchDialogEvent += async (jd, pathService, name) =>
+            ModelView.SearchDialogEvent += async (dialogArgs) =>
             {
+                string manga = ContentPageUtility.Search(dialogArgs.Name, dialogArgs.Author,
+                    FileUtility.ComicsDirectory, "Manga");
+                string backup = ContentPageUtility.Search(dialogArgs.Name, dialogArgs.Author,
+                    dialogArgs.Path, "Backup");
                 ContentDialog dialog = new()
                 {
                     Title = "Search",
-                    Content = new SearchPage(ModelView.AddToPanel(FileUtility.ComicsDirectory, "Manga"),
-                  ModelView.AddToPanel(pathService.BackupDirPath, "Backup"),
-                  $"From JDownloader {jd}" ?? "Download not found",
-                    $"Do you want to delete the backup of {name}"),
+                    Content = new SearchPage(manga, backup,
+                  $"From JDownloader {dialogArgs.Jd}" ?? "Download not found",
+                    $"Do you want to delete the backup of {dialogArgs.Name}"),
                     PrimaryButtonText = "Yes",
                     DefaultButton = ContentDialogButton.Primary,
                     CloseButtonText = "No",
@@ -58,30 +63,6 @@ namespace ModernDownladComics.Pages
         private void Page_Loaded(object sender, RoutedEventArgs e)
         {
             ModelView.Load();
-
-        }
-
-
-
-        private async void SearchBTN_Click(object sender, RoutedEventArgs e)
-        {
-
-        }
-
-
-
-        private async void RestoreBTN_Click(object sender, RoutedEventArgs e)
-        {
-
-
-        }
-
-
-
-        private void DeleteBTN_Click(object sender, RoutedEventArgs e)
-        {
         }
     }
-
-
 }

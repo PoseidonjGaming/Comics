@@ -10,10 +10,10 @@ namespace ModernDownladComics.Models.View
         [ObservableProperty]
         public partial string? StateJob { get; set; } = stateJob;
         [ObservableProperty]
-        public partial int ProgessValue { get; set; }
+        public partial int ProgressValue { get; set; }
         [ObservableProperty]
         public partial bool IsDetermined { get; set; } = true;
 
-        public ObservableCollection<string> States { get; set; } = [];
+        public ObservableCollection<string> States { get; } = [];
     }
 }

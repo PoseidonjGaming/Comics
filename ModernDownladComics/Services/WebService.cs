@@ -10,7 +10,7 @@ namespace ModernDownladComics.Services
 {
     public class WebService : IWebService
     {
-        private Frame? frame ;
+        private Frame? frame;
 
         public void Init(Frame frame)
         {

@@ -160,7 +160,7 @@ namespace DownloadComics.services
                     }
                     catch (Exception ex)
                     {
-                        Dispatcher.CurrentDispatcher.Invoke(() => MessageBox.Show(ex.Message));
+                        Dispatcher.CurrentDispatcher.Invoke(() => MessageBox.Show(comic.PackageName));
                     }
 
                 }

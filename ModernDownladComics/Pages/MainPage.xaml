@@ -33,7 +33,7 @@
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch">
                 <StackPanel Orientation="Vertical" Margin="0,0,20,0">
                     <TextBlock Text="URL:" FontSize="16" Margin="0,0,0,5"/>
-                    <TextBox Text="{Binding SelectedComic.URL}"
+                    <TextBox Text="{Binding SelectedComic.URL, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                              FontSize="16" Width="750"
                              HorizontalAlignment="Left" VerticalAlignment="Top"/>
                 </StackPanel>
@@ -47,36 +47,36 @@
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch" Margin="0,10,0,0">
                 <StackPanel Orientation="Vertical">
                     <TextBlock Text="Author:" FontSize="16" Margin="0,0,0,5"/>
-                    <TextBox Text="{Binding SelectedComic.Author}"
+                    <TextBox Text="{Binding SelectedComic.Author, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                              Width="150" TextWrapping="NoWrap"/>
                 </StackPanel>
                 <StackPanel Orientation="Vertical" Margin="20,0,20,0">
                     <TextBlock Text="Package Name" FontSize="16" Margin="0,0,0,5"/>
-                    <TextBox Text="{Binding SelectedComic.PackageName}"
+                    <TextBox Text="{Binding SelectedComic.PackageName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                              FontSize="16" Width="300" TextWrapping="NoWrap"/>
                 </StackPanel>
                 <StackPanel Orientation="Vertical">
                     <TextBlock Text="Filename" FontSize="16" Margin="0,0,0,5"/>
-                    <TextBox Text="{Binding SelectedComic.Filename}"
+                    <TextBox Text="{Binding SelectedComic.Filename, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                              FontSize="16" Width="250" TextWrapping="NoWrap"/>
                 </StackPanel>
             </StackPanel>
             <StackPanel Orientation="Vertical" Margin="0,10,0,0">
                 <TextBlock Text="Path:" FontSize="16" Margin="0,0,0,5"/>
-                <TextBox Text="{Binding SelectedComic.Path}"
+                <TextBox Text="{Binding SelectedComic.Path, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                          FontSize="16" Width="700" TextWrapping="NoWrap" HorizontalAlignment="Left"/>
             </StackPanel>
 
             <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
                 <StackPanel Orientation="Vertical">
                     <TextBlock Text="Number of pages:" FontSize="16" Margin="0,0,0,5"/>
-                    <TextBox Text="{Binding SelectedComic.NumberPages}"
+                    <TextBox Text="{Binding SelectedComic.NumberPages, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                              FontSize="16" Width="75" TextWrapping="NoWrap" HorizontalAlignment="Left"/>
                 </StackPanel>
                 <StackPanel Orientation="Vertical" Margin="20,0,20,0">
                     <TextBlock Text="Enabled:" FontSize="16" Margin="0,0,0,5"/>
                     <CheckBox
-                        IsChecked="{Binding SelectedComic.Enabled}"/>
+                        IsChecked="{Binding SelectedComic.Enabled, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                 </StackPanel>
                 <StackPanel Orientation="Vertical" VerticalAlignment="Center">
                     <TextBlock Text="Priority:" FontSize="16" Margin="0,0,0,5"/>

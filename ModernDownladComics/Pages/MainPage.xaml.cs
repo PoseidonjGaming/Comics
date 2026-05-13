@@ -20,10 +20,17 @@ namespace ModernDownladComics.Pages
     /// </summary>
     public sealed partial class MainPage : Page
     {
+        public MainPageViewModel ViewModel { get; set; }
         public MainPage()
         {
             InitializeComponent();
-            DataContext = App.Current.Services.GetRequiredService<MainPageViewModel>();
+            ViewModel = App.Current.Services.GetRequiredService<MainPageViewModel>();
+            ViewModel.ChangeSourceRequested += comic =>
+            {
+                _ = new ChangeSourceWindow(comic);
+            };
+
+            DataContext = ViewModel;
 
         }
     }

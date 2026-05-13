@@ -46,19 +46,27 @@ namespace ComicsInfraLib.Services
 
         public async Task<string?> GetComicJdownloader(string author, string name)
         {
-            JDownloaderClient client = await GetClient();
-
-            List<FilePackage> packages = await client.DownloadsV2.QueryPackages(new()
+            try
             {
-                SaveTo = true
-            });
-            List<long> filePackages = [.. packages.Where(p => p.SaveTo.Contains(author)).Select(p => p.UUID)];
+                JDownloaderClient client = await GetClient();
 
-            List<DownloadLink> links = await client.DownloadsV2.QueryLinks(new());
-            List<DownloadLink> filterLinks = [.. links.Where(dl => Fuzz.Ratio(Path.GetFileNameWithoutExtension(dl.Name), name)==100)
+                List<FilePackage> packages = await client.DownloadsV2.QueryPackages(new()
+                {
+                    SaveTo = true
+                });
+                List<long> filePackages = [.. packages.Where(p => p.SaveTo.Contains(author)).Select(p => p.UUID)];
+
+                List<DownloadLink> links = await client.DownloadsV2.QueryLinks(new());
+                List<DownloadLink> filterLinks = [.. links.Where(dl => Fuzz.Ratio(Path.GetFileNameWithoutExtension(dl.Name), name)==100)
                 .Where(dl => filePackages.Contains(dl.PackageUUID))];
 
-            return filterLinks.FirstOrDefault()?.Comment;
+                return filterLinks.FirstOrDefault()?.Comment;
+            }
+            catch
+            {
+                return "JDownloader not open";
+            }
+            
         }
 
         public async Task Reset()

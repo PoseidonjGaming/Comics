@@ -1,8 +1,8 @@
+using ComicsInfraLib.Models.Views;
 using ComicsLib.Utility;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using ModernDownladComics.Models.View;
 using ModernDownladComics.Utilities;
 using System;
 

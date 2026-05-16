@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
 
-namespace ModernDownladComics.Models
+namespace ComicsInfraLib.Models
 {
     public partial class ComicInputModel : INotifyPropertyChanged
     {

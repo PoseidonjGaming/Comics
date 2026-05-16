@@ -7,7 +7,8 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:conv="using:ModernDownloadComics.Converters"
-    mc:Ignorable="d" DataContext="{Binding RelativeSource={RelativeSource Self}}">
+    xmlns:vw="using:ComicsInfraLib.Models.Views"
+    mc:Ignorable="d" d:DataContext="{d:DesignInstance Type=vw:SettingsHostPageViewModel}">
 
     <Page.Resources>
         <conv:HostConverter x:Key="HostConverter"/>
@@ -25,13 +26,13 @@
                 <TextBlock Text="Host:" FontSize="16" VerticalAlignment="Center"
                            Margin="0,0,0,5"/>
                 <StackPanel Orientation="Horizontal">
-                    <TextBox FontSize="16" Width="200" Text="{Binding Value.Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    <TextBox FontSize="16" Width="200" Text="{Binding Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                     <Button Content="Add" FontSize="16" Margin="10,0,10,0"
                             Background="{StaticResource AddButton}"
-                            Click="AddHostBTN_Click"/>
+                            Command="{Binding AddValueCommand}"/>
                     <Button Content="Remove" FontSize="16"
                             Background="{StaticResource DeleteButton}"
-                            Click="DeleteHostBTN_Click"/>
+                            Command="{Binding DeleteValueCommand}"/>
                 </StackPanel>
             </StackPanel>
         </StackPanel>

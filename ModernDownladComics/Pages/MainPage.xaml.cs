@@ -1,18 +1,7 @@
-using ComicsInfraLib.Services;
-using ComicsJDownloaderApi;
-using ComicsLib.Models;
-using ComicsLib.Utility;
-using ComicsServiceLib.UI;
-using JDownloader.Model;
+using ComicsInfraLib.Models.Views;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using ModernDownladComics.Models.View;
 using ModernDownladComics.windows;
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.

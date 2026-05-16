@@ -1,7 +1,8 @@
+using ComicsInfraLib.Models;
+using ComicsInfraLib.Models.Views;
 using ComicsLib.Models;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
-using ModernDownladComics.Models;
 using System;
 
 // To learn more about WinUI, the WinUI project structure,
@@ -14,13 +15,12 @@ namespace ModernDownladComics.Pages
     /// </summary>
     public sealed partial class SettingsComicPage : Page
     {
-        public Comic Comic { get; set; }
-        public Array Priorities { get; set; }
+        public SettingsComicPageViewModel ViewModel { get; set; }
         public SettingsComicPage()
         {
             InitializeComponent();
-            Comic = new();
-            Priorities = Enum.GetValues<Priorities>();
+            ViewModel = new();
+            DataContext = ViewModel;
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
@@ -29,7 +29,7 @@ namespace ModernDownladComics.Pages
 
             if (e.Parameter is SettingsPageArgs<Comic> args)
             {
-                Comic = args.Arg;
+                ViewModel.Setup(args);
             }
         }
     }

@@ -1,7 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using System.Collections.ObjectModel;
 
-namespace ModernDownladComics.Models.View
+namespace ComicsInfraLib.Models.Views
 {
     public partial class SendViewModel(string job, string stateJob) : ObservableObject
     {

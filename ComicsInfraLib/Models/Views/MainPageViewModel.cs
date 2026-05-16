@@ -1,16 +1,13 @@
 ﻿using ComicsLib.Models;
-using ComicsLib.Utility;
 using ComicsServiceLib.UI;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using ModernDownladComics.windows;
-using System;
 using System.Collections.ObjectModel;
 
-namespace ModernDownladComics.Models.View
+namespace ComicsInfraLib.Models.Views
 {
-    public partial class MainPageViewModel(IPathService pathService,
-        IStateRepository stateRepository) : ObservableObject
+    public partial class MainPageViewModel(IStateRepository stateRepository) : 
+        ObservableObject
     {
         public Array Priorities { get; } = Enum.GetValues<Priorities>();
 

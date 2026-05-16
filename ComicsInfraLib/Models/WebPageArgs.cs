@@ -1,7 +1,6 @@
 ﻿using ComicsLib.Models;
-using System.Threading.Tasks;
 
-namespace ModernDownladComics.Models
+namespace ComicsInfraLib.Models
 {
     public record WebPageArgs(string Url, RetrieveSource RetrieveSource, 
         TaskCompletionSource<string> Source);

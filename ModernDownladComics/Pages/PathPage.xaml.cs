@@ -1,4 +1,6 @@
 using ComicsInfraLib.Helpers;
+using ComicsInfraLib.Models;
+using ComicsInfraLib.Models.Views;
 using ComicsLib.Models;
 using ComicsLib.Utility;
 using ComicsServiceLib.UI;
@@ -6,8 +8,6 @@ using FuzzierSharp;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
-using ModernDownladComics.Models;
-using ModernDownladComics.Models.View;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;

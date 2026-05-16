@@ -1,9 +1,8 @@
-﻿using ComicsLib.Models;
+﻿using ComicsInfraLib.Models;
+using ComicsLib.Models;
 using ComicsServiceLib.UI;
 using Microsoft.UI.Xaml.Controls;
-using ModernDownladComics.Models;
 using ModernDownladComics.Pages;
-using System;
 using System.Threading.Tasks;
 
 namespace ModernDownladComics.Services

@@ -4,11 +4,9 @@ using ComicsServiceLib;
 using ComicsServiceLib.UI;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using System;
 using System.Collections.ObjectModel;
-using System.Threading.Tasks;
 
-namespace ModernDownladComics.Models.View
+namespace ComicsInfraLib.Models.Views
 {
     public partial class AddPageViewModel(IComicsBuilderService builderService,
         JdownloaderService jdownloaderService, IPathService pathService,

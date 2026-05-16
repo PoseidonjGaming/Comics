@@ -3,13 +3,13 @@
 // and more about our project templates, see: http://aka.ms/winui-project-info.
 
 using ComicsInfraLib;
+using ComicsInfraLib.Models.Views;
 using ComicsInfraLib.Services;
 using ComicsJDownloaderApi;
 using ComicsServiceLib;
 using ComicsServiceLib.UI;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
-using ModernDownladComics.Models.View;
 using ModernDownladComics.Services;
 using System;
 using System.Threading;

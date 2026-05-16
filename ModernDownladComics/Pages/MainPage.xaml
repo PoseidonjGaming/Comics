@@ -8,7 +8,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:conv="using:ModernDownloadComics.Converters"
     xmlns:src="using:ComicsLib.Models"
-    xmlns:vw="using:ModernDownladComics.Models.View"
+    xmlns:vw="using:ComicsInfraLib.Models.Views"
     d:DataContext="{d:DesignInstance Type=vw:MainPageViewModel}"
     mc:Ignorable="d">
 

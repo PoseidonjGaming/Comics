@@ -1,9 +1,5 @@
-﻿using ComicsLib.Models;
+﻿using ComicsInfraLib.Models.Views;
 using ComicsServiceLib.UI;
-using Microsoft.UI.Xaml.Controls;
-using ModernDownladComics.Models.View;
-using ModernDownladComics.Pages;
-using System;
 
 namespace ModernDownladComics.Services
 {

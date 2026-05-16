@@ -1,22 +1,11 @@
-using ComicsInfraLib.Services;
-using ComicsLib.Models;
-using ComicsLib.Utilities;
+using ComicsInfraLib.Models;
+using ComicsInfraLib.Models.Views;
 using ComicsLib.Utility;
-using ComicsServiceLib;
-using ComicsServiceLib.UI;
-using FuzzierSharp.Extractor;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
-using ModernDownladComics.Models;
-using ModernDownladComics.Models.View;
 using ModernDownladComics.Utilities;
-using SearchComicsLib;
 using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.IO;
-using System.Linq;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.

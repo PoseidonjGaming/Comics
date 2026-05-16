@@ -120,9 +120,9 @@ namespace ComicsLib.Models
         [JsonProperty]
         public bool Enabled { get; set; } = false;
 
-        private Priority _priority;
+        private Priorities _priority;
         [JsonProperty]
-        public Priority Priority
+        public Priorities Priority
         {
             get => _priority;
             set

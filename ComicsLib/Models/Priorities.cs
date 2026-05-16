@@ -1,6 +1,6 @@
 ﻿namespace ComicsLib.Models
 {
-    public enum Priority
+    public enum Priorities
     {
         HIGHEST,
         HIGHER,

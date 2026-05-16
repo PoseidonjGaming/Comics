@@ -1,10 +1,7 @@
 ﻿using ComicsLib.Models;
-using CommunityToolkit.Mvvm.ComponentModel;
-using System;
 using System.Text.Json;
-using System.Threading.Tasks;
 
-namespace ModernDownladComics.Models.View
+namespace ComicsInfraLib.Models.Views
 {
     public class BrowserPageViewModel
     {

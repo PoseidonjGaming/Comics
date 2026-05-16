@@ -1,4 +1,5 @@
 using ComicsInfraLib.Helpers;
+using ComicsInfraLib.Models;
 using ComicsLib.Models;
 using ComicsLib.Utility;
 using ComicsServiceLib;
@@ -11,7 +12,6 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.Windows.AppNotifications;
 using Microsoft.Windows.AppNotifications.Builder;
 using Microsoft.Windows.Storage.Pickers;
-using ModernDownladComics.Models;
 using ModernDownladComics.Pages;
 using ModernDownloadComics.Services;
 using System;

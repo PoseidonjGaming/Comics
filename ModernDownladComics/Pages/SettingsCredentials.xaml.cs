@@ -1,3 +1,5 @@
+using ComicsInfraLib.Models;
+using ComicsInfraLib.Models.Views;
 using ComicsLib.Models;
 using JDownloader;
 using JDownloader.Model;
@@ -5,7 +7,6 @@ using Microsoft.UI;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
-using ModernDownladComics.Models;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -20,11 +21,31 @@ namespace ModernDownladComics.Pages
     /// </summary>
     public sealed partial class SettingsCredentials : Page
     {
-        public JDCredentials JDCredentials { get; set; }
+        public SettingsCredientialsPageViewModel ViewModel { get; set; }
         public SettingsCredentials()
         {
             InitializeComponent();
-            JDCredentials = new("mail", "password", "device");
+            ViewModel = new();
+            ViewModel.ConnectionEvent += () =>
+            {
+                connectionLBL.Foreground = new SolidColorBrush(Colors.Green);
+            };
+            ViewModel.DialogEvent += async (msg) =>
+            {
+                connectionLBL.Foreground = new SolidColorBrush(Colors.Red);
+                ContentDialog dialog = new()
+                {
+                    Title = "Error",
+                    Content = msg,
+                    DefaultButton = ContentDialogButton.Primary,
+                    PrimaryButtonText = "Close",
+                    XamlRoot = this.XamlRoot
+                };
+
+                await dialog.ShowAsync();
+            };
+            DataContext = ViewModel;
+            
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
@@ -32,73 +53,10 @@ namespace ModernDownladComics.Pages
             base.OnNavigatedTo(e);
             if (e.Parameter is SettingsPageArgs<JDCredentials> args)
             {
-                JDCredentials = args.Arg;
+                ViewModel.Setup(args);
             }
         }
 
-        private async void Button_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
-        {
-            try
-            {
-                JDownloaderClient client = new(new()
-                {
-                    AppKey = "DownloadComicsTest"
-                });
-
-                if (!client.IsConnected)
-                {
-                    await client.Connect(JDCredentials.Email, JDCredentials.Password);
-
-                    DeviceList devices = await client.ListDevices();
-                    DeviceData? targetDevice = devices.Devices
-                        .FirstOrDefault(d => d.Name == JDCredentials.Device);
-
-                    if (targetDevice != null)
-                    {
-                        client.SetWorkingDevice(targetDevice);
-
-                        var directInfos = await client.Device.GetDirectConnectionInfos();
-                        if (directInfos.Infos.Count > 0)
-                        {
-                            client.SetDirectConnectionInfo(directInfos.Infos[0]);
-                        }
-
-                        connectionLBL.Text = "Connection Seccessful";
-                        connectionLBL.Foreground = new SolidColorBrush(Colors.Green);
-                    }
-                    else
-                    {
-                        throw new ArgumentException("Email and/or password and/or device name are wrong");
-                    }
-                }
-
-
-            }
-            catch (MyJDownloaderException ex)
-            {
-                await HandleConnectionException(ex.Message);
-            }
-            catch (ArgumentException ex)
-            {
-                await HandleConnectionException(ex.Message);
-            }
-        }
-        private async Task HandleConnectionException(string message)
-        {
-            connectionLBL.Text = "Connection Failed";
-            connectionLBL.Foreground = new SolidColorBrush(Colors.Red);
-
-            ContentDialog dialog = new()
-            {
-                Title = "Error",
-                Content = message,
-                DefaultButton = ContentDialogButton.Primary,
-                PrimaryButtonText = "Close",
-                XamlRoot = this.XamlRoot
-            };
-
-            await dialog.ShowAsync();
-        }
-
+       
     }
 }

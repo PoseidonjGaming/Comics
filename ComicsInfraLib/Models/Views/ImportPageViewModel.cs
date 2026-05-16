@@ -1,21 +1,14 @@
-﻿using ComicsInfraLib.Services;
+﻿using ComicsInfraLib.Models;
+using ComicsInfraLib.Services;
 using ComicsLib.Models;
 using ComicsLib.Utilities;
 using ComicsServiceLib;
 using ComicsServiceLib.UI;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using FuzzierSharp.Extractor;
-using ModernDownladComics.Services;
-using SearchComicsLib;
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
 
-namespace ModernDownladComics.Models.View
+namespace ComicsInfraLib.Models.Views
 {
     public partial class ImportPageViewModel(IComicsBuilderService comicService,
         JdownloaderService jdownloaderService, IPathService pathService) : ObservableObject

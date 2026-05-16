@@ -1,4 +1,5 @@
 ﻿using ComicsInfraLib.Services;
+using FuzzierSharp;
 using FuzzierSharp.Extractor;
 using Microsoft.UI.Xaml.Controls.Primitives;
 using SearchComicsLib;
@@ -14,9 +15,10 @@ namespace ModernDownladComics.Utilities
     {
         public static string Search(string name, string author, string path, string from)
         {
-            string authorPath = SearchUtility.GetAuthorPath(author.Trim(), path);
-            if (Path.GetFileNameWithoutExtension(authorPath) != author) return "Empty";
-            IEnumerable<ExtractedResult<string>> results = SearchUtility.GetComics(authorPath, name.Trim());
+            string authorPath = SearchUtility.GetAuthorPath(author, path);
+            if (Fuzz.Ratio(Path.GetFileNameWithoutExtension(authorPath), author) < 80)
+                return "Empty";
+            IEnumerable<ExtractedResult<string>> results = SearchUtility.GetComics(authorPath, name);
             ExtractedResult<string>? res = results.FirstOrDefault();
 
             if (res == null)

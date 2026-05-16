@@ -20,7 +20,7 @@ namespace ModernDownladComics.Pages
         {
             InitializeComponent();
             Comic = new();
-            Priorities = Enum.GetValues<Priority>();
+            Priorities = Enum.GetValues<Priorities>();
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)

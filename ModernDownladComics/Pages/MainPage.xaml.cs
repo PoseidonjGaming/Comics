@@ -1,12 +1,16 @@
+using ComicsInfraLib.Services;
+using ComicsJDownloaderApi;
 using ComicsLib.Models;
 using ComicsLib.Utility;
 using ComicsServiceLib.UI;
+using JDownloader.Model;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using ModernDownladComics.Models.View;
 using ModernDownladComics.windows;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 
@@ -25,7 +29,7 @@ namespace ModernDownladComics.Pages
         {
             InitializeComponent();
             ViewModel = App.Current.Services.GetRequiredService<MainPageViewModel>();
-            ViewModel.ChangeSourceRequested += comic =>
+            ViewModel.ChangeSourceRequested += async comic =>
             {
                 _ = new ChangeSourceWindow(comic);
             };

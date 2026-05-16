@@ -44,7 +44,8 @@ namespace ModernDownladComics.Models.View
         {
             if (SearchDialogEvent == null || NavigateEvent == null) return;
 
-            string? jd = await jdownloaderService.GetComicJdownloader(Comic.Author, Comic.PackageName);
+            string? jd = await jdownloaderService.GetComicJdownloader(Comic.Author, 
+                Comic.PackageName);
 
             bool res = await SearchDialogEvent.Invoke(new(Comic.PackageName, Comic.Author,
                 pathService.BackupDirPath, jd));

@@ -53,8 +53,8 @@ namespace ModernDownladComics.Pages
                 ContentDialog dialog = new()
                 {
                     Title = "Search",
-                    Content = new SearchPage(manga, backup, !string.IsNullOrEmpty(args.Jd)?
-                    args.Jd : "Download not found",
+                    Content = new SearchPage(manga, backup, !string.IsNullOrEmpty(args.Jd) ?
+                    $"From JD: {args.Jd}" : "Download not found",
                     $"Do you want to add {args.Name}"),
                     PrimaryButtonText = "Yes",
                     DefaultButton = ContentDialogButton.Primary,

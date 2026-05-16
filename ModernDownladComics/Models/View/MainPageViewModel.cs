@@ -12,7 +12,7 @@ namespace ModernDownladComics.Models.View
     public partial class MainPageViewModel(IPathService pathService,
         IStateRepository stateRepository) : ObservableObject
     {
-        public Array Priorities { get; } = Enum.GetValues<Priority>();
+        public Array Priorities { get; } = Enum.GetValues<Priorities>();
 
         public ObservableCollection<Comic> Comics { get; } = AppStateStore.Instance.Comics;
 

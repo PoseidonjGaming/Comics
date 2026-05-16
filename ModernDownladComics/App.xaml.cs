@@ -4,9 +4,9 @@
 
 using ComicsInfraLib;
 using ComicsInfraLib.Services;
+using ComicsJDownloaderApi;
 using ComicsServiceLib;
 using ComicsServiceLib.UI;
-using JDownloader;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
 using ModernDownladComics.Models.View;
@@ -55,7 +55,7 @@ namespace ModernDownladComics
 
             AddServices(service);
 
-            service.AddSingleton(provider => new Lazy<Task<JDownloaderClient>>(() =>
+            service.AddSingleton(provider => new Lazy<Task<ComicsJDownloaderClient>>(() =>
                 JDownloaderFactory.CreateAsnc(provider.GetRequiredService<ICredentialsService>()),
                 LazyThreadSafetyMode.ExecutionAndPublication));
 

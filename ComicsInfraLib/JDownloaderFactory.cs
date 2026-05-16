@@ -1,4 +1,5 @@
-﻿using ComicsLib.Models;
+﻿using ComicsJDownloaderApi;
+using ComicsLib.Models;
 using ComicsServiceLib;
 using JDownloader;
 using JDownloader.Model;
@@ -7,12 +8,9 @@ namespace ComicsInfraLib
 {
     public static class JDownloaderFactory
     {
-        public static async Task<JDownloaderClient> CreateAsnc(ICredentialsService credentialsService)
+        public static async Task<ComicsJDownloaderClient> CreateAsnc(ICredentialsService credentialsService)
         {
-            JDownloaderClient client = new(new()
-            {
-                AppKey = "ModernDownloadComics"
-            });
+            ComicsJDownloaderClient client = new(true);
 
             try
             {
@@ -28,7 +26,6 @@ namespace ComicsInfraLib
                     if (targetDevice != null)
                     {
                         client.SetWorkingDevice(targetDevice);
-
                         DirectConnectionInfos? directInfos = await client.Device.GetDirectConnectionInfos();
                         if (directInfos.Infos.Count > 0)
                         {

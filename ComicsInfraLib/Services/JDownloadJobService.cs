@@ -1,4 +1,5 @@
-﻿using ComicsLib.Models;
+﻿using ComicsJDownloaderApi;
+using ComicsLib.Models;
 using ComicsServiceLib.UI;
 using JDownloader;
 using JDownloader.Model;
@@ -114,7 +115,7 @@ namespace ComicsInfraLib.Services
 
         private async Task FinalizeLinks(CancellationToken token)
         {
-            JDownloaderClient client = await jdownloaderService.GetClient();
+            ComicsJDownloaderClient client = await jdownloaderService.GetClient();
             jobState.UpdateState("Set links disabled", false);
             await DisableLinks(client);
             
@@ -175,7 +176,7 @@ namespace ComicsInfraLib.Services
                 }
             }
         }
-        private async Task DisableLinks(JDownloaderClient client)
+        private async Task DisableLinks(ComicsJDownloaderClient client)
         {
             if (jdownloaderService != null)
             {
@@ -186,7 +187,7 @@ namespace ComicsInfraLib.Services
                 }
             }
         }
-        private static async Task SortPackages(JDownloaderClient client)
+        private static async Task SortPackages(ComicsJDownloaderClient client)
         {
             List<CrawledPackage> packages = await client.LinkGrabberV2.QueryPackages(new()
             {
@@ -207,7 +208,7 @@ namespace ComicsInfraLib.Services
             }
         }
 
-        private async Task FinishedLink(JDownloaderClient client)
+        private async Task FinishedLink(ComicsJDownloaderClient client)
         {
             if (jdownloaderService != null)
             {

@@ -1,14 +1,14 @@
-﻿using ComicsLib.Models;
+﻿using ComicsJDownloaderApi;
+using ComicsLib.Models;
 using FuzzierSharp;
-using HtmlAgilityPack;
 using JDownloader;
 using JDownloader.Model;
 
 namespace ComicsInfraLib.Services
 {
-    public class JdownloaderService(Lazy<Task<JDownloaderClient>> jdClient)
+    public class JdownloaderService(Lazy<Task<ComicsJDownloaderClient>> jdClient)
     {
-        public Task<JDownloaderClient> GetClient()=> jdClient.Value;
+        public Task<ComicsJDownloaderClient> GetClient()=> jdClient.Value;
 
         private static AppState State => AppStateStore.Instance;
 
@@ -48,7 +48,7 @@ namespace ComicsInfraLib.Services
         {
             try
             {
-                JDownloaderClient client = await GetClient();
+                ComicsJDownloaderClient client = await GetClient();
 
                 List<FilePackage> packages = await client.DownloadsV2.QueryPackages(new()
                 {
@@ -81,13 +81,13 @@ namespace ComicsInfraLib.Services
 
         public async Task<int> GetCrawledPackageCount()
         {
-            JDownloaderClient client = await jdClient.Value;
+            ComicsJDownloaderClient client = await jdClient.Value;
             return await client.LinkGrabberV2.GetPackageCount();
         }
 
         public async Task AddLinks(Comic comic, bool autoStart, Action<string> stateAction)
         {
-            JDownloaderClient client = await GetClient();
+            ComicsJDownloaderClient client = await GetClient();
             AddLinksQuery query = new()
             {
                 AssignJobID = true,
@@ -95,7 +95,7 @@ namespace ComicsInfraLib.Services
                 DestinationFolder = comic.Path,
                 Links = comic.URL,
                 PackageName = comic.PackageName,
-                Priority = Enum.Parse<JDownloader.Model.Priority>(comic.Priority.ToString()),
+                Priority = Enum.Parse<Priority>(comic.Priority.ToString()),
                 OverwritePackagizerRules = true,
             };
 
@@ -144,7 +144,7 @@ namespace ComicsInfraLib.Services
 
         public async Task<List<CrawledLink>> GetCrawledLink(long? UUID = null)
         {
-            JDownloaderClient client = await GetClient();
+            ComicsJDownloaderClient client = await GetClient();
             try
             {
 
@@ -191,7 +191,7 @@ namespace ComicsInfraLib.Services
 
         public async Task RemoveLinks()
         {
-            JDownloaderClient client = await GetClient();
+            ComicsJDownloaderClient client = await GetClient();
             List<CrawledLink> links = await GetCrawledLink();
             await client.LinkGrabberV2.RemoveLinks([.. links.Select(cl => cl.Uuid)], []);
         }

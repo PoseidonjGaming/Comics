@@ -1,12 +1,15 @@
 ﻿using ComicsJDownloaderApi;
 using ComicsLib.Models;
+using ComicsServiceLib;
 using FuzzierSharp;
+using HtmlAgilityPack;
 using JDownloader;
 using JDownloader.Model;
 
 namespace ComicsInfraLib.Services
 {
-    public class JdownloaderService(Lazy<Task<ComicsJDownloaderClient>> jdClient)
+    public class JdownloaderService(Lazy<Task<ComicsJDownloaderClient>> jdClient, 
+        IHtmlParserService htmlParserService, IHostService hostService)
     {
         public Task<ComicsJDownloaderClient> GetClient()=> jdClient.Value;
 
@@ -57,7 +60,7 @@ namespace ComicsInfraLib.Services
                 List<long> filePackages = [.. packages.Where(p => p.SaveTo.Contains(author)).Select(p => p.UUID)];
 
                 List<DownloadLink> links = await client.DownloadsV2.QueryLinks(new());
-                List<DownloadLink> filterLinks = [.. links.Where(dl => Fuzz.Ratio(Path.GetFileNameWithoutExtension(dl.Name), name)==100)
+                List<DownloadLink> filterLinks = [.. links.Where(dl => Fuzz.Ratio(Path.GetFileNameWithoutExtension(dl.Name).ToLower(), name.ToLower())==100)
                 .Where(dl => filePackages.Contains(dl.PackageUUID))];
 
                 return filterLinks.FirstOrDefault()?.Comment;
@@ -103,11 +106,11 @@ namespace ComicsInfraLib.Services
             comic.UUID = job.Id;
             stateAction.Invoke($"Add {comic.PackageName}");
         }
-        public static void ChangeUrl(Comic comic, string[] hosts, Action<string> stateAction)
+        public void ChangeUrl(Comic comic, string[] hosts, Action<string> stateAction)
         {
             Track? track = State.GetTrackByUrl(comic.URL);
 
-            if (track != null)
+            if (track != null && !string.IsNullOrEmpty(comic.HtmlBody))
             {
                 string? host = hosts.FirstOrDefault(h => !track.TestedHost.Contains(h));
 
@@ -115,13 +118,13 @@ namespace ComicsInfraLib.Services
                 {
                     stateAction.Invoke($"New url for {comic.PackageName}");
 
-                    /*HtmlNode? node = ComicService.LoadBody(comic.HtmlBody);
-                    if (node != null)
+                    HtmlNode? bodyNode = htmlParserService.LoadBody(comic.HtmlBody);
+                    if (bodyNode != null)
                     {
-                        string? nextUrl = ComicService.GetUrlByHost(node, host);
+                        HtmlNode? node = htmlParserService.FindNodeWithAttribute(bodyNode, host, "href");
+                        string? nextUrl = node?.GetAttributeValue("href", "no value");
                         if (!string.IsNullOrEmpty(nextUrl))
                         {
-
                             comic.URL = nextUrl;
                             comic.Host = host;
                             track.TestedHost.Add(host);
@@ -132,7 +135,7 @@ namespace ComicsInfraLib.Services
                             State.RemoveTrack(track);
                             State.Comics.Remove(comic);
                         }
-                    }*/
+                    }
                 }
                 else
                 {

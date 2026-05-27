@@ -20,7 +20,8 @@ namespace ModernDownladComics.Pages
         {
             InitializeComponent();
             ViewModel = new();
-            DataContext = ViewModel;
+            ViewModel.InitData(App.Current
+                .LocalizationService.GetData("SettingsComicPage", "Comic"));
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)

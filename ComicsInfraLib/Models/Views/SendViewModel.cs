@@ -6,9 +6,9 @@ namespace ComicsInfraLib.Models.Views
     public partial class SendViewModel(string job, string stateJob) : ObservableObject
     {
         [ObservableProperty]
-        public partial string? Job { get; set; } = job;
+        public partial string Job { get; set; } = job;
         [ObservableProperty]
-        public partial string? StateJob { get; set; } = stateJob;
+        public partial string StateJob { get; set; } = stateJob;
         [ObservableProperty]
         public partial int ProgressValue { get; set; }
         [ObservableProperty]

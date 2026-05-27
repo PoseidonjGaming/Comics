@@ -9,8 +9,7 @@
     xmlns:src="using:ComicsLib.Models"
     xmlns:vw="using:ComicsInfraLib.Models.Views"
     mc:Ignorable="d"
-    d:DataContext="{d:DesignInstance Type=vw:SendViewModel}"
-    Loaded="Page_Loaded">
+    Loaded="Page_Loaded" DataContext="{x:Bind ViewModel}">
 
     <Grid>
         <Grid.RowDefinitions>
@@ -23,7 +22,7 @@
             <ToggleButton x:Name="jobToggleBTN" Margin="10"
                           Checked="JobToggleBTN_Checked" Unchecked="jobToggleBTN_Unchecked"
                           HorizontalAlignment="Center" FontSize="20" Padding="15"/>
-            <ProgressBar Height="20" Minimum="0" Value="{Binding ProgessValue}"
+            <ProgressBar Height="20" Minimum="0" Value="{Binding ProgressValue}"
                          IsIndeterminate="{Binding IsDetermined}"
                          Maximum="{x:Bind src:AppStateStore.Instance.Comics.Count}"/>
         </StackPanel>

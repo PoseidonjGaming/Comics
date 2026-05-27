@@ -19,14 +19,14 @@ namespace ComicsInfraLib.Services
             listenerService.StartAsync();
 
             await RetryLoop(token);
-           
+
             try
             {
                 await Task.Delay(1000, token);
             }
-            catch 
+            catch
             {
-               
+
             }
             await AddLinks(token);
 
@@ -40,7 +40,7 @@ namespace ComicsInfraLib.Services
             }
 
             await FinalizeLinks(token);
-            
+
         }
 
         private async Task RetryLoop(CancellationToken token)
@@ -53,9 +53,8 @@ namespace ComicsInfraLib.Services
                 tryCount++;
                 PrepareTry(tryCount);
                 await ResetTry();
-                
-                await TryAddLinks(token);
 
+                await TryAddLinks(token);
                 offlineLinks = await listenerService.WaitJob();
                 await FixLinks(offlineLinks);
 
@@ -69,6 +68,7 @@ namespace ComicsInfraLib.Services
             jobState.UpdateState("Starting job", true);
             jobState.UpdateTry($"Try {tryCount}");
             jobState.UpdateProgess(progress, false);
+            listenerService.SetTask(new());
         }
 
         private async Task ResetTry()
@@ -89,7 +89,7 @@ namespace ComicsInfraLib.Services
         {
             offlineLinks.ForEach(async ol =>
             {
-                JdownloaderService.ChangeUrl(State.Comics.First(c => c.UUID == ol.JobUUID),
+                jdownloaderService.ChangeUrl(State.Comics.First(c => c.UUID == ol.JobUUID),
                     settingsService.GetOptions().Hosts, state =>
                 jobState.UpdateState(state, false));
             });
@@ -118,7 +118,7 @@ namespace ComicsInfraLib.Services
             ComicsJDownloaderClient client = await jdownloaderService.GetClient();
             jobState.UpdateState("Set links disabled", false);
             await DisableLinks(client);
-            
+
             try
             {
                 await Task.Delay(1000, token);

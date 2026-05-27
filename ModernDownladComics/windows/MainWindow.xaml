@@ -15,20 +15,31 @@
 
     <Grid>
         <NavigationView x:Name="navView" PaneDisplayMode="LeftCompact"
-                        SelectionChanged="NavigationView_SelectionChanged">
+                        SelectionChanged="NavigationView_SelectionChanged" 
+                        IsSettingsVisible="False">
             <NavigationView.MenuItems>
-                <NavigationViewItem Content="Home" Tag="home" Icon="Home"/>
-                <NavigationViewItem Content="Send" Tag="send" Icon="Upload"/>
+                <NavigationViewItem Content="{x:Bind Loc['Home']}" Tag="home" Icon="Home"/>
+                <NavigationViewItem Content="{x:Bind Loc['Send']}" Tag="send" Icon="Upload"/>
 
-                <NavigationViewItem Content="Add" SelectsOnInvoked="False" Icon="Add">
+                <NavigationViewItem Content="{x:Bind Loc['Add']}" SelectsOnInvoked="False" Icon="Add">
                     <NavigationViewItem.MenuItems>
-                        <NavigationViewItem Content="Add on link" Tag="add" Icon="Add"/>
-                        <NavigationViewItem Content="Import" Tag="import" Icon="Import"/>
+                        <NavigationViewItem Content="{x:Bind Loc['AddLink']}" Tag="add" Icon="Add"/>
+                        <NavigationViewItem Content="{x:Bind Loc['ImportLinks']}" Tag="import" Icon="Import"/>
                     </NavigationViewItem.MenuItems>
 
                 </NavigationViewItem>
-                <NavigationViewItem Content="Archive" Tag="archive" Icon="Folder"/>
+                <NavigationViewItem Content="{x:Bind Loc['Archive']}" Tag="archive" Icon="Folder"/>
             </NavigationView.MenuItems>
+
+            <NavigationView.FooterMenuItems>
+                <NavigationViewItem Content="Lang" Tag="lang">
+                    <NavigationViewItem.Icon>
+                        <FontIcon Glyph="&#xE8AB;" />
+                    </NavigationViewItem.Icon>
+                </NavigationViewItem>
+                <NavigationViewItem Content="{x:Bind Loc['Settings']}"
+                                    Tag="settings" Icon="Setting"/>
+            </NavigationView.FooterMenuItems>
             <Frame x:Name="frame"/>
         </NavigationView>
 

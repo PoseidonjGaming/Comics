@@ -16,24 +16,30 @@
     <NavigationView x:Name="navView" PaneDisplayMode="Left" 
                     SelectionChanged="NavigationView_SelectionChangedAsync"
                     IsSettingsVisible="False" IsPaneOpen="True" IsBackButtonVisible="Collapsed"
-                    IsPaneToggleButtonVisible="False" OpenPaneLength="200">
+                    IsPaneToggleButtonVisible="False" OpenPaneLength="250">
         
         <NavigationView.MenuItems>
-            <NavigationViewItemHeader Content="Settings"/>
             <NavigationViewItem Content="Comic" Icon="Library"/>
-            <NavigationViewItem Content="Hosts" SelectsOnInvoked="False" Icon="Globe">
+            <NavigationViewItem Content="{x:Bind Loc['Hosts']}"
+                                SelectsOnInvoked="False" Icon="Globe">
                 <NavigationViewItem.MenuItems>
-                    <NavigationViewItem Content="Search Hosts" Tag="search" Icon="Zoom"/>
-                    <NavigationViewItem Content="Confirm Hosts" Tag="confirm" Icon="Play"/>
-                    <NavigationViewItem Content="Exluded Hosts" Tag="excluded" Icon="Clear"/>
+                    <NavigationViewItem Content="{x:Bind Loc['SearchHosts']}" 
+                                        Tag="search" Icon="Zoom"/>
+                    <NavigationViewItem Content="{x:Bind Loc['ConfirmHosts']}"
+                                        Tag="confirm" Icon="Play"/>
+                    <NavigationViewItem Content="{x:Bind Loc['ExcludedHosts']}" 
+                                        Tag="excluded" Icon="Clear"/>
                 </NavigationViewItem.MenuItems>
             </NavigationViewItem>
-            <NavigationViewItem Content="Path" Tag="path" Icon="Save"/>
-            <NavigationViewItem Content="Credentials" Tag="credentials" Icon="Permissions"/>
+            <NavigationViewItem Content="{x:Bind Loc['Paths']}" Tag="path" Icon="Save"/>
+            <NavigationViewItem Content="{x:Bind Loc['Credentials']}" 
+                                Tag="credentials" Icon="Permissions"/>
         </NavigationView.MenuItems>
         <NavigationView.FooterMenuItems>
-            <NavigationViewItem Content="Import Settigns" Tag="import_settings" Icon="OpenFile"/>
-            <NavigationViewItem Content="Export Settigns" Tag="export_settings" Icon="SaveLocal"/>
+            <NavigationViewItem Content="{x:Bind Loc['ImportSettings']}" 
+                                Tag="import_settings" Icon="OpenFile"/>
+            <NavigationViewItem Content="{x:Bind Loc['ExportSettings']}" 
+                                Tag="export_settings" Icon="SaveLocal"/>
         </NavigationView.FooterMenuItems>
         <Frame x:Name="settingsFrame"/>
     </NavigationView>

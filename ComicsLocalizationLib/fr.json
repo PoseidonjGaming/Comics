@@ -1,0 +1,104 @@
+﻿{
+  "Comic": {
+    "Author": "Auteur",
+    "PackageName": "Nom du paquet",
+    "Pages": "Nombre de pages",
+    "Filename": "Nom du fichier",
+    "Path": "Chemin",
+    "Enable": "Actif",
+    "Priority": "Priorité",
+    "Host": "Hôte",
+    "BaseURL": "URL de base"
+  },
+  "Priority": {
+    "DEFAULT": "Normale",
+    "HIGHEST": "Très haute",
+    "HIGHER": "Plus haute",
+    "HIGH": "Haute",
+    "LOW": "Basse",
+    "LOWER": "Plus basse",
+    "LOWEST": "Très basse"
+  },
+  "MainWindow": {
+    "Title": "Gestionnaire de comics",
+    "Home": "Accueil",
+    "Send": "Envoyer",
+    "Add": "Ajouter",
+    "AddLink": "Ajouter un lien",
+    "ImportLinks": "Import des liens",
+    "Archive": "Archive",
+    "Settings": "Options"
+  },
+  "MainPage": {
+    
+  },
+  "AddPage": {
+    "AddBTN": "Ajouter le comic",
+    "SearchBTN": "Rechercher le comic",
+    "DeleteBTN": "Supprimer le comic",
+    "ClearBTN": "Effacer le comic"
+  },
+  "ArchivePage": {
+    "SearchBTN": "Rechercher le comics",
+    "RestoreBTN": "Restaurer le comics",
+    "DeleteBTN": "Supprimer l'archive"
+  },
+  "ImportPage": {
+    "AddBTN": "Ajouter le comic",
+    "ClearBTN": "Effacer le comic",
+    "SearchBTN": "Rechercher le comic"
+  },
+  "PathPage": {
+    "CancelBTN": "Annuler",
+    "SelectBTN": "Sélectionner"
+  },
+  "SearchPage": {
+    "Title": "Recherche",
+    "From": "Depuis",
+    "Empty": "Vide",
+    "NotFound": "Téléchargement non trouvé",
+    "Delete": "Voulez-vous supprimer ce téléchargement ?",
+    "Add": "Voulez-vous ajouter ce téléchargement ?"
+  },
+  "Dialog": {
+    "Yes": "Oui",
+    "No": "Non",
+    "Search": "Rechercher",
+    "Error": "Erreur",
+    "Restore": "Restaurer",
+    "RestoreQuestion": "Voulez-vous restaurer cette archive ?",
+    "Close": "Fermer"
+  },
+  "ScanDialog": {
+    "Title": "Scanner l'url",
+    "Content": "Voulez-vous scanner l'url ?",
+    "Cancel": "Annuler"
+  },
+  "SettingsWindow": {
+    "Hosts": "Hôtes",
+    "SearchHosts": "Hôtes à rechercher",
+    "ConfirmHosts": "Hôtes à ne pas confirmer ",
+    "ExcludedHosts": "Hôtes à exclure",
+    "Paths": "Chemins prédéfinis",
+    "Credentials": "Informations d'identification",
+    "ImportSettings": "Importer les paramètres",
+    "ExportSettings": "Export les paramètres"
+  },
+  "SettingsComicPage": {
+    "Enabling": "Activer le téléchargement",
+    "Enabled": "Activé",
+    "Disabled": "Désactivé"
+  },
+  "SettingsCredentialsPage": {
+    "Mail": "Email",
+    "Password": "Mot de passe",
+    "Device": "Nom de l'appareil",
+    "TestConnectionBTN": "Tester la connexion",
+    "ConnectionFailed": "Échec de la connexion",
+    "ConnectionSuccessful": "Connexion réussie"
+  },
+  "SettingsHostsPage": {
+    "AddBTN": "Ajouter",
+    "DeleteBTN": "Supprimer"
+  }
+}

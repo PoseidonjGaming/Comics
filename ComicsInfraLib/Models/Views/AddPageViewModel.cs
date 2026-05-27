@@ -8,9 +8,10 @@ using System.Collections.ObjectModel;
 
 namespace ComicsInfraLib.Models.Views
 {
-    public partial class AddPageViewModel(IComicsBuilderService builderService,
+    public partial class AddPageViewModel<T>(IComicsBuilderService builderService,
         JdownloaderService jdownloaderService, IPathService pathService,
-        IStateRepository stateRepository) : ObservableObject
+        IStateRepository stateRepository, IDialogService<T> dialogService) :
+        BaseLocViewModel where T : class
     {
         [ObservableProperty]
         public partial ComicInputModel Comic { get; set; } = new();
@@ -18,38 +19,39 @@ namespace ComicsInfraLib.Models.Views
         public partial Comic SelectedComic { get; set; } = new Comic();
         public ObservableCollection<Comic> Comics { get; set; } = stateRepository.Comics;
 
-        public event Func<Task<bool>>? AddDialogEvent;
-        public event Func<DialogArgs, Task<bool>>? SearchDialogEvent;
         public event Action<Comic>? NavigateEvent;
 
-        [RelayCommand]
-        public async Task AddComic()
-        {
-            if (AddDialogEvent == null || NavigateEvent == null) return;
 
-            bool res = await AddDialogEvent.Invoke();
+        [RelayCommand]
+        public async Task AddComic(T arg)
+        {
             if (Comic.Author == null)
                 Comic.Author = "";
+
+            DialogResult res = await dialogService.ShowAddAsync(arg);
+            if (res == DialogResult.CANCELLED)
+                return;
+
             Comic? comic = await builderService.MakeComics(Comic.BaseURL,
-                Comic.Author, Comic.PackageName, Comic.NumberPages, res);
+                Comic.Author, Comic.PackageName, Comic.NumberPages, res == DialogResult.SUCCESS);
 
             if (comic == null) return;
-            NavigateEvent.Invoke(comic);
+            NavigateEvent?.Invoke(comic);
         }
 
         [RelayCommand]
-        public async Task SearchComic()
+        public async Task SearchComic(T arg)
         {
-            if (SearchDialogEvent == null || NavigateEvent == null) return;
+            if (NavigateEvent == null) return;
 
-            string? jd = await jdownloaderService.GetComicJdownloader(Comic.Author, 
+            string? jd = await jdownloaderService.GetComicJdownloader(Comic.Author,
                 Comic.PackageName);
 
-            bool res = await SearchDialogEvent.Invoke(new(Comic.PackageName, Comic.Author,
-                pathService.BackupDirPath, jd));
-            if (res)
+            DialogResult res = await dialogService.ShowSearchAsync(new(Comic.PackageName, Comic.Author,
+                pathService.BackupDirPath, jd), arg);
+            if (res == DialogResult.SUCCESS)
             {
-                await AddComic();
+                await AddComic(arg);
             }
         }
 

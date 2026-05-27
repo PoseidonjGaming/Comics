@@ -13,6 +13,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ComicsJDownloaderApi\ComicsJDownloaderApi.csproj" />
+    <ProjectReference Include="..\ComicsLocalizationLib\ComicsLocalizationLib.csproj" />
     <ProjectReference Include="..\ComicsServiceLib\ComicsServiceLib.csproj" />
   </ItemGroup>
 

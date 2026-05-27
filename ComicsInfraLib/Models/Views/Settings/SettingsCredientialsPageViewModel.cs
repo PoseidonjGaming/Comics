@@ -1,5 +1,6 @@
 ﻿using ComicsJDownloaderApi;
 using ComicsLib.Models;
+using ComicsServiceLib.UI;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using JDownloader.Model;
@@ -7,22 +8,19 @@ using System.Drawing;
 
 namespace ComicsInfraLib.Models.Views
 {
-    public partial class SettingsCredientialsPageViewModel : ObservableObject
+    public partial class SettingsCredientialsPageViewModel<T>(IDialogService<T> dialogService) :
+        BaseLocViewModel where T : class
     {
         [ObservableProperty]
-        public partial JDCredentials Credentials { get; set; }
+        public partial JDCredentials Credentials { get; set; } = new("mail", "password", "device");
 
         [ObservableProperty]
-        public partial string ConnectionLabel { get; set; }
+        public partial string ConnectionLabel { get; set; } = string.Empty;
+
 
         public event Action? ConnectionEvent;
         public event Action<string>? DialogEvent;
 
-        public SettingsCredientialsPageViewModel()
-        {
-            Credentials = new("mail", "password", "device");
-            ConnectionLabel = string.Empty;
-        }
 
         public void Setup(SettingsPageArgs<JDCredentials> args)
         {
@@ -30,7 +28,7 @@ namespace ComicsInfraLib.Models.Views
         }
 
         [RelayCommand]
-        public async Task TestConnection()
+        public async Task TestConnection(T arg)
         {
             if (ConnectionEvent == null) return;
             try
@@ -55,7 +53,8 @@ namespace ComicsInfraLib.Models.Views
                             client.SetDirectConnectionInfo(directInfos.Infos[0]);
                         }
 
-                        ConnectionLabel = "Connection Seccessful";
+                        ConnectionLabel = Loc["ConnectionSuccessful"]
+                        ;
                         ConnectionEvent();
                     }
                     else
@@ -66,20 +65,20 @@ namespace ComicsInfraLib.Models.Views
             }
             catch (MyJDownloaderException ex)
             {
-                await HandleConnectionException(ex.Message);
+                await HandleConnectionException(ex.Message, arg);
             }
             catch (ArgumentException ex)
             {
-                await HandleConnectionException(ex.Message);
+                await HandleConnectionException(ex.Message, arg);
             }
         }
 
-        private async Task HandleConnectionException(string message)
+        private async Task HandleConnectionException(string message, T arg)
         {
             if (ConnectionEvent == null || DialogEvent == null) return;
-            ConnectionLabel = "Connection Failed";
+            ConnectionLabel = Loc["ConnectionFailed"];
             ConnectionEvent();
-            DialogEvent(message);
+            await dialogService.ShowErrorAsync(arg, message);
 
 
         }

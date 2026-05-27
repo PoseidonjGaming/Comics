@@ -1,5 +1,4 @@
-﻿using ComicsInfraLib.Models;
-using ComicsInfraLib.Services;
+﻿using ComicsInfraLib.Services;
 using ComicsLib.Models;
 using ComicsLib.Utilities;
 using ComicsServiceLib;
@@ -10,8 +9,9 @@ using System.Collections.ObjectModel;
 
 namespace ComicsInfraLib.Models.Views
 {
-    public partial class ImportPageViewModel(IComicsBuilderService comicService,
-        JdownloaderService jdownloaderService, IPathService pathService) : ObservableObject
+    public partial class ImportPageViewModel<T>(IComicsBuilderService comicService,
+        JdownloaderService jdownloaderService, IPathService pathService,
+        IDialogService<T> dialogService) : BaseLocViewModel where T : class
     {
         public ObservableCollection<string> URLS { get; } = [];
         public ObservableCollection<string> Files { get; } = [];
@@ -32,8 +32,6 @@ namespace ComicsInfraLib.Models.Views
             }
         }
 
-        public event Func<Task<bool>>? ScanEvent;
-        public event Func<DialogArgs, Task<bool>>? SearchDialogEvent;
         public event Action<Comic?>? PathEvent;
 
         public void Load()
@@ -46,17 +44,18 @@ namespace ComicsInfraLib.Models.Views
             }
 
             SelectedFile = Files.FirstOrDefault() ?? "";
-
         }
 
         [RelayCommand]
-        public async Task AddComic()
+        public async Task AddComic(T arg)
         {
-            if (ScanEvent == null || PathEvent == null) return;
+            if (PathEvent == null) return;
 
-            bool res = await ScanEvent.Invoke();
+            DialogResult res = await dialogService.ShowAddAsync(arg);
+            if(res == DialogResult.CANCELLED) return;
+
             Comic? comic = await comicService.MakeComics(Comic.BaseURL,
-                Comic.Author, Comic.PackageName, Comic.NumberPages, res);
+                Comic.Author, Comic.PackageName, Comic.NumberPages, res == DialogResult.SUCCESS);
             if (comic != null)
                 PathEvent.Invoke(comic);
 
@@ -85,20 +84,20 @@ namespace ComicsInfraLib.Models.Views
         }
 
         [RelayCommand]
-        public async Task SearchComic()
+        public async Task SearchComic(T arg)
         {
-            if (SelectedFile == null || SearchDialogEvent == null) return;
+            if (SelectedFile == null) return;
             if (string.IsNullOrWhiteSpace(Comic.Author) || 
                 string.IsNullOrWhiteSpace(Comic.PackageName))
                 return;
 
             string? jd = await jdownloaderService.GetComicJdownloader(Comic.Author,
                Comic.PackageName);
-            bool res = await SearchDialogEvent.Invoke(new(Comic.PackageName, Comic.Author,
-                pathService.BackupDirPath, jd));
-            if (res)
+            DialogResult res = await dialogService.ShowSearchAsync(new(Comic.PackageName, Comic.Author,
+                pathService.BackupDirPath, jd), arg);
+            if (res == DialogResult.SUCCESS)
             {
-                await AddComic();
+                await AddComic(arg);
             }
         }
     }

@@ -1,7 +1,8 @@
-﻿using Microsoft.UI.Xaml.Data;
-using ModernDownloadComics.Resources;
+﻿using ComicsLocalizationLib;
+using Microsoft.UI.Xaml.Data;
+using ModernDownladComics;
 using System;
-using System.Globalization;
+using System.Collections.Generic;
 
 namespace ModernDownloadComics.Converters
 {
@@ -9,9 +10,10 @@ namespace ModernDownloadComics.Converters
     {
         public object Convert(object value, Type targetType, object parameter, string culture)
         {
+            Dictionary<string, string> dic = App.Current.LocalizationService.Data["Priority"] as Dictionary<string, string> ?? [];
             string v = value.ToString() ?? string.Empty;
 
-            return TranslationSource.Instance[$"Priority_{char.ToUpper(v[0])}{v[1..].ToLower()}"];
+            return dic[v];
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, string language)

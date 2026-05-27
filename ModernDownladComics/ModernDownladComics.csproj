@@ -59,6 +59,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ComicsInfraLib\ComicsInfraLib.csproj" />
+    <ProjectReference Include="..\ComicsLocalizationLib\ComicsLocalizationLib.csproj" />
   </ItemGroup>
   <ItemGroup>
     <Page Update="Pages\SettingsCredentials.xaml">

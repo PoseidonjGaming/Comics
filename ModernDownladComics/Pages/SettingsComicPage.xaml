@@ -8,11 +8,12 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:conv="using:ModernDownloadComics.Converters"
     xmlns:vw="using:ComicsInfraLib.Models.Views"
-    d:DataContext="{d:DesignInstance Type=vw:SettingsComicPageViewModel}"
-    mc:Ignorable="d">
+    mc:Ignorable="d" DataContext="{x:Bind ViewModel}">
 
     <Page.Resources>
         <conv:HostConverter x:Key="HostConverter"/>
+        <conv:EnumConverter x:Key="EnumConverter"/>
+        <conv:LabelConverter x:Key="LabelConverter"/>
     </Page.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
@@ -20,7 +21,7 @@
         </Grid.ColumnDefinitions>
         <StackPanel Orientation="Vertical">
             <StackPanel Orientation="Vertical" Margin="10">
-                <TextBlock Text="Base URL:" FontSize="16"
+                <TextBlock Text="{x:Bind ViewModel.Loc['BaseURL'], Converter={StaticResource LabelConverter}, ConverterParameter='{}{0}:'}" FontSize="16"
                            HorizontalAlignment="Left" Margin="0,0,0,5"/>
                 <TextBox FontSize="16" TextWrapping="NoWrap"
                          Text="{Binding Comic.BaseURL, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
@@ -33,7 +34,8 @@
                              Text="{Binding Comic.URL, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                 </StackPanel>
                 <StackPanel Orientation="Vertical" Margin="10,0,0,0">
-                    <TextBlock Text="Host:" FontSize="16" Margin="0,0,0,5" 
+                    <TextBlock Text="{x:Bind ViewModel.Loc['Host'], Converter={StaticResource LabelConverter}, ConverterParameter='{}{0}:'}"
+                               FontSize="16" Margin="0,0,0,5" 
                                HorizontalAlignment="Left"/>
                     <TextBox IsReadOnly="True" FontSize="16" TextWrapping="NoWrap" Width="150"
                              Text="{Binding Comic.URL, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource HostConverter}}"/>
@@ -41,45 +43,56 @@
             </StackPanel>
             <StackPanel Orientation="Horizontal">
                 <StackPanel Orientation="Vertical" Margin="10">
-                    <TextBlock Text="Author:" FontSize="16" Margin="0,0,0,5"
+                    <TextBlock Text="{x:Bind ViewModel.Loc['Author'], Converter={StaticResource LabelConverter}, ConverterParameter='{}{0}:'}" 
+                               FontSize="16" Margin="0,0,0,5"
                                HorizontalAlignment="Left" Width="150"/>
                     <TextBox FontSize="16" TextWrapping="NoWrap"
                              Text="{Binding Comic.Author, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                 </StackPanel>
                 <StackPanel Orientation="Vertical" Margin="10">
-                    <TextBlock Text="Name:" FontSize="16" Margin="0,0,0,5"
+                    <TextBlock Text="{x:Bind ViewModel.Loc['PackageName'], Converter={StaticResource LabelConverter}, ConverterParameter='{}{0}:'}" 
+                               FontSize="16" Margin="0,0,0,5"
                                HorizontalAlignment="Left"/>
                     <TextBox FontSize="16" TextWrapping="NoWrap" Width="300"
                              Text="{Binding Comic.PackageName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                 </StackPanel>
                 <StackPanel Orientation="Vertical" Margin="10">
-                    <TextBlock Text="Pages:" FontSize="16" Margin="0,0,0,5"
+                    <TextBlock Text="{x:Bind ViewModel.Loc['Pages'], Converter={StaticResource LabelConverter}, ConverterParameter='{}{0}:'}"
+                               FontSize="16" Margin="0,0,0,5"
                                HorizontalAlignment="Left"/>
                     <TextBox FontSize="16" TextWrapping="NoWrap" Width="15"
                              HorizontalAlignment="Left"
                              Text="{Binding Comic.NumberPages, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                 </StackPanel>
                 <StackPanel Orientation="Vertical" Margin="10">
-                    <TextBlock Text="Filename:" FontSize="16" Margin="0,0,0,5"/>
+                    <TextBlock Text="{x:Bind ViewModel.Loc['Filename'], Converter={StaticResource LabelConverter}, ConverterParameter='{}{0}:'}"
+                               FontSize="16" Margin="0,0,0,5"/>
                     <TextBox FontSize="16" TextWrapping="NoWrap" Width="200"
                         Text="{Binding Comic.Filename, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                 </StackPanel>
             </StackPanel>
             <StackPanel Orientation="Vertical" Margin="10,0,10,0">
-                <TextBlock Text="Path:" FontSize="16" Margin="0,0,0,5"/>
+                <TextBlock Text="{x:Bind ViewModel.Loc['Path'], Converter={StaticResource LabelConverter}, ConverterParameter='{}{0}:'}" FontSize="16" Margin="0,0,0,5"/>
                 <TextBox FontSize="16" TextWrapping="NoWrap"
                          Text="{Binding Comic.Path, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
             </StackPanel>
             <StackPanel Orientation="Horizontal">
                 <StackPanel Orientation="Vertical" Margin="10">
-                    <TextBlock Text="Enabling:" FontSize="16" Margin="0,0,0,5"/>
-                    <ToggleSwitch OffContent="Disabled" OnContent="Enabled" FontSize="16"
+                    <TextBlock Text="{x:Bind ViewModel.Loc['Enabling'], Converter={StaticResource LabelConverter}, ConverterParameter='{}{0}:'}" FontSize="16" Margin="0,0,0,5"/>
+                    <ToggleSwitch OffContent="{x:Bind ViewModel.Loc['Disabled']}" 
+                                  OnContent="{x:Bind ViewModel.Loc['Enabled']}" FontSize="16"
                                   IsOn="{Binding Comic.Enabled, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                 </StackPanel>
                 <StackPanel Orientation="Vertical" Margin="10">
-                    <TextBlock Text="Priority:" FontSize="16" Margin="0,0,0,5"/>
+                    <TextBlock Text="{x:Bind ViewModel.Loc['Priority'], Converter={StaticResource LabelConverter}, ConverterParameter='{}{0}:'}" FontSize="16" Margin="0,0,0,5"/>
                     <ComboBox ItemsSource="{Binding Priorities}" 
-                              SelectedItem="{Binding Comic.Priority, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                              SelectedItem="{Binding Comic.Priority, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Converter={StaticResource EnumConverter}}"/>
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
                 </StackPanel>
             </StackPanel>
         </StackPanel>

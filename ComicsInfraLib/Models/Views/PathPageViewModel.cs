@@ -18,20 +18,18 @@ namespace ComicsInfraLib.Models.Views
         [ObservableProperty]
         public partial string SelectedPath { get; set; }
 
-        private readonly ISettingsService _settingsService;
         private readonly IPathService _pathService;
         private readonly IScanService _scanService;
         private CancellationTokenSource? _scanCts;
         public Type? ReturnType;
+        public Dictionary<string, string> Loc = [];
 
         public event Action<Type>? NavigateEvent;
-        public event Action<ObservableCollection<string>, string>? AddPathEvent;
 
         private static AppState State => AppStateStore.Instance;
         public PathPageViewModel(ISettingsService settingsService, IPathService pathService,
             IScanService scanService)
         {
-            _settingsService = settingsService;
             _pathService = pathService;
             _scanService = scanService;
             Roots = new ObservableCollection<string>(settingsService.GetOptions().Paths);
@@ -41,11 +39,13 @@ namespace ComicsInfraLib.Models.Views
             Comic = new();
         }
 
-        public void Init(PathPageArgs args)
+        public void Init(PathPageArgs args, Dictionary<string, string> dictionary)
         {
             if (args.Comic != null)
                 Comic = args.Comic;
             ReturnType = args.ReturnType;
+
+            Loc = dictionary;
         }
 
         [RelayCommand]

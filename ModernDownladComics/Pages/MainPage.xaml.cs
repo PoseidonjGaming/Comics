@@ -2,6 +2,7 @@ using ComicsInfraLib.Models.Views;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml.Controls;
 using ModernDownladComics.windows;
+using System.Collections.Generic;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -23,8 +24,22 @@ namespace ModernDownladComics.Pages
                 _ = new ChangeSourceWindow(comic);
             };
 
-            DataContext = ViewModel;
+            App.Current.LocalizationService.LanguageChangedEvent += (data) =>
+            {
+                ViewModel.Loc = App.Current.LocalizationService.GetData("MainPage", "Comic");
+                Bindings.Update();
+            };
+            ViewModel.Init(App.Current.LocalizationService.GetData("MainPage", "Comic"));
+        }
 
+        private void FilterTXT_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            ViewModel.FilterComics();
+        }
+
+        private void Hosts_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            ViewModel.FilterComics();
         }
     }
 }

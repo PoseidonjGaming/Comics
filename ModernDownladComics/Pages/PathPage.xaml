@@ -7,9 +7,8 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:view="using:ComicsInfraLib.Models.Views" 
-    d:DataContext="{d:DesignInstance Type=view:PathPageViewModel}"
-    mc:Ignorable="d"
-    Loaded="Page_Loaded" Unloaded="Page_Unloaded">
+    mc:Ignorable="d" Loaded="Page_Loaded" Unloaded="Page_Unloaded" 
+    DataContext="{x:Bind ViewModel}">
 
     <Grid HorizontalAlignment="Center">
         <Grid.RowDefinitions>
@@ -53,11 +52,12 @@
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
 
-            <Button Width="100" Content="Select Path" FontSize="16" HorizontalAlignment="Center" 
+            <Button Content="{x:Bind ViewModel.Loc['SelectBTN']}"
+                    FontSize="16" HorizontalAlignment="Center" 
                     Command="{Binding SelectCommand}" Background="#229c0a"/>
-            <Button Grid.Column="1" Width="100" Content="Cancel" FontSize="16" 
-                    HorizontalAlignment="Center" Command="{Binding CancelCommand}"
-                    Background="#d91c20"/>
+            <Button Grid.Column="1" Content="{x:Bind ViewModel.Loc['CancelBTN']}"
+                    FontSize="16" HorizontalAlignment="Center" 
+                    Command="{Binding CancelCommand}" Background="#d91c20"/>
         </Grid>
     </Grid>
 </Page>

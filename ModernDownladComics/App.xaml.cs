@@ -6,6 +6,7 @@ using ComicsInfraLib;
 using ComicsInfraLib.Models.Views;
 using ComicsInfraLib.Services;
 using ComicsJDownloaderApi;
+using ComicsLocalizationLib;
 using ComicsServiceLib;
 using ComicsServiceLib.UI;
 using Microsoft.Extensions.DependencyInjection;
@@ -24,8 +25,10 @@ namespace ModernDownladComics
     {
         private Window? _window;
         public ServiceProvider Services { get; }
+        public LocalizationService LocalizationService { get; }
 
         public new static App Current => (App)Application.Current;
+        
 
         /// <summary>
         /// Initializes the singleton application object.  This is the first line of authored code
@@ -35,6 +38,8 @@ namespace ModernDownladComics
         {
             InitializeComponent();
             Services = ConfigureService();
+            LocalizationService = new();
+            LocalizationService.LoadLang("fr");
         }
 
 
@@ -71,10 +76,11 @@ namespace ModernDownladComics
         private static void AddViewModels(ServiceCollection service)
         {
             service.AddSingleton<MainPageViewModel>();
-            service.AddTransient<ArchivePageViewModel>();
-            service.AddTransient<ImportPageViewModel>();
-            service.AddTransient<AddPageViewModel>();
+            service.AddTransient<ArchivePageViewModel<XamlRoot>>();
+            service.AddTransient<ImportPageViewModel<XamlRoot>>();
+            service.AddTransient<AddPageViewModel<XamlRoot>>();
             service.AddTransient<PathPageViewModel>();
+            service.AddTransient<SettingsCredientialsPageViewModel<XamlRoot>>();
         }
 
         private static void AddServices(ServiceCollection services)
@@ -90,6 +96,7 @@ namespace ModernDownladComics
             services.AddSingleton<IStateRepository, StateRepository>();
             services.AddTransient<ArchiveService>();
             services.AddTransient<IScanService, ScanService>();
+            services.AddTransient<IDialogService<XamlRoot>, DialogService>();
         }
     }
 }

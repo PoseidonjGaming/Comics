@@ -20,15 +20,14 @@ public sealed partial class SettingsHostsPage : Page
     public SettingsHostsPage()
     {
         InitializeComponent();
-        ViewModel = new();
-        DataContext = ViewModel;
+        ViewModel = new(App.Current.LocalizationService.GetData("SettingsHostsPage", "Comic"));
     }
 
     protected override void OnNavigatedTo(NavigationEventArgs e)
     {
         base.OnNavigatedTo(e);
 
-        if(e.Parameter is SettingsPageArgs<ObservableCollection<string>> settings)
+        if (e.Parameter is SettingsPageArgs<ObservableCollection<string>> settings)
         {
             ViewModel.Setup(settings);
         }

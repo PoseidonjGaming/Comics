@@ -7,27 +7,28 @@ using System.Collections.ObjectModel;
 
 namespace ComicsInfraLib.Models.Views
 {
-    public partial class ArchivePageViewModel(JdownloaderService jdownloaderService,
-        IPathService pathService, ArchiveService archiveService) : ObservableObject
+    public partial class ArchivePageViewModel<T>(JdownloaderService jdownloaderService,
+        IPathService pathService, ArchiveService archiveService,
+        IDialogService<T> dialogService) : BaseLocViewModel where T : class
     {
-        public event Func<DialogArgs, Task<bool>>? SearchDialogEvent;
-        public event Func<Task<bool>>? RestoreDialogEvent;
         public ObservableCollection<TreeItem> Items { get; } = [];
 
         public TreeItem SelectedItem { get; set; } = new TreeItem("");
 
+        public Dictionary<string, string> Loc = [];
+
         [RelayCommand]
-        public async Task Search()
+        public async Task Search(T arg)
         {
-            if (SelectedItem == null || SearchDialogEvent == null) return;
+            if (SelectedItem == null) return;
 
             string? jd = await jdownloaderService.GetComicJdownloader(archiveService.GetAuthor(SelectedItem),
                 SelectedItem.Name);
 
 
-            bool res = await SearchDialogEvent.Invoke(new(SelectedItem.Name,
-                archiveService.GetAuthor(SelectedItem), pathService.BackupDirPath, jd));
-            if (res)
+            DialogResult res = await dialogService.ShowSearchAsync(new(SelectedItem.Name,
+                archiveService.GetAuthor(SelectedItem), pathService.BackupDirPath, jd), arg);
+            if (res == DialogResult.SUCCESS)
             {
                 DeleteItem();
             }
@@ -58,12 +59,12 @@ namespace ComicsInfraLib.Models.Views
         }
 
         [RelayCommand]
-        public async Task Restore()
+        public async Task Restore(T arg)
         {
-            if (SelectedItem != null && RestoreDialogEvent != null)
+            if (SelectedItem != null)
             {
-                bool res = await RestoreDialogEvent.Invoke();
-                if (res)
+                DialogResult res = await dialogService.ShowRestoreAsync(arg);
+                if (res == DialogResult.SUCCESS)
                 {
                     archiveService.RestoreBackup(SelectedItem);
                     DeleteItem();

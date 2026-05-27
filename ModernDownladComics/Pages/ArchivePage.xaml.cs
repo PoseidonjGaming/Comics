@@ -16,53 +16,25 @@ namespace ModernDownladComics.Pages
     /// </summary>
     public sealed partial class ArchivePage : Page
     {
-        public ArchivePageViewModel ModelView { get; set; }
+        public ArchivePageViewModel<XamlRoot> ViewModel { get; set; }
         public ArchivePage()
         {
             InitializeComponent();
 
-            ModelView = App.Current.Services.GetRequiredService<ArchivePageViewModel>();
-            ModelView.SearchDialogEvent += async (dialogArgs) =>
+            ViewModel = App.Current.Services.GetRequiredService<ArchivePageViewModel<XamlRoot>>();
+
+            App.Current.LocalizationService.LanguageChangedEvent += (data) =>
             {
-                string manga = ContentPageUtility.Search(dialogArgs.Name, dialogArgs.Author,
-                    FileUtility.ComicsDirectory, "Manga");
-                string backup = ContentPageUtility.Search(dialogArgs.Name, dialogArgs.Author,
-                    dialogArgs.Path, "Backup");
-                ContentDialog dialog = new()
-                {
-                    Title = "Search",
-                    Content = new SearchPage(manga, backup,
-                  $"From JDownloader {dialogArgs.Jd}" ?? "Download not found",
-                    $"Do you want to delete the backup of {dialogArgs.Name}"),
-                    PrimaryButtonText = "Yes",
-                    DefaultButton = ContentDialogButton.Primary,
-                    CloseButtonText = "No",
-                    XamlRoot = this.XamlRoot
-                };
-                ContentDialogResult result = await dialog.ShowAsync();
-                return result == ContentDialogResult.Primary;
+                ViewModel.Loc = App.Current.LocalizationService.GetData("ArchivePage");
+                Bindings.Update();
             };
 
-            ModelView.RestoreDialogEvent += async () =>
-            {
-                ContentDialog dialog = new()
-                {
-                    Title = "Restore",
-                    Content = "Do you want to restore this backup?",
-                    DefaultButton = ContentDialogButton.Primary,
-                    PrimaryButtonText = "Yes",
-                    CloseButtonText = "No",
-                    XamlRoot = this.XamlRoot
-                };
-
-                ContentDialogResult res = await dialog.ShowAsync();
-                return res == ContentDialogResult.Primary;
-            };
+            ViewModel.InitData(App.Current.LocalizationService.GetData("ArchivePage"));
         }
 
         private void Page_Loaded(object sender, RoutedEventArgs e)
         {
-            ModelView.Load();
+            ViewModel.Load();
         }
     }
 }

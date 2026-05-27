@@ -1,28 +1,23 @@
 ﻿using ComicsInfraLib.Helpers;
-using ComicsLib.Models;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using System.Collections.ObjectModel;
 
 namespace ComicsInfraLib.Models.Views
 {
-    public partial class SettingsHostPageViewModel : ObservableObject
+    public partial class SettingsHostPageViewModel(Dictionary<string, string> loc) : ObservableObject
     {
         [ObservableProperty]
-        public partial ObservableCollection<string> Collection { get; set; }
+        public partial ObservableCollection<string> Collection { get; set; } = [];
 
         [ObservableProperty]
-        public partial string Value { get; set; }
+        public partial string Value { get; set; } = string.Empty;
         [ObservableProperty]
-        public partial string SelectedHost { get; set; }
+        public partial string SelectedHost { get; set; } = string.Empty;
 
         private bool isHost;
 
-        public SettingsHostPageViewModel()
-        {
-            Value = string.Empty;
-            Collection = [];
-        }
+        public Dictionary<string, string> Loc { get; set; } = loc;
 
         public void Setup(SettingsPageArgs<ObservableCollection<string>> settings)
         {

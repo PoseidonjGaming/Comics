@@ -1,19 +1,8 @@
-using ComicsInfraLib.Helpers;
 using ComicsInfraLib.Models;
 using ComicsInfraLib.Models.Views;
-using ComicsLib.Models;
-using ComicsLib.Utility;
-using ComicsServiceLib.UI;
-using FuzzierSharp;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.IO;
-using System.Threading;
-using System.Threading.Tasks;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -37,15 +26,11 @@ namespace ModernDownladComics.Pages
             {
                 Frame.Navigate(returnType);
             };
-            ViewModel.AddPathEvent += (paths, item) =>
+            App.Current.LocalizationService.LanguageChangedEvent += (data) =>
             {
-                DispatcherQueue.TryEnqueue(() =>
-                {
-                    paths.Add(item);
-                });
+                ViewModel.Loc = App.Current.LocalizationService.GetData("PathPage");
+                Bindings.Update();
             };
-
-            DataContext = ViewModel;
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
@@ -54,7 +39,7 @@ namespace ModernDownladComics.Pages
 
             if (e.Parameter is PathPageArgs args)
             {
-                ViewModel.Init(args);
+                ViewModel.Init(args, App.Current.LocalizationService.GetData("PathPage"));
             }
         }
 

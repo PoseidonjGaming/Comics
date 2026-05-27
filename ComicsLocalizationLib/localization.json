@@ -1,0 +1,286 @@
+{
+  "$id": "loc_schema",
+  "title": "Localization Schema",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "Comic",
+    "Priority",
+    "MainWindow",
+    "MainPage",
+    "AddPage",
+    "ArchivePage",
+    "ImportPage",
+    "PathPage",
+    "Dialog",
+    "SearchPage",
+    "ScanDialog",
+    "SettingsComicPage",
+    "SettingsCredentialsPage",
+    "SettingsHostsPage"
+  ],
+  "properties": {
+    "Comic": {
+      "type": "object",
+      "required": [
+        "Author",
+        "PackageName",
+        "Pages",
+        "Host",
+        "Filename",
+        "Path",
+        "Enable",
+        "Priority",
+        "BaseURL"
+      ],
+      "properties": {
+        "Author": { "type": "string" },
+        "PackageName": { "type": "string" },
+        "Pages": { "type": "string" },
+        "Host": { "type": "string" },
+        "Filename": { "type": "string" },
+        "Path": { "type": "string" },
+        "Enable": { "type": "string" },
+        "Priority": { "type": "string" },
+        "BaseURL": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+    "Priority": {
+      "type": "object",
+      "required": [
+        "HIGHEST",
+        "HIGHER",
+        "HIGH",
+        "DEFAULT",
+        "LOW",
+        "LOWER",
+        "LOWEST"
+      ],
+      "properties": {
+        "HIGHEST": { "type": "string" },
+        "HIGHER": { "type": "string" },
+        "HIGH": { "type": "string" },
+        "DEFAULT": { "type": "string" },
+        "LOW": { "type": "string" },
+        "LOWER": { "type": "string" },
+        "LOWEST": { "type": "string" },
+        "additionalProperties": false
+      }
+    },
+    "MainWindow": {
+      "type": "object",
+      "properties": {
+        "Title": { "type": "string" },
+        "Home": { "type": "string" },
+        "Send": { "type": "string" },
+        "Add": { "type": "string" },
+        "AddLink": { "type": "string" },
+        "ImportLinks": { "type": "string" },
+        "Archive": { "type": "string" },
+        "Settings": { "type": "string" }
+      },
+      "required": [
+        "Title",
+        "Home",
+        "Add",
+        "AddLink",
+        "ImportLinks",
+        "Archive",
+        "Settings"
+      ],
+      "additionalProperties": false
+    },
+    "MainPage": {
+      "type": "object",
+      "required": [
+
+      ],
+      "properties": {
+
+      },
+      "additionalProperties": false
+    },
+    "AddPage": {
+      "type": "object",
+      "required": [
+        "AddBTN",
+        "SearchBTN",
+        "ClearBTN",
+        "DeleteBTN"
+      ],
+      "properties": {
+        "AddBTN": { "type": "string" },
+        "SearchBTN": { "type": "string" },
+        "ClearBTN": { "type": "string" },
+        "DeleteBTN": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+    "ArchivePage": {
+      "type": "object",
+      "required": [
+        "SearchBTN",
+        "RestoreBTN",
+        "DeleteBTN"
+      ],
+      "properties": {
+        "SearchBTN": { "type": "string" },
+        "RestoreBTN": { "type": "string" },
+        "DeleteBTN": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+    "ImportPage": {
+      "type": "object",
+      "required": [
+        "AddBTN",
+        "SearchBTN",
+        "ClearBTN"
+      ],
+      "properties": {
+        "AddBTN": { "type": "string" },
+        "SearchBTN": { "type": "string" },
+        "ClearBTN": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+    "PathPage": {
+      "type": "object",
+      "required": [
+        "SelectBTN",
+        "CancelBTN"
+      ],
+      "properties": {
+        "SelectBTN": { "type": "string" },
+        "CancelBTB": { "type": "string" }
+      }
+    },
+    "SearchPage": {
+      "type": "object",
+      "required": [
+        "Title",
+        "From",
+        "Empty",
+        "NotFound",
+        "Delete",
+        "Add"
+      ],
+      "properties": {
+        "Title": { "type": "string" },
+        "From": { "type": "string" },
+        "Empty": { "type": "string" },
+        "NotFound": { "type": "string" },
+        "Delete": { "type": "string" },
+        "Add": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+    "Dialog": {
+      "type": "object",
+      "required": [
+        "Yes",
+        "No",
+        "Search",
+        "Error",
+        "Restore",
+        "RestoreQuestion",
+        "Close"
+      ],
+      "properties": {
+        "Yes": { "type": "string" },
+        "No": { "type": "string" },
+        "Search": { "type": "string" },
+        "Error": { "type": "string" },
+        "Restore": { "type": "string" },
+        "RestoreQuestion": { "type": "string" },
+        "Close": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+    "ScanDialog": {
+      "type": "object",
+      "required": [
+        "Title",
+        "Content",
+        "Cancel"
+      ],
+      "properties": {
+        "Title": { "type": "string" },
+        "Content": { "type": "string" },
+        "Cancel": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+    "SettingsWindow": {
+      "type": "object",
+      "required": [
+        "Hosts",
+        "SearchHosts",
+        "ConfirmHosts",
+        "ExcludedHosts",
+        "Paths",
+        "Credentials",
+        "ImportSettings",
+        "ExportSettings"
+      ],
+      "properties": {
+        "Hosts": { "type": "string" },
+        "SearchHosts": { "type": "string" },
+        "ConfirmHosts": { "type": "string" },
+        "ExcludedHosts": { "type": "string" },
+        "Paths": { "type": "string" },
+        "Credentials": { "type": "string" },
+        "ImportSettings": { "type": "string" },
+        "ExportSettings": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+    "SettingsComicPage": {
+      "type": "object",
+      "required": [
+        "Enabling",
+        "Enabled",
+        "Disabled"
+      ],
+      "properties": {
+        "Enabling": { "type": "string" },
+        "Enabled": { "type": "string" },
+        "Disabled": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+    "SettingsCredentialsPage": {
+      "type": "object",
+      "required": [
+        "Mail",
+        "Password",
+        "Device",
+        "TestConnectionBTN",
+        "ConnectionFailed",
+        "ConnectionSuccessful"
+      ],
+      "properties": {
+        "Mail": { "type": "string" },
+        "Password": { "type": "string" },
+        "Device": { "type": "string" },
+        "TestConnectionBTN": { "type": "string" },
+        "ConnectionFailed": { "type": "string" },
+        "ConnectionSuccessful": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+    "SettingsHostsPage": {
+      "type": "object",
+      "required": [
+        "AddBTN",
+        "DeleteBTN"
+      ],
+      "properties": {
+        "AddBTN": { "type": "string" },
+        "DeleteBTN": { "type": "string" }
+      },
+      "additionalProperties": false
+    }
+  }
+}

@@ -44,8 +44,8 @@ namespace ComicsInfraLib.Services
         public void RestoreBackup(TreeItem item)
         {
             string destPath = item.Path.Replace(pathService.BackupDirPath, FileUtility.ComicsDirectory);
-
-            Directory.Move(destPath, item.Path);
+            
+            Directory.Move(item.Path, destPath);
         }
 
         public string GetAuthor(TreeItem item)

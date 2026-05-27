@@ -15,6 +15,7 @@ using Microsoft.Windows.Storage.Pickers;
 using ModernDownladComics.Pages;
 using ModernDownloadComics.Services;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
 // To learn more about WinUI, the WinUI project structure,
@@ -35,12 +36,13 @@ namespace ModernDownladComics.windows
         private readonly ObservableCollection<string> Confirm;
         private readonly ObservableCollection<string> Excluded;
         private readonly ObservableCollection<string> Path;
+        public Dictionary<string, string> Loc { get; set; }
 
 
         public SettingsWindow()
         {
             InitializeComponent();
-            AppWindow.Resize(new(1050, 700));
+            AppWindow.Resize(new(1100, 700));
             AppWindow.TitleBar.PreferredTheme = TitleBarTheme.UseDefaultAppMode;
             WindowService.SetOwner(this);
             WindowService.Center(this);
@@ -57,8 +59,9 @@ namespace ModernDownladComics.windows
             AppWindow.TitleBar.ButtonBackgroundColor = Colors.Transparent;
             AppWindow.TitleBar.ButtonInactiveBackgroundColor = Colors.Transparent;
             AppWindow.TitleBar.ButtonForegroundColor = Colors.White;
-
-            AppWindow.Show();
+            
+            Loc = App.Current.LocalizationService.GetData("SettingsWindow");
+            
 
             options = App.Current.Services.GetRequiredService<ISettingsService>().GetOptions();
             Host = new(options.Hosts);
@@ -67,6 +70,8 @@ namespace ModernDownladComics.windows
             Path = new(options.Paths);
 
             credentials = App.Current.Services.GetRequiredService<ICredentialsService>().GetCredentials();
+
+            AppWindow.Show();
 
             settingsFrame.Navigate(typeof(SettingsComicPage),
                 new SettingsPageArgs<Comic?>(options.Comic, false));

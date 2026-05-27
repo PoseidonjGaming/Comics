@@ -17,53 +17,23 @@ namespace ModernDownladComics.Pages;
 /// </summary>
 public sealed partial class ImportPage : Page
 {
-    public ImportPageViewModel ViewModel { get; set; }
+    public ImportPageViewModel<XamlRoot> ViewModel { get; set; }
 
     public ImportPage()
     {
         InitializeComponent();
-        ViewModel = App.Current.Services.GetRequiredService<ImportPageViewModel>();
-        ViewModel.ScanEvent += async () =>
-        {
-            ContentDialog dialog = new()
-            {
-                Title = "Scan the url",
-                Content = "Do you want to scan the url",
-                DefaultButton = ContentDialogButton.Primary,
-                PrimaryButtonText = "Yes",
-                SecondaryButtonText = "No",
-                XamlRoot = this.XamlRoot
-            };
-
-            var res = await dialog.ShowAsync();
-            return res == ContentDialogResult.Primary;
-        };
-        ViewModel.SearchDialogEvent += async (args) =>
-        {
-            string manga = ContentPageUtility.Search(args.Name, args.Author,
-                FileUtility.ComicsDirectory, "Manga");
-            string backup = ContentPageUtility.Search(args.Name, args.Author,
-              args.Path, "Backup");
-            ContentDialog dialog = new()
-            {
-                Title = "Search",
-                Content = new SearchPage(manga, backup,!string.IsNullOrEmpty(args.Jd)?
-                $"From JDownloader {args.Jd}" : "Download not found",
-                $"Do you want to add {args.Name}"),
-                PrimaryButtonText = "Yes",
-                DefaultButton = ContentDialogButton.Primary,
-                CloseButtonText = "No",
-                XamlRoot = this.XamlRoot
-            };
-            ContentDialogResult dialogRes = await dialog.ShowAsync();
-            return dialogRes == ContentDialogResult.Primary;
-        };
+        ViewModel = App.Current.Services.GetRequiredService<ImportPageViewModel<XamlRoot>>();
         ViewModel.PathEvent += comic =>
         {
             Frame.Navigate(typeof(PathPage), new PathPageArgs(comic, typeof(ImportPage)));
         };
 
-        DataContext = ViewModel;
+        App.Current.LocalizationService.LanguageChangedEvent += (data) =>
+        {
+            ViewModel.Loc = App.Current.LocalizationService.GetData("ImportPage", "Comic");
+            Bindings.Update();
+        };
+        ViewModel.InitData(App.Current.LocalizationService.GetData("ImportPage", "Comic"));
     }
 
     private void Page_Loaded(object sender, RoutedEventArgs e)

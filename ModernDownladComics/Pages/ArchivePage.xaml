@@ -9,8 +9,7 @@
     xmlns:vw="using:ComicsInfraLib.Models.Views"
     xmlns:m="using:ComicsLib.Models"
     mc:Ignorable="d"
-    d:DataContext="{d:DesignInstance Type=vw:ArchivePageViewModel}"
-    Loaded="Page_Loaded" DataContext="{x:Bind ModelView}">
+    Loaded="Page_Loaded" DataContext="{x:Bind ViewModel}">
 
     <Grid>
         <Grid.RowDefinitions>
@@ -24,11 +23,15 @@
 
         <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center"
                     Margin="10">
-            <Button x:Name="searchBTN" Content="Search" FontSize="16" 
-                    Command="{Binding SearchCommand}"/>
-            <Button Content="Restore" FontSize="16" Margin="10,0,10,0"
-                    Command="{Binding RestoreCommand}"/>
-            <Button Content="Delete" FontSize="16" Command="{Binding DeleteItemCommand}"/>
+            <Button Content="{x:Bind ViewModel.Loc['SearchBTN']}" FontSize="16" 
+                    Command="{Binding SearchCommand}"
+                    CommandParameter="{x:Bind XamlRoot}"/>
+            <Button Content="{x:Bind ViewModel.Loc['RestoreBTN']}" FontSize="16"
+                    Margin="10,0,10,0"
+                    Command="{Binding RestoreCommand}"
+                    CommandParameter="{x:Bind XamlRoot}"/>
+            <Button Content="{x:Bind ViewModel.Loc['DeleteBTN']}" FontSize="16"
+                    Command="{Binding DeleteItemCommand}"/>
         </StackPanel>
 
         <TreeView x:Name="folderTree" Grid.Row="1" Margin="10" CanDrag="False"

@@ -15,18 +15,19 @@ namespace ModernDownladComics.Utilities
     {
         public static string Search(string name, string author, string path, string from)
         {
+
             string authorPath = SearchUtility.GetAuthorPath(author, path);
             if (Fuzz.Ratio(Path.GetFileNameWithoutExtension(authorPath), author) < 80)
-                return "Empty";
+                return App.Current.LocalizationService.GetData("SearchPage")["Empty"];
             IEnumerable<ExtractedResult<string>> results = SearchUtility.GetComics(authorPath, name);
             ExtractedResult<string>? res = results.FirstOrDefault();
 
             if (res == null)
-                return "Empty";
+                return App.Current.LocalizationService.GetData("SearchPage")["Empty"];
 
             string fromPath = res.Value.Replace(authorPath, string.Empty)[1..];
-
-            return $"From {from}: {SearchUtility.CountPage(res.Value)} pages - {fromPath}";
+            string fromLoc = App.Current.LocalizationService.GetData("SearchPage")["From"];
+            return $"{fromLoc} {from}: {SearchUtility.CountPage(res.Value)} pages - {fromPath}";
         }
     }
 }

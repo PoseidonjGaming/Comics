@@ -3,7 +3,9 @@ using ComicsInfraLib.Models.Views;
 using ComicsLib.Models;
 using JDownloader;
 using JDownloader.Model;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI;
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
@@ -21,11 +23,13 @@ namespace ModernDownladComics.Pages
     /// </summary>
     public sealed partial class SettingsCredentials : Page
     {
-        public SettingsCredientialsPageViewModel ViewModel { get; set; }
+        public SettingsCredientialsPageViewModel<XamlRoot> ViewModel { get; set; }
         public SettingsCredentials()
         {
             InitializeComponent();
-            ViewModel = new();
+            ViewModel = App.Current.Services
+                .GetRequiredService<SettingsCredientialsPageViewModel<XamlRoot>>();
+            ViewModel.InitData(App.Current.LocalizationService.GetData("SettingsCredentialsPage"));
             ViewModel.ConnectionEvent += () =>
             {
                 connectionLBL.Foreground = new SolidColorBrush(Colors.Green);
@@ -33,19 +37,7 @@ namespace ModernDownladComics.Pages
             ViewModel.DialogEvent += async (msg) =>
             {
                 connectionLBL.Foreground = new SolidColorBrush(Colors.Red);
-                ContentDialog dialog = new()
-                {
-                    Title = "Error",
-                    Content = msg,
-                    DefaultButton = ContentDialogButton.Primary,
-                    PrimaryButtonText = "Close",
-                    XamlRoot = this.XamlRoot
-                };
-
-                await dialog.ShowAsync();
-            };
-            DataContext = ViewModel;
-            
+            };            
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)

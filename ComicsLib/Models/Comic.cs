@@ -193,12 +193,14 @@ namespace ComicsLib.Models
             this.NumberPages = pages;
             this.Author = author;
             this.Path = System.IO.Path.Combine(author.Trim(), packageName.Trim());
+            this._filename = filename;
         }
 
         public Comic()
         {
             _url = "";
             _baseURL = "";
+            _filename = "";
         }
 
         public void Reset()

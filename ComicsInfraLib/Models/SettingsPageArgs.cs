@@ -1,4 +1,6 @@
-﻿namespace ComicsInfraLib.Models
+﻿using ComicsInfraLib.Models.Views;
+
+namespace ComicsInfraLib.Models
 {
-    public record SettingsPageArgs<T>(T Arg, bool IsHost);
+    public record SettingsPageArgs<T>(T Arg);
 }

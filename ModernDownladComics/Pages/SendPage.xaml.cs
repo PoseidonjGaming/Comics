@@ -25,17 +25,19 @@ namespace ModernDownladComics.Pages
 
         private readonly JDownloadJobService? _jobService;
         public readonly SendViewModel ViewModel;
+        private readonly IStateRepository _stateRepository;
 
         public SendPage()
         {
             InitializeComponent();
-            ViewModel = new("Start", "Job not started");
+            ViewModel = App.Current.Services.GetRequiredService<SendViewModel>();
 
             _jobService = App.Current.Services.GetRequiredService<JDownloadJobService>();
             var service = App.Current.Services.GetRequiredService<IJobState>() as JobState;
 
             service?.InitPage(ViewModel);
-            DataContext = ViewModel;
+
+            _stateRepository = App.Current.Services.GetRequiredService<IStateRepository>();
         }
 
         private async void JobToggleBTN_Checked(object sender, RoutedEventArgs e)
@@ -75,11 +77,10 @@ namespace ModernDownladComics.Pages
             if (_jobService != null)
             {
                 await _jobService.RunAsync(_verifyTokenSource.Token);
-                AppStateStore.Instance.Comics.Clear();
+                _stateRepository.Comics.Clear();
                 ViewModel.IsDetermined = true;
-                var pathService= App.Current.Services.GetRequiredService<IPathService>();
-                FileUtility.WriteFile(pathService.BackupFilePath,
-                    AppStateStore.Instance.Comics);
+                var pathService = App.Current.Services.GetRequiredService<IPathService>();
+                FileUtility.WriteFile(pathService.BackupFilePath, _stateRepository.Comics);
                 Frame.Navigate(typeof(MainPage));
             }
 

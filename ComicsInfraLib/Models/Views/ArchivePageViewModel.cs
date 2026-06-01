@@ -1,7 +1,6 @@
 ﻿using ComicsInfraLib.Services;
 using ComicsLib.Models;
 using ComicsServiceLib.UI;
-using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using System.Collections.ObjectModel;
 
@@ -9,13 +8,11 @@ namespace ComicsInfraLib.Models.Views
 {
     public partial class ArchivePageViewModel<T>(JdownloaderService jdownloaderService,
         IPathService pathService, ArchiveService archiveService,
-        IDialogService<T> dialogService) : BaseLocViewModel where T : class
+        IDialogService<T> dialogService) where T : class
     {
         public ObservableCollection<TreeItem> Items { get; } = [];
 
         public TreeItem SelectedItem { get; set; } = new TreeItem("");
-
-        public Dictionary<string, string> Loc = [];
 
         [RelayCommand]
         public async Task Search(T arg)

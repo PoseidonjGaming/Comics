@@ -20,13 +20,13 @@ namespace ModernDownladComics.Pages
     /// </summary>
     public sealed partial class BrowserPage : Page
     {
-        public BrowserPageViewModel ModelView { get; }
+        public BrowserPageViewModel ViewModel { get; }
         private TypedEventHandler<CoreWebView2, CoreWebView2WebResourceRequestedEventArgs>? webResourceRequestHandler;
 
         public BrowserPage()
         {
             InitializeComponent();
-            ModelView = new();
+            ViewModel = new();
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
@@ -35,7 +35,7 @@ namespace ModernDownladComics.Pages
 
             if (e.Parameter is WebPageArgs pageArgs)
             {
-                ModelView.Init(pageArgs);
+                ViewModel.Init(pageArgs);
             }
         }
 
@@ -54,22 +54,19 @@ namespace ModernDownladComics.Pages
             browser.CoreWebView2.Profile?.ClearBrowsingDataAsync(CoreWebView2BrowsingDataKinds.Cookies | CoreWebView2BrowsingDataKinds.CacheStorage | CoreWebView2BrowsingDataKinds.AllProfile);
 
 
-            browser.CoreWebView2.Navigate(ModelView.URL);
+            browser.CoreWebView2.Navigate(ViewModel.URL);
         }
 
         private async void Browser_NavigationCompleted(WebView2 sender, CoreWebView2NavigationCompletedEventArgs args)
         {
-            if (args.IsSuccess)
-            {
-                await ModelView.OnNavigationCompleted(
-                          async js => await browser.CoreWebView2.ExecuteScriptAsync(js),
-                          browser.Source.AbsoluteUri);
-            }
+            await ViewModel.OnNavigationCompleted(
+                         async js => await browser.CoreWebView2.ExecuteScriptAsync(js),
+                         browser.Source.AbsoluteUri);
         }
 
         private void Page_Unloaded(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
         {
-            ModelView.CleanUp();
+            ViewModel.CleanUp();
             if (browser != null)
             {
                 try
@@ -83,6 +80,9 @@ namespace ModernDownladComics.Pages
             }
         }
 
-
+        private void browser_KeyDown(object sender, Microsoft.UI.Xaml.Input.KeyRoutedEventArgs e)
+        {
+           
+        }
     }
 }

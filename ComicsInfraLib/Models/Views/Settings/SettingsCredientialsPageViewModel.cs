@@ -1,15 +1,15 @@
 ﻿using ComicsJDownloaderApi;
 using ComicsLib.Models;
+using ComicsLocalizationLib;
 using ComicsServiceLib.UI;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using JDownloader.Model;
-using System.Drawing;
 
 namespace ComicsInfraLib.Models.Views
 {
-    public partial class SettingsCredientialsPageViewModel<T>(IDialogService<T> dialogService) :
-        BaseLocViewModel where T : class
+    public partial class SettingsCredientialsPageViewModel<T>(IDialogService<T> dialogService,
+        LocalizationService localizationService) :ObservableObject where T : class
     {
         [ObservableProperty]
         public partial JDCredentials Credentials { get; set; } = new("mail", "password", "device");
@@ -53,7 +53,7 @@ namespace ComicsInfraLib.Models.Views
                             client.SetDirectConnectionInfo(directInfos.Infos[0]);
                         }
 
-                        ConnectionLabel = Loc["ConnectionSuccessful"]
+                        ConnectionLabel = localizationService["SettingsCredentialsPage.ConnectionSuccessful"]
                         ;
                         ConnectionEvent();
                     }
@@ -76,7 +76,7 @@ namespace ComicsInfraLib.Models.Views
         private async Task HandleConnectionException(string message, T arg)
         {
             if (ConnectionEvent == null || DialogEvent == null) return;
-            ConnectionLabel = Loc["ConnectionFailed"];
+            ConnectionLabel = localizationService["SettingsCredentialsPage.ConnectionFailed"];
             ConnectionEvent();
             await dialogService.ShowErrorAsync(arg, message);
 

@@ -7,6 +7,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:view="using:ComicsInfraLib.Models.Views" 
+    xmlns:res="using:ModernDownladComics"
     mc:Ignorable="d" Loaded="Page_Loaded" Unloaded="Page_Unloaded" 
     DataContext="{x:Bind ViewModel}">
 
@@ -52,10 +53,10 @@
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
 
-            <Button Content="{x:Bind ViewModel.Loc['SelectBTN']}"
+            <Button Content="{res:Loc Key=SelectBTN, Section=PathPage}"
                     FontSize="16" HorizontalAlignment="Center" 
                     Command="{Binding SelectCommand}" Background="#229c0a"/>
-            <Button Grid.Column="1" Content="{x:Bind ViewModel.Loc['CancelBTN']}"
+            <Button Grid.Column="1" Content="{res:Loc Key=CancelBTN, Section=PathPage}"
                     FontSize="16" HorizontalAlignment="Center" 
                     Command="{Binding CancelCommand}" Background="#d91c20"/>
         </Grid>

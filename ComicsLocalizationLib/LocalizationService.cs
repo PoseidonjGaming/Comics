@@ -1,55 +1,35 @@
-﻿using System.ComponentModel;
+﻿using ComicsLocalizationLib.Resources;
+using System.ComponentModel;
 using System.Reflection;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 
 namespace ComicsLocalizationLib
 {
-    public class LocalizationService
+    public partial class LocalizationService : INotifyPropertyChanged
     {
-        private Dictionary<string, object> _data = [];
-        public Dictionary<string, object> Data { get => _data; }
+        private Dictionary<string, string> _data = [];
+        public Dictionary<string, string> Data { get => _data; }
         public string CurrentCulture { get; private set; } = "en";
 
+        public List<LanguageOption> Languages { get; }
+
         public string this[string key] => Get(key);
-        public event Action<Dictionary<string, object>>? LanguageChangedEvent;
+        public event Action<Dictionary<string, string>>? LanguageChangedEvent;
+
+        public event PropertyChangedEventHandler? PropertyChanged;
+
+        public LocalizationService()
+        {
+            Languages = [..Assembly.GetExecutingAssembly().GetManifestResourceNames().Select(s=>{
+                string code = s.Split("Langs").Last().TrimStart('.').Replace(".json", string.Empty);
+                return new LanguageOption(code,code);
+            })];
+        }
 
         public string Get(string key)
         {
-            var parts = key.Split('.');
-            object current = _data;
-            foreach (var part in parts)
-            {
-                if (current is Dictionary<string, object> dic &&
-                    dic.TryGetValue(part, out var next))
-                {
-                    current = next;
-                }
-                else
-                {
-                    return $"#{key}#";
-                }
-            }
-
-            return current.ToString() ?? $"#{key}#";
-        }
-
-        public string Format(string key, object value)
-        {
-            string template = Get(key);
-
-            if (value == null)
-                return template;
-
-            var props = value.GetType().GetProperties();
-            foreach (var prop in props)
-            {
-                string placeholder = "{" + prop.Name + "}";
-                string val = prop.GetValue(value)?.ToString() ?? "";
-
-                template = template.Replace(placeholder, val);
-            }
-            return template;
+            return _data.TryGetValue(key, out var value) ? value : $"#{key}#";
         }
 
         public void LoadLang(string lang)
@@ -66,63 +46,53 @@ namespace ComicsLocalizationLib
 
             CurrentCulture = lang;
 
-            LanguageChangedEvent?.Invoke(_data);
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("Item[]"));
 
         }
 
-        private static Dictionary<string, object> Deserializer(string json)
+        private static Dictionary<string, string> Deserializer(string json)
         {
-            Dictionary<string, object> rootDic = [];
+            Dictionary<string, string> rootDic = [];
 
             JsonNode? root = JsonNode.Parse(json);
             if (root != null)
             {
                 foreach (var rootProp in root.AsObject())
                 {
-                    if (rootProp.Value != null
-                        && rootProp.Value.GetValueKind() == JsonValueKind.Object)
+                    if (rootProp.Value?.GetValueKind() == JsonValueKind.Object)
                     {
-                        Dictionary<string, string> dic = [];
-                        foreach (var prop in rootProp.Value.AsObject())
-                        {
-                            if (prop.Value != null && prop.Value.GetValueKind() == JsonValueKind.String)
-                                dic.Add(prop.Key, prop.Value.AsValue().GetValue<string>());
-                        }
-                        rootDic.Add(rootProp.Key, dic);
+                        BrowseNode(rootProp.Value.AsObject(), rootProp.Key, rootDic);
                     }
+
                 }
             }
 
             return rootDic;
         }
 
-        private static string GetRessource(string lang)
+        private static void BrowseNode(JsonObject node, string key,
+            Dictionary<string, string> dic)
         {
-
-            var list = Assembly.GetExecutingAssembly().GetManifestResourceNames();
-            return Assembly.GetExecutingAssembly()
-                 .GetManifestResourceNames().First(s => s.Equals($"ComicsLocalizationLib.{lang}"));
-        }
-
-        public Dictionary<string, string> GetData(string uiKey, params string[] additionalKeys)
-        {
-            Dictionary<string, string> dic = GetDic(uiKey);
-
-            foreach (var key in additionalKeys)
+            foreach (var prop in node)
             {
-                Dictionary<string, string> commonDic = GetDic(key);
-                foreach (var item in commonDic)
+                if (prop.Value?.GetValueKind() == JsonValueKind.Object)
                 {
-                    dic.TryAdd(item.Key, item.Value);
+                    BrowseNode(prop.Value.AsObject(), $"{key}.{prop.Key}", dic);
+
+                }
+                else if (prop.Value?.GetValueKind() == JsonValueKind.String)
+                {
+                    dic[$"{key}.{prop.Key}"] = prop.Value?.ToString() ?? "";
                 }
             }
-
-            return dic;
         }
 
-        private Dictionary<string, string> GetDic(string uiKey)
+        private static string GetRessource(string lang)
         {
-            return _data[uiKey] as Dictionary<string, string> ?? [];
+            var list = Assembly.GetExecutingAssembly().GetManifestResourceNames();
+            return Assembly.GetExecutingAssembly()
+                 .GetManifestResourceNames().First(s =>
+                 s.Equals($"ComicsLocalizationLib.Resources.Langs.{lang}"));
         }
     }
 }

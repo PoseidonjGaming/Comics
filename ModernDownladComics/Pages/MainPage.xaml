@@ -9,20 +9,20 @@
     xmlns:conv="using:ModernDownloadComics.Converters"
     xmlns:src="using:ComicsLib.Models"
     xmlns:vw="using:ComicsInfraLib.Models.Views"
+    xmlns:res="using:ModernDownladComics"
     mc:Ignorable="d" DataContext="{x:Bind ViewModel}">
 
     <Page.Resources>
         <conv:HostConverter x:Key="HostConverter"/>
         <conv:EnumConverter x:Key="EnumConverter"/>
-        <conv:LabelConverter x:Key="LabelConverter"/>
     </Page.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="415"/>
-            <ColumnDefinition Width="673*"/>
+            <ColumnDefinition Width="600"/>
+            <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
         <Grid>
@@ -43,13 +43,14 @@
                       SelectionChanged="Hosts_SelectionChanged">
                 <ComboBox.ItemTemplate>
                     <DataTemplate>
-                        <TextBlock Text="{Binding Converter={StaticResource HostConverter}}"/>
+                        <TextBlock Text="{Binding Converter={StaticResource HostConverter}}"
+                                   FontSize="16"/>
                     </DataTemplate>
                 </ComboBox.ItemTemplate>
             </ComboBox>
 
             <ListView Grid.Row="1" Grid.ColumnSpan="2" x:Name="comicsLST" 
-                      Margin="10" ItemsSource="{Binding Comics}"
+                      Margin="10" ItemsSource="{Binding Comics, Mode=TwoWay}"
                       SelectedItem="{Binding SelectedComic, Mode=TwoWay}"
                       DisplayMemberPath="PackageName"/>
         </Grid>
@@ -64,52 +65,52 @@
                              HorizontalAlignment="Left" VerticalAlignment="Top"/>
                 </StackPanel>
                 <StackPanel Orientation="Vertical">
-                    <TextBlock Text="{x:Bind ViewModel.Loc['Host'], Converter={StaticResource LabelConverter}, ConverterParameter='{}{0}:'}" FontSize="16" Margin="0,0,0,5"/>
+                    <TextBlock Text="{res:Loc Key=Host, Format='{}{0}:', Section=Comic}" FontSize="16" Margin="0,0,0,5"/>
                     <TextBox FontSize="16" Width="150" TextWrapping="NoWrap"
                              Text="{Binding SelectedComic.URL, Converter={StaticResource HostConverter}}"/>
                 </StackPanel>
             </StackPanel>
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch" Margin="0,10,0,0">
                 <StackPanel Orientation="Vertical">
-                    <TextBlock Text="{x:Bind ViewModel.Loc['Author'], Converter={StaticResource LabelConverter}, ConverterParameter='{}{0}:'}" FontSize="16" Margin="0,0,0,5"/>
+                    <TextBlock Text="{res:Loc Key=Author, Format='{}{0}:', Section=Comic}" FontSize="16" Margin="0,0,0,5"/>
                     <TextBox Text="{Binding SelectedComic.Author, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                              Width="150" TextWrapping="NoWrap"/>
                 </StackPanel>
                 <StackPanel Orientation="Vertical" Margin="20,0,20,0">
-                    <TextBlock Text="{x:Bind ViewModel.Loc['PackageName'], Converter={StaticResource LabelConverter}, ConverterParameter='{}{0}:'}" FontSize="16" Margin="0,0,0,5"/>
+                    <TextBlock Text="{res:Loc Key=PackageName, Format='{}{0}:', Section=Comic}" FontSize="16" Margin="0,0,0,5"/>
                     <TextBox Text="{Binding SelectedComic.PackageName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                              FontSize="16" Width="300" TextWrapping="NoWrap"/>
                 </StackPanel>
                 <StackPanel Orientation="Vertical">
-                    <TextBlock Text="{x:Bind ViewModel.Loc['Filename'], Converter={StaticResource LabelConverter}, ConverterParameter='{}{0}:'}" FontSize="16" Margin="0,0,0,5"/>
+                    <TextBlock Text="{res:Loc Key=Filename, Format='{}{0}:', Section=Comic}" FontSize="16" Margin="0,0,0,5"/>
                     <TextBox Text="{Binding SelectedComic.Filename, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                              FontSize="16" Width="250" TextWrapping="NoWrap"/>
                 </StackPanel>
             </StackPanel>
             <StackPanel Orientation="Vertical" Margin="0,10,0,0">
-                <TextBlock Text="{x:Bind ViewModel.Loc['Path'], Converter={StaticResource LabelConverter}, ConverterParameter='{}{0}:'}" FontSize="16" Margin="0,0,0,5"/>
+                <TextBlock Text="{res:Loc Key=Path, Format='{}{0}:', Section=Comic}" FontSize="16" Margin="0,0,0,5"/>
                 <TextBox Text="{Binding SelectedComic.Path, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                          FontSize="16" Width="700" TextWrapping="NoWrap" HorizontalAlignment="Left"/>
             </StackPanel>
 
             <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
                 <StackPanel Orientation="Vertical">
-                    <TextBlock Text="{x:Bind ViewModel.Loc['Pages'], Converter={StaticResource LabelConverter}, ConverterParameter='{}{0}:'}" FontSize="16" Margin="0,0,0,5"/>
+                    <TextBlock Text="{res:Loc Key=Pages, Format='{}{0}:', Section=Comic}" FontSize="16" Margin="0,0,0,5"/>
                     <TextBox Text="{Binding SelectedComic.NumberPages, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                              FontSize="16" Width="75" TextWrapping="NoWrap" HorizontalAlignment="Left"/>
                 </StackPanel>
                 <StackPanel Orientation="Vertical" Margin="20,0,20,0">
-                    <TextBlock Text="{x:Bind ViewModel.Loc['Enable'], Converter={StaticResource LabelConverter}, ConverterParameter='{}{0}:'}" FontSize="16" Margin="0,0,0,5"/>
+                    <TextBlock Text="{res:Loc Key=Enable, Format='{}{0}:', Section=Comic}" FontSize="16" Margin="0,0,0,5"/>
                     <CheckBox
                         IsChecked="{Binding SelectedComic.Enabled, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                 </StackPanel>
                 <StackPanel Orientation="Vertical" VerticalAlignment="Center">
-                    <TextBlock Text="{x:Bind ViewModel.Loc['Priority'], Converter={StaticResource LabelConverter}, ConverterParameter='{}{0}:'}" FontSize="16" Margin="0,0,0,5"/>
+                    <TextBlock Text="{res:Loc Key=Priority, Format='{}{0}:', Section=Comic}" FontSize="16" Margin="0,0,0,5"/>
                     <ComboBox ItemsSource="{Binding Priorities}"
                               SelectedItem="{Binding SelectedComic.Priority, Mode=TwoWay}">
                         <ComboBox.ItemTemplate>
                             <DataTemplate>
-                                <TextBlock Text="{Binding Converter={StaticResource EnumConverter}}"/>
+                                <TextBlock Text="{Binding Converter={StaticResource EnumConverter}}" FontSize="16"/>
                             </DataTemplate>
                         </ComboBox.ItemTemplate>
                     </ComboBox>
@@ -117,12 +118,11 @@
             </StackPanel>
 
             <StackPanel Orientation="Horizontal" Margin="0,20,0,0">
-                <Button x:Name="changeSourceBTN" Content="Change Source" FontSize="16"
-                       Padding="5" Command="{Binding ChangeSourceCommand}"/>
-                <Button x:Name="unselectBTN" Content="Unselect" FontSize="16"
-                        Margin="20,0,20,0" Padding="5"
-                        Command="{Binding UnselectCommand}"/>
-                <Button Content="Delete Comics" Padding="5" FontSize="16"
+                <Button x:Name="changeSourceBTN" Content="{res:Loc Key=ChangeSourceBTN, Section=MainPage}"
+                        FontSize="16" Padding="5" Command="{Binding ChangeSourceCommand}"/>
+                <Button x:Name="unselectBTN" Content="{res:Loc Key=UnselectBTN, Section=MainPage}"
+                        FontSize="16" Margin="20,0,20,0" Padding="5" Command="{Binding UnselectCommand}"/>
+                <Button Content="{res:Loc Key=DeleteBTN, Section=MainPage}" Padding="5" FontSize="16"
                         Command="{Binding DeleteCommand}"/>
             </StackPanel>
         </StackPanel>

@@ -2,7 +2,7 @@
 {
     public class Options
     {
-        private static Comic FallBack = new(
+        private static readonly Comic FallBack = new(
                 "https://exemple_url.com",
                 "https://exemple_baseurl.com",
                 "package name",
@@ -21,24 +21,25 @@
         public string[] Confirms { get; set; } = [];
         public string[] Paths { get; set; } = [];
         public string[] ExcludedHosts { get; set; } = [];
-        public sbyte Period { get; set; } = 0;
-        private string Lang { get; set; } = "en";
+        public string Lang { get; set; } = "en";
+        public string Path { get; set; }
 
         public Options(Comic comic, string[] hosts, string[] confirms, string[] paths,
-            string[] excludedHosts, sbyte period, string lang)
+            string[] excludedHosts, string lang, string path)
         {
             Comic = comic;
             Hosts = hosts;
             Confirms = confirms;
             Paths = paths;
-            Period = period;
             ExcludedHosts = excludedHosts;
             Lang = lang;
+            Path = path;
         }
 
 
         public Options() {
             Comic = FallBack;
+            Path = string.Empty;
         }
     }
 }

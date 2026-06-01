@@ -4,12 +4,14 @@
 
 using ComicsInfraLib;
 using ComicsInfraLib.Models.Views;
+using ComicsInfraLib.Models.Views.Settings;
 using ComicsInfraLib.Services;
 using ComicsJDownloaderApi;
 using ComicsLocalizationLib;
 using ComicsServiceLib;
 using ComicsServiceLib.UI;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.UI;
 using Microsoft.UI.Xaml;
 using ModernDownladComics.Services;
 using System;
@@ -25,7 +27,6 @@ namespace ModernDownladComics
     {
         private Window? _window;
         public ServiceProvider Services { get; }
-        public LocalizationService LocalizationService { get; }
 
         public new static App Current => (App)Application.Current;
         
@@ -38,8 +39,6 @@ namespace ModernDownladComics
         {
             InitializeComponent();
             Services = ConfigureService();
-            LocalizationService = new();
-            LocalizationService.LoadLang("fr");
         }
 
 
@@ -60,14 +59,6 @@ namespace ModernDownladComics
 
             AddServices(service);
 
-            service.AddSingleton(provider => new Lazy<Task<ComicsJDownloaderClient>>(() =>
-                JDownloaderFactory.CreateAsnc(provider.GetRequiredService<ICredentialsService>()),
-                LazyThreadSafetyMode.ExecutionAndPublication));
-
-            service.AddSingleton<JdownloaderService>();
-            service.AddSingleton<ListenerService>();
-            service.AddSingleton<JDownloadJobService>();
-
             AddViewModels(service);
 
             return service.BuildServiceProvider();
@@ -75,16 +66,25 @@ namespace ModernDownladComics
 
         private static void AddViewModels(ServiceCollection service)
         {
-            service.AddSingleton<MainPageViewModel>();
+            service.AddTransient<MainPageViewModel>();
             service.AddTransient<ArchivePageViewModel<XamlRoot>>();
-            service.AddTransient<ImportPageViewModel<XamlRoot>>();
+            service.AddSingleton<ImportPageViewModel<XamlRoot>>();
             service.AddTransient<AddPageViewModel<XamlRoot>>();
             service.AddTransient<PathPageViewModel>();
             service.AddTransient<SettingsCredientialsPageViewModel<XamlRoot>>();
+            service.AddTransient<SendViewModel>();
+            service.AddTransient<SettingsAppPageViewModel<WindowId>>();
+            service.AddTransient<SettingsHostPageViewModel>();
         }
 
         private static void AddServices(ServiceCollection services)
         {
+            services.AddSingleton(provider => new Lazy<Task<ComicsJDownloaderClient>>(() =>
+               JDownloaderFactory.CreateAsnc(provider.GetRequiredService<ICredentialsService>()),
+               LazyThreadSafetyMode.ExecutionAndPublication));
+            services.AddSingleton<JdownloaderService>();
+            services.AddSingleton<ListenerService>();
+            services.AddSingleton<JDownloadJobService>();
             services.AddSingleton<ISettingsService, OptionService>();
             services.AddSingleton<ICredentialsService, CredentialsService>();
             services.AddSingleton<IHostService, HostSelectionService>();
@@ -97,6 +97,8 @@ namespace ModernDownladComics
             services.AddTransient<ArchiveService>();
             services.AddTransient<IScanService, ScanService>();
             services.AddTransient<IDialogService<XamlRoot>, DialogService>();
+            services.AddSingleton<LocalizationService>();
+            services.AddSingleton<IPickerDialog<WindowId>, PickerDialog>();
         }
     }
 }

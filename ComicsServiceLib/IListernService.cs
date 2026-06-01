@@ -5,7 +5,7 @@ namespace ComicsServiceLib
     public interface IListernService
     {
         Task StartListening(int port);
-        Task<List<OfflineLink>> WaitJob();
+        Task WaitJob();
         void StopListening();
     }
 }

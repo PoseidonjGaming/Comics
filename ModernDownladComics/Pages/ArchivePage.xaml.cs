@@ -22,14 +22,6 @@ namespace ModernDownladComics.Pages
             InitializeComponent();
 
             ViewModel = App.Current.Services.GetRequiredService<ArchivePageViewModel<XamlRoot>>();
-
-            App.Current.LocalizationService.LanguageChangedEvent += (data) =>
-            {
-                ViewModel.Loc = App.Current.LocalizationService.GetData("ArchivePage");
-                Bindings.Update();
-            };
-
-            ViewModel.InitData(App.Current.LocalizationService.GetData("ArchivePage"));
         }
 
         private void Page_Loaded(object sender, RoutedEventArgs e)

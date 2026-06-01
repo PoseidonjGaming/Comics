@@ -6,6 +6,7 @@
     xmlns:local="using:ModernDownladComics.windows"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:res="using:ModernDownladComics"
     mc:Ignorable="d"
     Title="SettingsWindow" Closed="Window_Closed">
 
@@ -19,26 +20,28 @@
                     IsPaneToggleButtonVisible="False" OpenPaneLength="250">
         
         <NavigationView.MenuItems>
-            <NavigationViewItem Content="Comic" Icon="Library"/>
-            <NavigationViewItem Content="{x:Bind Loc['Hosts']}"
+            <NavigationViewItem Content="{res:Loc Key=App, Section=SettingsWindow}" 
+                                Tag="app" Icon="Globe"/>
+            <NavigationViewItem Content="Comic" Tag="comic" Icon="Library"/>
+            <NavigationViewItem Content="{res:Loc Key=Hosts, Section=SettingsWindow}"
                                 SelectsOnInvoked="False" Icon="Globe">
                 <NavigationViewItem.MenuItems>
-                    <NavigationViewItem Content="{x:Bind Loc['SearchHosts']}" 
+                    <NavigationViewItem Content="{res:Loc Key=SearchHosts, Section=SettingsWindow}" 
                                         Tag="search" Icon="Zoom"/>
-                    <NavigationViewItem Content="{x:Bind Loc['ConfirmHosts']}"
+                    <NavigationViewItem Content="{res:Loc Key=ConfirmHosts, Section=SettingsWindow}"
                                         Tag="confirm" Icon="Play"/>
-                    <NavigationViewItem Content="{x:Bind Loc['ExcludedHosts']}" 
+                    <NavigationViewItem Content="{res:Loc Key=ExcludedHosts, Section=SettingsWindow}" 
                                         Tag="excluded" Icon="Clear"/>
                 </NavigationViewItem.MenuItems>
             </NavigationViewItem>
-            <NavigationViewItem Content="{x:Bind Loc['Paths']}" Tag="path" Icon="Save"/>
-            <NavigationViewItem Content="{x:Bind Loc['Credentials']}" 
+            <NavigationViewItem Content="{res:Loc Key=Paths, Section=SettingsWindow}" Tag="path" Icon="Save"/>
+            <NavigationViewItem Content="{res:Loc Key=Credentials, Section=SettingsWindow}" 
                                 Tag="credentials" Icon="Permissions"/>
         </NavigationView.MenuItems>
         <NavigationView.FooterMenuItems>
-            <NavigationViewItem Content="{x:Bind Loc['ImportSettings']}" 
+            <NavigationViewItem Content="{res:Loc Key=ImportSettings, Section=SettingsWindow}" 
                                 Tag="import_settings" Icon="OpenFile"/>
-            <NavigationViewItem Content="{x:Bind Loc['ExportSettings']}" 
+            <NavigationViewItem Content="{res:Loc Key=ExportSettings, Section=SettingsWindow}" 
                                 Tag="export_settings" Icon="SaveLocal"/>
         </NavigationView.FooterMenuItems>
         <Frame x:Name="settingsFrame"/>

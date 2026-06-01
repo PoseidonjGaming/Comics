@@ -24,13 +24,6 @@ namespace ModernDownladComics.Pages
             {
                 Frame.Navigate(typeof(PathPage), new PathPageArgs(comic, typeof(AddPage)));
             };
-            ViewModel.InitData(App.Current.LocalizationService.GetData("AddPage", "Comic"));
-
-            App.Current.LocalizationService.LanguageChangedEvent += (data) =>
-            {
-                ViewModel.Loc = App.Current.LocalizationService.GetData("AddPage", "Comic");
-                Bindings.Update();
-            };
         }
     }
 }

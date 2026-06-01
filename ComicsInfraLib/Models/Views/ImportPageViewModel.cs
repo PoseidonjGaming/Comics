@@ -11,7 +11,7 @@ namespace ComicsInfraLib.Models.Views
 {
     public partial class ImportPageViewModel<T>(IComicsBuilderService comicService,
         JdownloaderService jdownloaderService, IPathService pathService,
-        IDialogService<T> dialogService) : BaseLocViewModel where T : class
+        IDialogService<T> dialogService): ObservableObject where T : class
     {
         public ObservableCollection<string> URLS { get; } = [];
         public ObservableCollection<string> Files { get; } = [];
@@ -36,14 +36,16 @@ namespace ComicsInfraLib.Models.Views
 
         public void Load()
         {
-            Files.Clear();
-            foreach (var file in Directory.GetFiles(pathService.ComicsDir)
-                .OrderBy(File.GetLastWriteTimeUtc).Select(dir => Path.GetFileName(dir)))
+            if (!Files.Any())
             {
-                Files.Add(file);
-            }
+                foreach (var file in Directory.GetFiles(pathService.ComicsDir)
+                                .OrderBy(File.GetLastWriteTimeUtc).Select(dir => Path.GetFileName(dir)))
+                {
+                    Files.Add(file);
+                }
 
-            SelectedFile = Files.FirstOrDefault() ?? "";
+                SelectedFile = Files.FirstOrDefault() ?? "";
+            }
         }
 
         [RelayCommand]

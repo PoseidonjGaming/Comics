@@ -9,11 +9,9 @@
     xmlns:src="using:ComicsLib.Models" 
     xmlns:view="using:ComicsInfraLib.Models.Views" 
     xmlns:conv="using:ModernDownloadComics.Converters"
+    xmlns:res="using:ModernDownladComics"
     mc:Ignorable="d" DataContext="{x:Bind ViewModel}">
 
-    <Page.Resources>
-        <conv:LabelConverter x:Key="LabelConverter"/>
-    </Page.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
@@ -36,7 +34,7 @@
 
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
                 <StackPanel Orientation="Vertical" HorizontalAlignment="Center" Margin="10">
-                    <TextBlock Text="{x:Bind ViewModel.Loc['Author'], Converter={StaticResource LabelConverter}, ConverterParameter='{}{0}:'}" FontSize="16" Margin="0,0,0,5"
+                    <TextBlock Text="{res:Loc Key=Author, Format='{}{0}:', Section=Comic}" FontSize="16" Margin="0,0,0,5"
                                HorizontalAlignment="Left" VerticalAlignment="Center"/>
                     <TextBox x:Name="authorTXT" FontSize="16" 
                              Text="{Binding Comic.Author, Mode=TwoWay}"
@@ -44,7 +42,7 @@
                              HorizontalAlignment="Left" VerticalContentAlignment="Center" />
                 </StackPanel>
                 <StackPanel Orientation="Vertical" HorizontalAlignment="Center" Margin="10">
-                    <TextBlock Text="{x:Bind ViewModel.Loc['PackageName'], Converter={StaticResource LabelConverter}, ConverterParameter='{}{0}:'}" FontSize="16" Margin="0,0,0,5" 
+                    <TextBlock Text="{res:Loc Key=PackageName, Format='{}{0}:', Section=Comic}" FontSize="16" Margin="0,0,0,5" 
                                HorizontalAlignment="Left" VerticalAlignment="Center"/>
                     <TextBox Grid.Row="1" x:Name="nameTXT" FontSize="16" 
                              Text="{Binding Comic.PackageName, Mode=TwoWay}"
@@ -53,7 +51,7 @@
                 </StackPanel>
 
                 <StackPanel Orientation="Vertical" HorizontalAlignment="Left" Margin="10">
-                    <TextBlock Text="{x:Bind ViewModel.Loc['Pages'], Converter={StaticResource LabelConverter}, ConverterParameter='{}{0}:'}" FontSize="16" Margin="0,0,0,5"
+                    <TextBlock Text="{res:Loc Key=Pages, Format='{}{0}:', Section=Comic}" FontSize="16" Margin="0,0,0,5"
                                HorizontalAlignment="Left" VerticalAlignment="Center"/>
                     <TextBox x:Name="pageTXT" FontSize="16" TextWrapping="NoWrap" Width="75"
                              Text="{Binding Comic.NumberPages, Mode=TwoWay}"
@@ -63,20 +61,20 @@
 
 
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
-                <Button x:Name="addComicBTN" Content="{x:Bind ViewModel.Loc['AddBTN']}" Margin="10"
+                <Button x:Name="addComicBTN" Content="{res:Loc Key=AddBTN, Section=AddPage}" Margin="10"
                         Background="{StaticResource AddButton}" 
                         Command="{Binding AddComicCommand}"
                         CommandParameter="{x:Bind XamlRoot}"/>
 
-                <Button x:Name="searchComicBTN" Content="{x:Bind ViewModel.Loc['SearchBTN']}" Margin="10" 
+                <Button x:Name="searchComicBTN" Content="{res:Loc Key=SearchBTN, Section=AddPage}" Margin="10" 
                         Background="{StaticResource StandardButton}"
                         Command="{Binding SearchComicCommand}"
                         CommandParameter="{x:Bind XamlRoot}"/>
-                <Button x:Name="clearBTN" Content="{x:Bind ViewModel.Loc['ClearBTN']}" Margin="10"
+                <Button x:Name="clearBTN" Content="{res:Loc Key=ClearBTN, Section=AddPage}" Margin="10"
                         Background="{StaticResource ClearButton}"
                         Command="{Binding ClearComicCommand}"/>
 
-                <Button x:Name="deleteBTN" Content="{x:Bind ViewModel.Loc['DeleteBTN']}" FontSize="16" Margin="10"
+                <Button x:Name="deleteBTN" Content="{res:Loc Key=DeleteBTN, Section=AddPage}" FontSize="16" Margin="10"
                         Background="{StaticResource DeleteButton}"
                         Command="{Binding DelecteSelectComicCommand}"/>
             </StackPanel>

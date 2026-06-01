@@ -1,6 +1,7 @@
 ﻿using ComicsJDownloaderApi;
 using ComicsLib.Models;
 using ComicsServiceLib;
+using ComicsServiceLib.UI;
 using FuzzierSharp;
 using HtmlAgilityPack;
 using JDownloader;
@@ -8,12 +9,11 @@ using JDownloader.Model;
 
 namespace ComicsInfraLib.Services
 {
-    public class JdownloaderService(Lazy<Task<ComicsJDownloaderClient>> jdClient, 
-        IHtmlParserService htmlParserService, IHostService hostService)
+    public class JdownloaderService(Lazy<Task<ComicsJDownloaderClient>> jdClient,
+        IHtmlParserService htmlParserService, IHostService hostService,
+        IStateRepository stateRepository)
     {
-        public Task<ComicsJDownloaderClient> GetClient()=> jdClient.Value;
-
-        private static AppState State => AppStateStore.Instance;
+        public Task<ComicsJDownloaderClient> GetClient() => jdClient.Value;
 
         private readonly ReaderWriterLockSlim _startingCountLock = new();
         private int _startingCount;
@@ -55,12 +55,19 @@ namespace ComicsInfraLib.Services
 
                 List<FilePackage> packages = await client.DownloadsV2.QueryPackages(new()
                 {
-                    SaveTo = true
+                    SaveTo = true,
+                    MaxResults = -1,
+                    StartAt = 0
                 });
                 List<long> filePackages = [.. packages.Where(p => p.SaveTo.Contains(author)).Select(p => p.UUID)];
 
-                List<DownloadLink> links = await client.DownloadsV2.QueryLinks(new());
-                List<DownloadLink> filterLinks = [.. links.Where(dl => Fuzz.Ratio(Path.GetFileNameWithoutExtension(dl.Name).ToLower(), name.ToLower())==100)
+                List<DownloadLink> links = await client.DownloadsV2.QueryLinks(new()
+                {
+                    MaxResults = -1,
+                    StartAt = 0
+                });
+                List<DownloadLink> filterLinks = [.. links.Where(dl =>
+                Fuzz.Ratio(Path.GetFileNameWithoutExtension(dl.Name).ToLower(), name.ToLower())==100)
                 .Where(dl => filePackages.Contains(dl.PackageUUID))];
 
                 return filterLinks.FirstOrDefault()?.Comment;
@@ -69,7 +76,7 @@ namespace ComicsInfraLib.Services
             {
                 return "JDownloader not open";
             }
-            
+
         }
 
         public async Task Reset()
@@ -108,7 +115,7 @@ namespace ComicsInfraLib.Services
         }
         public void ChangeUrl(Comic comic, string[] hosts, Action<string> stateAction)
         {
-            Track? track = State.GetTrackByUrl(comic.URL);
+            Track? track = stateRepository.Tracks.FirstOrDefault(t => t.DownloadURL == comic.URL);
 
             if (track != null && !string.IsNullOrEmpty(comic.HtmlBody))
             {
@@ -132,15 +139,15 @@ namespace ComicsInfraLib.Services
                         }
                         else
                         {
-                            State.RemoveTrack(track);
-                            State.Comics.Remove(comic);
+                            stateRepository.Tracks.Remove(track);
+                            stateRepository.Comics.Remove(comic);
                         }
                     }
                 }
                 else
                 {
-                    State.RemoveTrack(track);
-                    State.Comics.Remove(comic);
+                    stateRepository.Tracks.Remove(track);
+                    stateRepository.Comics.Remove(comic);
                 }
             }
         }
@@ -148,48 +155,20 @@ namespace ComicsInfraLib.Services
         public async Task<List<CrawledLink>> GetCrawledLink(long? UUID = null)
         {
             ComicsJDownloaderClient client = await GetClient();
-            try
+            
+            CrawledLinkQuery query = new()
             {
+                Availability = true,
+                Status = true,
+                StartAt = 0,
+                MaxResults = -1,
+                Url = true,
+                BytesTotal = true,
+                JobUUIDs = UUID == null ? [.. stateRepository.Comics.Select(c => c.UUID)]
+                    : [UUID.Value],
+            };
+            return await client.LinkGrabberV2.QueryLinks(query);
 
-                CrawledLinkQuery query = new()
-                {
-                    Availability = true,
-                    Status = true,
-                    StartAt = 0,
-                    MaxResults = -1,
-                    Url = true,
-                    BytesTotal = true,
-                    JobUUIDs = UUID == null ? [.. State.Comics.Select(c=>c.UUID)] : [UUID.Value],
-                };
-                return await client.LinkGrabberV2.QueryLinks(query);
-            }
-            catch (Exception)
-            {
-                foreach (var comic in State.Comics)
-                {
-                    try
-                    {
-                        CrawledLinkQuery query = new()
-                        {
-                            Availability = true,
-                            Status = true,
-                            StartAt = 0,
-                            MaxResults = -1,
-                            Url = true,
-                            BytesTotal = true,
-                            JobUUIDs = [comic.UUID],
-                        };
-                        List<CrawledLink> list = await client.LinkGrabberV2.QueryLinks(query);
-                    }
-                    catch (Exception ex)
-                    {
-                        //Dispatcher.CurrentDispatcher.Invoke(() => MessageBox.Show(ex.Message));
-                    }
-
-                }
-
-                return [];
-            }
         }
 
         public async Task RemoveLinks()

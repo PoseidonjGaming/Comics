@@ -1,5 +1,6 @@
 ﻿using ComicsInfraLib.Services;
 using ComicsLib.Models;
+using ComicsLocalizationLib;
 using ComicsServiceLib;
 using ComicsServiceLib.UI;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -8,18 +9,36 @@ using System.Collections.ObjectModel;
 
 namespace ComicsInfraLib.Models.Views
 {
-    public partial class AddPageViewModel<T>(IComicsBuilderService builderService,
-        JdownloaderService jdownloaderService, IPathService pathService,
-        IStateRepository stateRepository, IDialogService<T> dialogService) :
-        BaseLocViewModel where T : class
+    public partial class AddPageViewModel<T>: ObservableObject where T : class
     {
+
+        private readonly IComicsBuilderService builderService;
+        private readonly JdownloaderService jdownloaderService;
+        private readonly IPathService pathService;
+        private readonly IStateRepository stateRepository;
+        private readonly IDialogService<T> dialogService;
+
         [ObservableProperty]
         public partial ComicInputModel Comic { get; set; } = new();
         [ObservableProperty]
         public partial Comic SelectedComic { get; set; } = new Comic();
-        public ObservableCollection<Comic> Comics { get; set; } = stateRepository.Comics;
+        public ObservableCollection<Comic> Comics { get; set; }
 
         public event Action<Comic>? NavigateEvent;
+
+        public AddPageViewModel(IComicsBuilderService builderService,
+        JdownloaderService jdownloaderService, IPathService pathService,
+        IStateRepository stateRepository, IDialogService<T> dialogService,
+        LocalizationService localizationService)
+        {
+            this.builderService = builderService;
+            this.jdownloaderService = jdownloaderService;
+            this.pathService = pathService;
+            this.stateRepository = stateRepository;
+            this.dialogService = dialogService;
+
+            Comics = new(stateRepository.Comics);
+        }
 
 
         [RelayCommand]
@@ -64,7 +83,7 @@ namespace ComicsInfraLib.Models.Views
         [RelayCommand]
         public void DelecteSelectComic()
         {
-            AppStateStore.Instance.Comics.Remove(SelectedComic);
+            stateRepository.Comics.Remove(SelectedComic);
             stateRepository.Save();
         }
     }

@@ -1,8 +1,10 @@
 ﻿using Microsoft.UI.Xaml.Data;
 using System;
+using System.Collections.Generic;
 using System.Globalization;
+using System.Text;
 
-namespace ModernDownloadComics.Converters
+namespace ModernDownladComics.Converters
 {
     public partial class LocConverter(string format) : IValueConverter
     {
@@ -14,11 +16,9 @@ namespace ModernDownloadComics.Converters
                 return value;
 
             return string.Format(_format, value);
-
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, string language)
        => new();
-
     }
 }

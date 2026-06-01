@@ -8,8 +8,7 @@ namespace ComicsInfraLib.Services
     {
         private CancellationTokenSource? _listenTokenSource;
         private HttpListener? _listener;
-        public TaskCompletionSource<List<OfflineLink>>? TaskCompletionSource;
-        private readonly AppState State = AppStateStore.Instance;
+        public TaskCompletionSource? TaskCompletionSource;
         private readonly ReaderWriterLockSlim _countLock = new();
         private int _count;
         public int Count
@@ -48,10 +47,7 @@ namespace ComicsInfraLib.Services
         {
             _listenTokenSource = null;
         }
-        public void SetTask(TaskCompletionSource<List<OfflineLink>> taskCompletionSource)
-        {
-            this.TaskCompletionSource = taskCompletionSource;
-        }
+        
 
         public void StartAsync(int port = 12345)
         {
@@ -82,7 +78,7 @@ namespace ComicsInfraLib.Services
                                 {
                                     Count += requestCount;
                                 }
-                                writer.Write(Count == State.Comics.Count);
+                                writer.Write(false);
                                 writer.Flush();
                                 context.Response.Close();
                                 break;
@@ -92,10 +88,6 @@ namespace ComicsInfraLib.Services
                                 using StreamReader reader = new(context.Request.InputStream);
                                 string response = reader.ReadToEnd();
 
-                                TaskCompletionSource?
-                                .TrySetResult(JsonConvert
-                                .DeserializeObject<List<OfflineLink>>(response
-                                .Replace("data=", string.Empty)) ?? []);
 
                                 using StreamWriter writer = new(context.Response.OutputStream);
                                 writer.Write("OK");
@@ -123,14 +115,5 @@ namespace ComicsInfraLib.Services
             _listener = null;
         }
 
-        public async Task<List<OfflineLink>> WaitJob()
-        {
-            if (TaskCompletionSource == null)
-                return [];
-            
-            List<OfflineLink> links = await TaskCompletionSource.Task;
-            TaskCompletionSource = null;
-            return links;
-        }
     }
 }

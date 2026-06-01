@@ -26,11 +26,6 @@ namespace ModernDownladComics.Pages
             {
                 Frame.Navigate(returnType);
             };
-            App.Current.LocalizationService.LanguageChangedEvent += (data) =>
-            {
-                ViewModel.Loc = App.Current.LocalizationService.GetData("PathPage");
-                Bindings.Update();
-            };
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
@@ -39,7 +34,7 @@ namespace ModernDownladComics.Pages
 
             if (e.Parameter is PathPageArgs args)
             {
-                ViewModel.Init(args, App.Current.LocalizationService.GetData("PathPage"));
+                ViewModel.Init(args);
             }
         }
 

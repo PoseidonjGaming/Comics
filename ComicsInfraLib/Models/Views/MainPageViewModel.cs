@@ -1,19 +1,23 @@
-﻿using ComicsLib.Models;
+﻿using ComicsInfraLib.Services;
+using ComicsJDownloaderApi;
+using ComicsJDownloaderApi.Model;
+using ComicsLib.Models;
 using ComicsServiceLib.UI;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using FuzzierSharp;
 using FuzzierSharp.PreProcess;
+using JDownloader.Model;
 using System.Collections.ObjectModel;
 
 namespace ComicsInfraLib.Models.Views
 {
-    public partial class MainPageViewModel(IStateRepository stateRepository) :
-        BaseLocViewModel
+    public partial class MainPageViewModel(IStateRepository stateRepository): ObservableObject
     {
         public Array Priorities { get; } = Enum.GetValues<Priorities>();
 
-        public ObservableCollection<Comic> Comics { get; set; } = [];
+        public ObservableCollection<Comic> Comics { get; set; } = 
+            new(stateRepository.Comics);
 
         public event Action<Comic>? ChangeSourceRequested;
 
@@ -24,17 +28,16 @@ namespace ComicsInfraLib.Models.Views
         public partial string Filter { get; set; } = string.Empty;
 
         [ObservableProperty]
-        public partial ObservableCollection<string> Hosts { get; set; } =
-            new ObservableCollection<string>(AppStateStore.Instance.Comics
-                .Select(c => c.Host).Distinct().Prepend("All"));
+        public partial ObservableCollection<string> Hosts { get; set; } = [];
 
         [ObservableProperty]
         public partial string SelectedHost { get; set; } = "All";
 
-        public void Init(Dictionary<string, string> data)
+        public void Init()
         {
-            InitData(data);
+
             FilterComics();
+            InitFilteredHosts();
         }
 
         [RelayCommand]
@@ -48,13 +51,14 @@ namespace ComicsInfraLib.Models.Views
         {
             if (SelectedComic != null)
             {
-                Comics.Remove(SelectedComic);
+                stateRepository.Comics.Remove(SelectedComic);
+                Comics.Remove(SelectedComic);                
                 stateRepository.Save();
             }
         }
 
         [RelayCommand]
-        private void ChangeSource()
+        private async Task ChangeSource()
         {
             if (SelectedComic != null)
                 ChangeSourceRequested?.Invoke(SelectedComic);
@@ -64,7 +68,7 @@ namespace ComicsInfraLib.Models.Views
         {
             Comics.Clear();
 
-            var comics = AppStateStore.Instance.Comics.Where(c =>
+            var comics = stateRepository.Comics.Where(c =>
             {
                 if (string.IsNullOrWhiteSpace(Filter) && SelectedHost == "All")
                     return true;
@@ -90,6 +94,15 @@ namespace ComicsInfraLib.Models.Views
             foreach (var item in comics)
             {
                 Comics.Add(item);
+            }
+        }
+
+        private void InitFilteredHosts()
+        {
+            Hosts.Clear();
+            foreach (var host in stateRepository.Comics.Select(c => c.Host).Distinct().Prepend("All"))
+            {
+                Hosts.Add(host);
             }
         }
     }

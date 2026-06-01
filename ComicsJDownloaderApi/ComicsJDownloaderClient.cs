@@ -10,7 +10,7 @@ using System.Web;
 
 namespace ComicsJDownloaderApi
 {
-    public class ComicsJDownloaderClient : IJDownloaderClient,IDisposable
+    public class ComicsJDownloaderClient : IJDownloaderClient, IDisposable
     {
         private readonly JDownloaderClientOptions _jDownloaderClientOptions;
         private readonly JsonSerializerOptions _serializerOptions;
@@ -93,7 +93,7 @@ namespace ComicsJDownloaderApi
             _ownsHttpClient = ownsHttpClient;
             _httpClient = JDownloaderUtility.CreateHttpClient();
             _serializerOptions = JDownloaderUtility.CreateJsonSerializerOptions();
-            
+
             AccountsV2 = new Namespace.AccountsV2(this);
             Captcha = new Namespace.Captcha(this);
             CaptchaForward = new Namespace.CaptchaForward(this);
@@ -216,13 +216,13 @@ namespace ComicsJDownloaderApi
             {
                 string serverURL = JDownloaderUtility.GetServerUrl(action);
                 using HttpResponseMessage httpResponse = await _httpClient.GetAsync(serverURL);
-                
+
                 string response = await httpResponse.Content.ReadAsStringAsync();
-                if(httpResponse != null && httpResponse.StatusCode== HttpStatusCode.OK)
+                if (httpResponse != null && httpResponse.StatusCode == HttpStatusCode.OK)
                 {
                     string decryptValue = await JDownloaderCrypto.Decrypt(response, arg.Key);
                     T? val = JsonSerializer.Deserialize<T>(decryptValue, _serializerOptions);
-                    if(val != null && val.RequestId == requestId)
+                    if (val != null && val.RequestId == requestId)
                     {
                         return val;
                     }
@@ -236,11 +236,12 @@ namespace ComicsJDownloaderApi
             catch (MyJDownloaderException)
             {
                 throw;
-            }catch(Exception ex)
+            }
+            catch (Exception ex)
             {
                 throw new MyJDownloaderException(ex.Message, ex);
             }
-            
+
 
         }
         private async Task<string> GetDecryptedResponseBody(HttpResponseMessage response)
@@ -292,7 +293,7 @@ namespace ComicsJDownloaderApi
 
         private async Task<T> PostRequestInternalAsync<T>(string baseUrl, PostRequestArg arg)
         {
-            if (_sessionInfo.DeviceEncryptionToken!=null)
+            if (_sessionInfo.DeviceEncryptionToken != null)
             {
                 long requestId = JDownloaderUtility.GetUniqueRequestId();
 
@@ -311,6 +312,7 @@ namespace ComicsJDownloaderApi
                     string response = await GetDecryptedResponseBody(httpResponse);
                     if (httpResponse.StatusCode == HttpStatusCode.OK)
                     {
+                        response = FixPropertyName.Fix<T>(response);
                         if (arg.DoubleJsonDecode)
                             response = JDownloaderUtility.DoubleJsonDecode(response);
 
@@ -332,7 +334,8 @@ namespace ComicsJDownloaderApi
                 {
                     throw;
                 }
-                catch (Exception ex) {
+                catch (Exception ex)
+                {
                     throw new MyJDownloaderException(ex.Message, ex);
                 }
             }

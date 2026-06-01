@@ -1,116 +1,64 @@
-﻿using ComicsJDownloaderApi;
+﻿using ComicsInfraLib.Models.Views;
+using ComicsJDownloaderApi;
 using ComicsLib.Models;
 using ComicsServiceLib.UI;
-using JDownloader;
 using JDownloader.Model;
-using Newtonsoft.Json.Linq;
+using System.Net;
 
 namespace ComicsInfraLib.Services
 {
     public class JDownloadJobService(JdownloaderService jdownloaderService,
-        ListenerService listenerService, ISettingsService settingsService,
-        IJobState jobState)
+        ISettingsService settingsService, IJobState jobState, 
+        IStateRepository stateRepository)
     {
         private int progress;
-        private static AppState State => AppStateStore.Instance;
 
         public async Task RunAsync(CancellationToken token)
         {
-            listenerService.StartAsync();
+            Options options = settingsService.GetOptions();
 
-            await RetryLoop(token);
+            HttpListener listener = new();
+            listener.Prefixes.Add("http://localhost:12345/");
+            listener.Start();
 
-            try
-            {
-                await Task.Delay(1000, token);
-            }
-            catch
-            {
-
-            }
-            await AddLinks(token);
-
-            try
-            {
-                await Task.Delay(1000, token);
-            }
-            catch
-            {
-
-            }
-
-            await FinalizeLinks(token);
-
-        }
-
-        private async Task RetryLoop(CancellationToken token)
-        {
-            List<OfflineLink> offlineLinks;
-            int tryCount = 0;
-
+            List<CrawledLink> links = [];
+            int tr = 0;
             do
             {
-                tryCount++;
-                PrepareTry(tryCount);
-                await ResetTry();
+                tr++;
+                jobState.UpdateTry($"Try {tr}");
+                links.Clear();
+                await AddLinks(c => false, listener, token);
 
-                await TryAddLinks(token);
-                offlineLinks = await listenerService.WaitJob();
-                await FixLinks(offlineLinks);
+                token.ThrowIfCancellationRequested();
+
+                stateRepository.Comics.ForEach(async c =>
+                {
+                    List<CrawledLink> crawledLinks = await jdownloaderService.GetCrawledLink(c.UUID);
+
+                    if (!options.ExcludedHosts.Contains(c.Host) && crawledLinks.Count == 1 &&
+                    crawledLinks.All(cl => cl.AvailableLinkState == AvailableLinkState.OFFLINE))
+                    {
+                        jdownloaderService.ChangeUrl(c, options.Hosts, state =>
+                        jobState.UpdateState(state, false));
+                    }
+                    await Task.Delay(1000, token);
+                });
+
+                progress = 0;
+                jobState.UpdateProgess(progress, true);
+
+                links = await jdownloaderService.GetCrawledLink();
 
                 await jdownloaderService.RemoveLinks();
-            } while (offlineLinks != null && offlineLinks.Count != 0);
-        }
+            } while (links.Any(cl => cl.AvailableLinkState == AvailableLinkState.OFFLINE));
 
-        private void PrepareTry(int tryCount)
-        {
-            progress = 0;
-            jobState.UpdateState("Starting job", true);
-            jobState.UpdateTry($"Try {tryCount}");
-            jobState.UpdateProgess(progress, false);
-            listenerService.SetTask(new());
-        }
-
-        private async Task ResetTry()
-        {
-            await jdownloaderService.Reset();
-            listenerService.Count = 0;
-        }
-
-        private async Task TryAddLinks(CancellationToken token)
-        {
-            await AddLinks(comic => false, token);
-
-            jobState.UpdateState("Wait to finished job", false);
-            jobState.UpdateProgess(progress, false);
-        }
-
-        private async Task FixLinks(List<OfflineLink> offlineLinks)
-        {
-            offlineLinks.ForEach(async ol =>
-            {
-                jdownloaderService.ChangeUrl(State.Comics.First(c => c.UUID == ol.JobUUID),
-                    settingsService.GetOptions().Hosts, state =>
-                jobState.UpdateState(state, false));
-            });
-
-            progress = 0;
-            jobState.UpdateProgess(progress, true);
-        }
-
-        private async Task AddLinks(CancellationToken token)
-        {
-            listenerService.Count = 0;
+            jobState.UpdateTry("Final Try");
             jobState.ClearState();
-            jobState.UpdateTry("Final try");
-            jobState.UpdateProgess(State.Comics.Count, true);
+            await AddLinks(c => !options.Confirms.Contains(c.Host), listener, token);
 
-
-            await AddLinks(comic =>
-            !settingsService.GetOptions().Confirms.Contains(comic.Host), token);
-
-            jobState.UpdateState("Wait to finished job", false);
-            await listenerService.WaitJob();
+            await FinalizeLinks(token);
+            listener.Stop();
         }
 
         private async Task FinalizeLinks(CancellationToken token)
@@ -119,26 +67,12 @@ namespace ComicsInfraLib.Services
             jobState.UpdateState("Set links disabled", false);
             await DisableLinks(client);
 
-            try
-            {
-                await Task.Delay(1000, token);
-            }
-            catch
-            {
-
-            }
+            await Task.Delay(1000, token);
 
             jobState.UpdateState("Sort links", false);
             await SortPackages(client);
 
-            try
-            {
-                await Task.Delay(1000, token);
-            }
-            catch
-            {
-
-            }
+            await Task.Delay(1000, token);
 
             jobState.UpdateState("Set name and comment", false);
             await FinishedLink(client);
@@ -146,47 +80,73 @@ namespace ComicsInfraLib.Services
             jobState.ClearState();
         }
 
-        private async Task AddLinks(Func<Comic, bool> autoStart, CancellationToken ct)
-        {
-            if (jdownloaderService != null)
-            {
-                foreach (Comic comic in State.Comics)
-                {
-                    if (ct.IsCancellationRequested)
-                    {
-                        break;
-                    }
-
-
-                    await jdownloaderService.AddLinks(comic, autoStart.Invoke(comic), state =>
-                    {
-                        progress++;
-                        jobState.UpdateState(state, false);
-                        jobState.UpdateProgess(progress, true);
-                    });
-
-                    try
-                    {
-                        await Task.Delay(1000, ct);
-                    }
-                    catch (OperationCanceledException)
-                    {
-                        break;
-                    }
-                }
-            }
-        }
         private async Task DisableLinks(ComicsJDownloaderClient client)
         {
-            if (jdownloaderService != null)
+            foreach (Comic comic in stateRepository.Comics.Where(comic => !comic.Enabled))
             {
-                foreach (Comic comic in State.Comics.Where(comic => !comic.Enabled))
+                List<CrawledLink> cralwedLinks = await jdownloaderService.GetCrawledLink(comic.UUID);
+                await client.LinkGrabberV2.SetEnabled([.. cralwedLinks.Select(l => l.Uuid)], [], false);
+            }
+        }
+
+        private async Task FinishedLink(ComicsJDownloaderClient client)
+        {
+            foreach (Comic comic in stateRepository.Comics)
+            {
+                List<CrawledLink> crawledLinks = await jdownloaderService.GetCrawledLink(comic.UUID);
+                if (crawledLinks.Count == 1 && !string.IsNullOrEmpty(comic.GetFilename()))
                 {
-                    List<CrawledLink> cralwedLinks = await jdownloaderService.GetCrawledLink(comic.UUID);
-                    await client.LinkGrabberV2.SetEnabled([.. cralwedLinks.Select(l => l.Uuid)], [], false);
+                    CrawledLink crawledLink = crawledLinks.First();
+
+                    comic.Extansion = Path.GetExtension(crawledLink.Name);
+
+                    await client.LinkGrabberV2.RenameLink(crawledLink.Uuid, comic.GetFilename());
+                    await client.LinkGrabberV2.SetComment([crawledLink.Uuid], [],
+                        true, $"{comic.NumberPages} pages");
                 }
             }
         }
+
+        private static void HandleRequest(HttpListenerContext context, Comic comic)
+        {
+            switch (context.Request.Url?.AbsolutePath)
+            {
+                case "/finished":
+                    {
+                        using StreamWriter writer = new(context.Response.OutputStream);
+                        writer.Write("OK");
+                        writer.Flush();
+
+                        context.Response.Close();
+                        break;
+                    }
+                default:
+                    {
+                        context.Response.StatusCode = 404;
+                        break;
+                    }
+            }
+        }
+
+        private async Task AddLinks(Func<Comic, bool> autoStartFunc,
+            HttpListener listener, CancellationToken ct)
+        {
+            progress = 0;
+            foreach (var comic in stateRepository.Comics)
+            {
+                ct.ThrowIfCancellationRequested();
+                await jdownloaderService.AddLinks(comic, autoStartFunc(comic), state =>
+                {
+                    jobState.UpdateState(state, false);
+                    jobState.UpdateProgess(progress++, true);
+                });
+
+                await Task.Delay(1000, ct);
+                HttpListenerContext context = await listener.GetContextAsync();
+                HandleRequest(context, comic);
+            }
+        }
+
         private static async Task SortPackages(ComicsJDownloaderClient client)
         {
             List<CrawledPackage> packages = await client.LinkGrabberV2.QueryPackages(new()
@@ -205,27 +165,6 @@ namespace ComicsInfraLib.Services
                 long targetId = (i == 0) ? 0L : sortedIds[i - 1];
 
                 await client.LinkGrabberV2.MovePackages(current, targetId);
-            }
-        }
-
-        private async Task FinishedLink(ComicsJDownloaderClient client)
-        {
-            if (jdownloaderService != null)
-            {
-                foreach (Comic comic in State.Comics)
-                {
-                    List<CrawledLink> crawledLinks = await jdownloaderService.GetCrawledLink(comic.UUID);
-                    if (crawledLinks.Count == 1 && !string.IsNullOrEmpty(comic.GetFilename()))
-                    {
-                        CrawledLink crawledLink = crawledLinks.First();
-
-                        comic.Extansion = Path.GetExtension(crawledLink.Name);
-
-                        await client.LinkGrabberV2.RenameLink(crawledLink.Uuid, comic.GetFilename());
-                        await client.LinkGrabberV2.SetComment([crawledLink.Uuid], [],
-                            true, $"{comic.NumberPages} pages");
-                    }
-                }
             }
         }
     }

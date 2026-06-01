@@ -15,6 +15,6 @@
         </Grid.RowDefinitions>
 
         <WebView2 x:Name="browser" Margin="10" 
-                  NavigationCompleted="Browser_NavigationCompleted"/>
+                  NavigationCompleted="Browser_NavigationCompleted" KeyDown="browser_KeyDown"/>
     </Grid>
 </Page>

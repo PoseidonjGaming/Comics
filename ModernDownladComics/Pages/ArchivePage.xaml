@@ -8,6 +8,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:vw="using:ComicsInfraLib.Models.Views"
     xmlns:m="using:ComicsLib.Models"
+    xmlns:res="using:ModernDownladComics"
     mc:Ignorable="d"
     Loaded="Page_Loaded" DataContext="{x:Bind ViewModel}">
 
@@ -23,14 +24,14 @@
 
         <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center"
                     Margin="10">
-            <Button Content="{x:Bind ViewModel.Loc['SearchBTN']}" FontSize="16" 
+            <Button Content="{res:Loc Key=SearchBTN, Section=ArchivePage}" FontSize="16" 
                     Command="{Binding SearchCommand}"
                     CommandParameter="{x:Bind XamlRoot}"/>
-            <Button Content="{x:Bind ViewModel.Loc['RestoreBTN']}" FontSize="16"
+            <Button Content="{res:Loc Key=RestoreBTN, Section=ArchivePage}" FontSize="16"
                     Margin="10,0,10,0"
                     Command="{Binding RestoreCommand}"
                     CommandParameter="{x:Bind XamlRoot}"/>
-            <Button Content="{x:Bind ViewModel.Loc['DeleteBTN']}" FontSize="16"
+            <Button Content="{res:Loc Key=DeleteBTN, Section=ArchivePage}" FontSize="16"
                     Command="{Binding DeleteItemCommand}"/>
         </StackPanel>
 

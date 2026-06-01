@@ -24,7 +24,7 @@
                           HorizontalAlignment="Center" FontSize="20" Padding="15"/>
             <ProgressBar Height="20" Minimum="0" Value="{Binding ProgressValue}"
                          IsIndeterminate="{Binding IsDetermined}"
-                         Maximum="{x:Bind src:AppStateStore.Instance.Comics.Count}"/>
+                         Maximum="{Binding Maximum}"/>
         </StackPanel>
 
         <TextBlock Text="{Binding StateJob}" Grid.Row="1" FontSize="16" Margin="10,10,10,5"/>

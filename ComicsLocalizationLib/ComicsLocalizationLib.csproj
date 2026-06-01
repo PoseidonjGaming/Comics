@@ -11,10 +11,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="en.json" />
-    <EmbeddedResource Include="fr.json" />
+    <EmbeddedResource Include="Resources\Langs\en.json" />
+    <EmbeddedResource Include="Resources\Langs\fr.json" />
   </ItemGroup>
 
-  <ProjectExtensions><VisualStudio><UserProperties en_1json__JsonSchema="localization.json" fr_1json__JsonSchema="localization.json" localization_1json__JsonSchema="https://json-schema.org/draft/2020-12/schema" /></VisualStudio></ProjectExtensions>
+  <ProjectExtensions><VisualStudio><UserProperties resources_4langs_4en_1json__JsonSchema="localization.json" resources_4langs_4fr_1json__JsonSchema="localization.json" resources_4langs_4localization_1json__JsonSchema="https://json-schema.org/draft/2020-12/schema" /></VisualStudio></ProjectExtensions>
 
 </Project>

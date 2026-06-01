@@ -4,7 +4,6 @@ namespace ComicsLib.Utility
 {
     public class FileUtility
     {
-        public const string ComicsDirectory = @"E:\Manga Scan\Manga\hentai";
         public static T? ReadFile<T>(string filePath)
         {
             return JsonConvert.DeserializeObject<T>(File.ReadAllText(filePath));

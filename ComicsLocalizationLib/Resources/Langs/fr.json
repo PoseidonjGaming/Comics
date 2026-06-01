@@ -30,7 +30,9 @@
     "Settings": "Options"
   },
   "MainPage": {
-    
+    "ChangeSourceBTN": "Changer la source",
+    "UnselectBTN": "Désélectionner le comic",
+    "DeleteBTN": "Supprimer le comic"
   },
   "AddPage": {
     "AddBTN": "Ajouter le comic",
@@ -58,23 +60,27 @@
     "Empty": "Vide",
     "NotFound": "Téléchargement non trouvé",
     "Delete": "Voulez-vous supprimer ce téléchargement ?",
-    "Add": "Voulez-vous ajouter ce téléchargement ?"
+    "Add": "Voulez-vous ajouter ce téléchargement ({0})?"
   },
   "Dialog": {
     "Yes": "Oui",
     "No": "Non",
     "Search": "Rechercher",
     "Error": "Erreur",
-    "Restore": "Restaurer",
-    "RestoreQuestion": "Voulez-vous restaurer cette archive ?",
-    "Close": "Fermer"
+    "Close": "Fermer",
+    "Cancel": "Annuler"
   },
   "ScanDialog": {
     "Title": "Scanner l'url",
     "Content": "Voulez-vous scanner l'url ?",
     "Cancel": "Annuler"
   },
+  "RestoreDialog": {
+    "Title": "Restaurer",
+    "Question": "Voulez-vous restaurer cette archive ?"
+  },
   "SettingsWindow": {
+    "App": "Application",
     "Hosts": "Hôtes",
     "SearchHosts": "Hôtes à rechercher",
     "ConfirmHosts": "Hôtes à ne pas confirmer ",
@@ -84,7 +90,12 @@
     "ImportSettings": "Importer les paramètres",
     "ExportSettings": "Export les paramètres"
   },
+  "SettingsAppPage": {
+    "Path": "Chemin des comics",
+    "PathBTN": "Modifier le chemin"
+  },
   "SettingsComicPage": {
+    "BaseURL": "URL de base",
     "Enabling": "Activer le téléchargement",
     "Enabled": "Activé",
     "Disabled": "Désactivé"
@@ -100,5 +111,13 @@
   "SettingsHostsPage": {
     "AddBTN": "Ajouter",
     "DeleteBTN": "Supprimer"
+  },
+  "FileDialog": {
+    "Title": "Sélection d'un fichier",
+    "Select": "Sélectionner un fichier"
+  },
+  "FolderDialog": {
+    "Title": "Sélection d'un dossier",
+    "Select": "Sélectionner un dossier"
   }
 }

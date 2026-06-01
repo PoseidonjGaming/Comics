@@ -1,11 +1,13 @@
 ﻿using ComicsInfraLib.Helpers;
+using ComicsLocalizationLib;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using System.Collections.ObjectModel;
 
 namespace ComicsInfraLib.Models.Views
 {
-    public partial class SettingsHostPageViewModel(Dictionary<string, string> loc) : ObservableObject
+    public partial class SettingsHostPageViewModel(LocalizationService localizationService) :
+        ObservableObject
     {
         [ObservableProperty]
         public partial ObservableCollection<string> Collection { get; set; } = [];
@@ -17,25 +19,21 @@ namespace ComicsInfraLib.Models.Views
 
         private bool isHost;
 
-        public Dictionary<string, string> Loc { get; set; } = loc;
+        [ObservableProperty]
+        public partial string Label { get; set; }
 
-        public void Setup(SettingsPageArgs<ObservableCollection<string>> settings)
+        public void Setup(SettingsCollectionPageArg settings)
         {
-            Collection = settings.Arg;
+            Collection = settings.List;
             isHost = settings.IsHost;
+
+            Label = string.Format("{0}:", localizationService[isHost ? "Comic.Host" : "Comic.Path"]);
         }
 
         [RelayCommand]
         public void AddValue()
         {
-            if (isHost)
-            {
-                Collection.Add(RegexUtility.HostRegex().Match(Value).Value);
-            }
-            else
-            {
-                Collection.Add(Value);
-            }
+            Collection.Add(isHost ? RegexUtility.HostRegex().Match(Value).Value : Value);
 
             Value = string.Empty;
         }

@@ -6,6 +6,7 @@
     xmlns:local="using:ModernDownladComics"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:res="using:ModernDownladComics"
     mc:Ignorable="d"
     Title="ModernDownladComics" Closed="Window_Closed">
 
@@ -18,26 +19,21 @@
                         SelectionChanged="NavigationView_SelectionChanged" 
                         IsSettingsVisible="False">
             <NavigationView.MenuItems>
-                <NavigationViewItem Content="{x:Bind Loc['Home']}" Tag="home" Icon="Home"/>
-                <NavigationViewItem Content="{x:Bind Loc['Send']}" Tag="send" Icon="Upload"/>
+                <NavigationViewItem Content="{res:Loc Key=Home, Section=MainWindow}" Tag="home" Icon="Home"/>
+                <NavigationViewItem Content="{res:Loc Key=Send, Section=MainWindow}" Tag="send" Icon="Upload"/>
 
-                <NavigationViewItem Content="{x:Bind Loc['Add']}" SelectsOnInvoked="False" Icon="Add">
+                <NavigationViewItem Content="{res:Loc Key=Add, Section=MainWindow}" SelectsOnInvoked="False" Icon="Add">
                     <NavigationViewItem.MenuItems>
-                        <NavigationViewItem Content="{x:Bind Loc['AddLink']}" Tag="add" Icon="Add"/>
-                        <NavigationViewItem Content="{x:Bind Loc['ImportLinks']}" Tag="import" Icon="Import"/>
+                        <NavigationViewItem Content="{res:Loc Key=AddLink, Section=MainWindow}" Tag="add" Icon="Add"/>
+                        <NavigationViewItem Content="{res:Loc Key=ImportLinks, Section=MainWindow}" Tag="import" Icon="Import"/>
                     </NavigationViewItem.MenuItems>
 
                 </NavigationViewItem>
-                <NavigationViewItem Content="{x:Bind Loc['Archive']}" Tag="archive" Icon="Folder"/>
+                <NavigationViewItem Content="{res:Loc Key=Archive, Section=MainWindow}" Tag="archive" Icon="Folder"/>
             </NavigationView.MenuItems>
 
             <NavigationView.FooterMenuItems>
-                <NavigationViewItem Content="Lang" Tag="lang">
-                    <NavigationViewItem.Icon>
-                        <FontIcon Glyph="&#xE8AB;" />
-                    </NavigationViewItem.Icon>
-                </NavigationViewItem>
-                <NavigationViewItem Content="{x:Bind Loc['Settings']}"
+                <NavigationViewItem Content="{res:Loc Key=Settings, Section=MainWindow}"
                                     Tag="settings" Icon="Setting"/>
             </NavigationView.FooterMenuItems>
             <Frame x:Name="frame"/>

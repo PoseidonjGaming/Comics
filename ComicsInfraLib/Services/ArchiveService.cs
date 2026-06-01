@@ -4,7 +4,7 @@ using ComicsServiceLib.UI;
 
 namespace ComicsInfraLib.Services
 {
-    public class ArchiveService(IPathService pathService)
+    public class ArchiveService(IPathService pathService, ISettingsService settingsService)
     {
         public IEnumerable<TreeItem> LoadTree()
         {
@@ -43,8 +43,10 @@ namespace ComicsInfraLib.Services
 
         public void RestoreBackup(TreeItem item)
         {
-            string destPath = item.Path.Replace(pathService.BackupDirPath, FileUtility.ComicsDirectory);
-            
+            string destPath = item.Path.Replace(pathService.BackupDirPath,
+                settingsService.GetOptions().Path);
+
+            DeleteBackup(destPath);
             Directory.Move(item.Path, destPath);
         }
 

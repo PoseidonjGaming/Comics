@@ -8,11 +8,8 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:vw="using:ComicsInfraLib.Models.Views"
     xmlns:conv="using:ModernDownloadComics.Converters"
+    xmlns:res="using:ModernDownladComics"
     mc:Ignorable="d" Loaded="Page_Loaded" DataContext="{x:Bind ViewModel}">
-
-    <Page.Resources>
-        <conv:LabelConverter x:Key="LabelConverter"/>
-    </Page.Resources>
 
     <Grid>
         <Grid.RowDefinitions>
@@ -20,8 +17,8 @@
             <RowDefinition Height="40*"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="49*"/>
-            <ColumnDefinition Width="250*"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="3*"/>
         </Grid.ColumnDefinitions>
 
         <Grid Grid.RowSpan="2">
@@ -49,33 +46,35 @@
                              TextWrapping="NoWrap" FontSize="16" IsReadOnly="True"/>
                 </StackPanel>
                 <StackPanel Margin="10">
-                    <TextBlock Text="{x:Bind ViewModel.Loc['Author'], Converter={StaticResource LabelConverter}, ConverterParameter='{}{0}:'}" FontSize="16"
+                    <TextBlock Text="{res:Loc Key=Author, Format='{}{0}:', Section=Common}" FontSize="16"
                                Padding="0,0,0,5"/>
                     <TextBox Text="{Binding Comic.Author, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                              Width="150" Height="30" TextWrapping="NoWrap" FontSize="16"/>
                 </StackPanel>
                 <StackPanel Margin="10">
-                    <TextBlock Text="{x:Bind ViewModel.Loc['PackageName'], Converter={StaticResource LabelConverter}, ConverterParameter='{}{0}:'}" FontSize="16" Padding="0,0,0,5"/>
+                    <TextBlock Text="{res:Loc Key=PackageName, Format='{}{0}:', Section=Comic}" FontSize="16" Padding="0,0,0,5"/>
                     <TextBox Text="{Binding Comic.PackageName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                              Width="150" Height="30" TextWrapping="NoWrap" FontSize="16"/>
                 </StackPanel>
                 <StackPanel Margin="10">
-                    <TextBlock Text="{x:Bind ViewModel.Loc['Pages'], Converter={StaticResource LabelConverter}, ConverterParameter='{}{0}:'}" FontSize="16" Padding="0,0,0,5"/>
+                    <TextBlock Text="{res:Loc Key=Pages, Format='{}{0}:', Section=Comic}" FontSize="16" Padding="0,0,0,5"/>
                     <TextBox Text="{Binding Comic.NumberPages, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                              Width="75" Height="30" TextWrapping="NoWrap" FontSize="16"/>
                 </StackPanel>
             </StackPanel>
             <StackPanel Orientation="Horizontal" Margin="10,10,10,12"
                         VerticalAlignment="Top" HorizontalAlignment="Center">
-                <Button x:Name="addBTN" Content="{x:Bind ViewModel.Loc['AddBTN']}" 
+                <Button x:Name="addBTN" Content="{res:Loc Key=AddBTN, Section=ImportPage}" 
                         Margin="10,0,10,0" Padding="10,0,10,0" Height="30" FontSize="16" 
                         Background="{StaticResource AddButton}"
-                        Command="{Binding AddComicCommand}"/>
-                <Button x:Name="searchBTN" Content="{x:Bind ViewModel.Loc['SearchBTN']}" 
+                        Command="{Binding AddComicCommand}"
+                        CommandParameter="{x:Bind XamlRoot}"/>
+                <Button x:Name="searchBTN" Content="{res:Loc Key=SearchBTN, Section=ImportPage}" 
                         Margin="10,0,10,0" Padding="10,0,10,0" Height="30" FontSize="16"
                         Background="{StaticResource StandardButton}" 
-                        Command="{Binding SearchComicCommand}"/>
-                <Button x:Name="clearBTN" Content="{x:Bind ViewModel.Loc['ClearBTN']}"
+                        Command="{Binding SearchComicCommand}"
+                        CommandParameter="{x:Bind XamlRoot}"/>
+                <Button x:Name="clearBTN" Content="{res:Loc Key=ClearBTN, Section=ImportPage}"
                         Margin="10,0,0,0" Padding="10,0,10,0"
                         Height="30" FontSize="16" 
                         Background="{StaticResource ClearButton}" 

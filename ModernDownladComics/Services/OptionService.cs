@@ -1,4 +1,5 @@
-﻿using ComicsLib.Models;
+﻿using ComicsInfraLib.Models;
+using ComicsLib.Models;
 using ComicsLib.Utility;
 using ComicsServiceLib.UI;
 using System;
@@ -44,7 +45,17 @@ namespace ModernDownladComics.Services
 
         public void SaveOptions()
         {
-            FileUtility.WriteFile<Options>(_optionPath, Options);
+            FileUtility.WriteFile(_optionPath, Options);
+        }
+
+        public void SetOptions(SettingsInputModel settings)
+        {
+            Options.Comic = settings.Comic;
+            Options.Hosts = [.. settings.Hosts];
+            Options.Confirms = [.. settings.Confirms];
+            Options.ExcludedHosts = [.. settings.ExcludedHosts];
+            Options.Path = settings.Path;
+            Options.Lang = settings.Lang;
         }
     }
 }

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Page
+    x:Class="ModernDownladComics.Pages.SettingsAppPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:ModernDownladComics.Pages"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:res="using:ModernDownladComics"
+    mc:Ignorable="d" DataContext="{x:Bind ViewModel}">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <StackPanel Orientation="Vertical" Margin="10">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Text="{res:Loc Key=Path, Section=SettingsAppPage}"
+                           FontSize="16" Margin="0,0,0,5"/>
+                <TextBox Grid.Row="1" Text="{Binding Options.Path, Mode=TwoWay}" 
+                         IsReadOnly="True" FontSize="16"/>
+                <Button Grid.Row="1" Grid.Column="1" Content="{res:Loc Key=PathBTN, Section=SettingsAppPage}" 
+                        Margin="10,0,10,0" FontSize="16" 
+                        Command="{Binding SetPathCommand}"
+                        CommandParameter="{x:Bind WindowId}"/>
+
+            </Grid>
+            <StackPanel Orientation="Vertical" Margin="10">
+                <TextBlock Text="Langage" FontSize="16" Margin="0,0,0,5"/>
+                <ComboBox ItemsSource="{Binding Languages}"
+                          SelectedItem="{Binding Lang, Mode=TwoWay}" SelectionChanged="Lang_SelectionChanged">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal" Margin="4,2">
+                                <Image Source="{Binding FlagPath}" Width="28" Height="21" Margin="6,0,12,0"
+                                       Stretch="UniformToFill" VerticalAlignment="Center"/>
+                                <TextBlock Text="{Binding DisplayName}" FontSize="16" 
+                                           VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
+            </StackPanel>
+        </StackPanel>
+    </Grid>
+</Page>

@@ -1,5 +1,6 @@
 using ComicsLib.Models;
 using ComicsLib.Utility;
+using ComicsLocalizationLib;
 using ComicsServiceLib.UI;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Windowing;
@@ -12,6 +13,7 @@ using ModernDownloadComics.Services;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -23,45 +25,33 @@ namespace ModernDownladComics
     /// </summary>
     public sealed partial class MainWindow : Window
     {
-        public Dictionary<string, string> Loc { get; set; }
+        private readonly IStateRepository _stateRepository;
         public MainWindow()
         {
             InitializeComponent();
+            AppWindow.Resize(new(1750, 900));
+
+            DisplayArea displayArea = DisplayArea.GetFromWindowId(AppWindow.Id, DisplayAreaFallback.Primary);
+            AppWindow.Move(new(displayArea.WorkArea.X + (displayArea.WorkArea.Width - 1750) / 2,
+                displayArea.WorkArea.Y + (displayArea.WorkArea.Height - 900) / 2));
+
             AppWindow.SetIcon("Assets/download comics.ico");
             WindowService.Instance.InitOwner(this);
             var webService = App.Current.Services.GetRequiredService<IWebService>() as WebService;
             webService?.Init(frame);
+            
+            _stateRepository = App.Current.Services.GetRequiredService<IStateRepository>();
+            
             Init();
-            App.Current.LocalizationService.LanguageChangedEvent += (data) =>
-            {
-                Loc = App.Current.LocalizationService.GetData("MainWindow");
-                Bindings.Update();
-            };
-            Loc = App.Current.LocalizationService.GetData("MainWindow");
-
-            AppStateStore.Instance.Comics.Add(new()
-            {
-                PackageName = "Test 1",
-                Author = "Author 1",
-                Host = "https://k2s.cc/",
-                URL = "https://k2s.cc/file/042a3437140e2/Patreon_-_Corrupted_Waifus_-_Black_Widow__AI_GENERATED_.rar?site=svscomics.com"
-            });
-            AppStateStore.Instance.Comics.Add(new()
-            {
-                PackageName = "Test 2",
-                Author = "Author 1",
-                Host = "https://fboom.me/",
-                URL = "https://fboom.me/file/0089aa8033a4b/Patreon_-_Corrupted_Waifus_-_Black_Widow__AI_GENERATED_.rar?site=svscomics.com"
-            });
-            AppStateStore.Instance.Comics.Add(new()
-            {
-                PackageName = "Test 2",
-                Author = "Author 2",
-                Host = "https://florenfile.com/",
-                URL = "https://florenfile.com/11575xpl3bwu/Patreon_-_Corrupted_Waifus_-_Black_Widow__AI_GENERATED_.rar.html"
-            });
+            var localizationService = App.Current.Services.GetRequiredService<LocalizationService>();
+            var options = App.Current.Services.GetRequiredService<ISettingsService>().GetOptions();
+            localizationService.LoadLang(options.Lang);
 
             frame.Navigate(typeof(MainPage));
+
+            OverlappedPresenter presenter = OverlappedPresenter.Create();
+            presenter.IsResizable = false;
+            AppWindow.SetPresenter(presenter);
         }
 
         private async void NavigationView_SelectionChanged(NavigationView sender, NavigationViewSelectionChangedEventArgs args)
@@ -80,7 +70,7 @@ namespace ModernDownladComics
                         frame.Navigate(typeof(ImportPage));
                         break;
                     case "send":
-                        if (AppStateStore.Instance.Comics.Count > 0)
+                        if (_stateRepository.Comics.Count != 0)
                         {
                             frame.Navigate(typeof(SendPage));
                             navView.SelectedItem = null;
@@ -92,12 +82,6 @@ namespace ModernDownladComics
                             dimmingOverlay.Visibility = Visibility.Visible;
                             SettingsWindow settingsWindow = new();
                             settingsWindow.Closed += SettingsWindow_Closed;
-                            break;
-                        }
-                    case "lang":
-                        {
-
-                            App.Current.LocalizationService.LoadLang("en");
                             break;
                         }
                     default:
@@ -113,15 +97,13 @@ namespace ModernDownladComics
             navView.SelectedItem = null;
         }
 
-        public static void Init()
+        public void Init()
         {
             var pathService = App.Current.Services.GetRequiredService<IPathService>();
             if (File.Exists(pathService.BackupFilePath))
-                AppStateStore.Instance.Comics =
-                      new(FileUtility.ReadFile<List<Comic>>(pathService.BackupFilePath) ?? []);
-
+                _stateRepository.Comics = FileUtility.ReadFile<List<Comic>>(pathService.BackupFilePath) ?? [];
             if (File.Exists(pathService.TrackFilePath))
-                AppStateStore.Instance.Tracks =
+                _stateRepository.Tracks =
                     FileUtility.ReadFile<List<Track>>(pathService.TrackFilePath) ?? [];
 
             FileUtility.CreateFolder(pathService.BackupDirPath);
@@ -130,7 +112,7 @@ namespace ModernDownladComics
 
         private void Window_Closed(object sender, WindowEventArgs args)
         {
-            //App.Current.Services.GetRequiredService<IStateRepository>().Save();
+            _stateRepository.Save();
         }
     }
 }

@@ -29,7 +29,6 @@ namespace ModernDownladComics.Pages
             InitializeComponent();
             ViewModel = App.Current.Services
                 .GetRequiredService<SettingsCredientialsPageViewModel<XamlRoot>>();
-            ViewModel.InitData(App.Current.LocalizationService.GetData("SettingsCredentialsPage"));
             ViewModel.ConnectionEvent += () =>
             {
                 connectionLBL.Foreground = new SolidColorBrush(Colors.Green);

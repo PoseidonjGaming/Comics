@@ -1,10 +1,8 @@
-using ComicsInfraLib.Helpers;
 using ComicsInfraLib.Models;
 using ComicsInfraLib.Models.Views;
-using ComicsLib.Models;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
-using System.Collections.ObjectModel;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -20,14 +18,14 @@ public sealed partial class SettingsHostsPage : Page
     public SettingsHostsPage()
     {
         InitializeComponent();
-        ViewModel = new(App.Current.LocalizationService.GetData("SettingsHostsPage", "Comic"));
+        ViewModel = App.Current.Services.GetRequiredService<SettingsHostPageViewModel>();
     }
 
     protected override void OnNavigatedTo(NavigationEventArgs e)
     {
         base.OnNavigatedTo(e);
 
-        if (e.Parameter is SettingsPageArgs<ObservableCollection<string>> settings)
+        if(e.Parameter is SettingsCollectionPageArg settings)
         {
             ViewModel.Setup(settings);
         }

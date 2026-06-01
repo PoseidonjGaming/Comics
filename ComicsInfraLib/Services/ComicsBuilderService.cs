@@ -8,7 +8,8 @@ using System.Text.RegularExpressions;
 namespace ComicsInfraLib.Services
 {
     public class ComicsBuilderService(IWebService web, IHtmlParserService parser,
-        IHostService hostSelector, ISettingsService settings) : IComicsBuilderService
+        IHostService hostSelector, ISettingsService settings,
+        IStateRepository stateRepository) : IComicsBuilderService
     {
         public async Task<Comic?> MakeComics(string baseUrl, string author, string name, int numberPage, bool isScan, string? htmlBody = "")
         {
@@ -43,7 +44,7 @@ namespace ComicsInfraLib.Services
                     .ToDictionary(href => RegexUtility.HostRegex().Match(href).Value,
                     href => href);
 
-                string host = hostSelector.SelectHost(AppStateStore.Instance.Comics,
+                string host = hostSelector.SelectHost(stateRepository.Comics,
                    nodes.Keys);
 
 

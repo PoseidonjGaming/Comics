@@ -20,18 +20,18 @@ namespace ComicsInfraLib.Models.Views
 
         private readonly IPathService _pathService;
         private readonly IScanService _scanService;
+        private readonly IStateRepository _stateRepository;
         private CancellationTokenSource? _scanCts;
         public Type? ReturnType;
-        public Dictionary<string, string> Loc = [];
 
         public event Action<Type>? NavigateEvent;
 
-        private static AppState State => AppStateStore.Instance;
         public PathPageViewModel(ISettingsService settingsService, IPathService pathService,
-            IScanService scanService)
+            IScanService scanService, IStateRepository stateRepository)
         {
             _pathService = pathService;
             _scanService = scanService;
+            _stateRepository = stateRepository;
             Roots = new ObservableCollection<string>(settingsService.GetOptions().Paths);
             SelectedRoot = Roots.FirstOrDefault() ?? "";
             Paths = [];
@@ -39,13 +39,11 @@ namespace ComicsInfraLib.Models.Views
             Comic = new();
         }
 
-        public void Init(PathPageArgs args, Dictionary<string, string> dictionary)
+        public void Init(PathPageArgs args)
         {
             if (args.Comic != null)
                 Comic = args.Comic;
             ReturnType = args.ReturnType;
-
-            Loc = dictionary;
         }
 
         [RelayCommand]
@@ -81,13 +79,13 @@ namespace ComicsInfraLib.Models.Views
             catch (UnauthorizedAccessException) { }
             finally
             {
-                State.Comics.Add(Comic);
-                State.AddTrack(new(Comic.BaseURL, Comic.URL, Comic.Host));
+                _stateRepository.Comics.Add(Comic);
+                _stateRepository.Tracks.Add(new(Comic.BaseURL, Comic.URL, Comic.Host));
 
                 FileUtility.WriteFile<List<Comic>>(_pathService.BackupFilePath,
-                   [.. State.Comics]);
+                   [.. _stateRepository.Comics]);
                 FileUtility.WriteFile<List<Track>>(_pathService.TrackFilePath,
-                    State.Tracks);
+                    _stateRepository.Tracks);
 
                 if (ReturnType != null)
                     NavigateEvent(ReturnType);

@@ -1,5 +1,8 @@
-﻿using System.Text.Json;
+﻿using JDownloader.Model;
+using JDownloader.Model.Enum;
+using System.Text.Json;
 using System.Text.Json.Serialization;
+using System.Text.Json.Serialization.Metadata;
 
 namespace ComicsJDownloaderApi.Helpers
 {
@@ -17,7 +20,25 @@ namespace ComicsJDownloaderApi.Helpers
         {
             return new JsonSerializerOptions(JsonSerializerDefaults.Web)
             {
-                Converters = { new JsonStringEnumConverter() }
+                Converters = {
+                    new EnumJsonConverter<AvailableLinkState>(),
+                new EnumJsonConverter<AccountErrorType>(),
+                new EnumJsonConverter<ArchiveFileStatus>(),
+                new EnumJsonConverter<CaptchaSkipRequest>(),
+                new EnumJsonConverter<CleanupAction>(),
+                new EnumJsonConverter<CleanupMode>(),
+                new EnumJsonConverter<Context>(),
+                new EnumJsonConverter<ControllerStatus>(),
+                new EnumJsonConverter<DeviceStatus>(),
+                new EnumJsonConverter<DirectConnectionMode>(),
+                new EnumJsonConverter<ErrorSource>(),
+                new EnumJsonConverter<HostType>(),
+                new EnumJsonConverter<LinkCheckStatus>(),
+                new EnumJsonConverter<MenuType>(),
+                new EnumJsonConverter<Priority>(),
+                new EnumJsonConverter<Reason>(),
+                new EnumJsonConverter<SelectionType>(),
+                new EnumJsonConverter<UrlDisplayType>()}
             };
         }
 

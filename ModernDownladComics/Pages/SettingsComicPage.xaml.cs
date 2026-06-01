@@ -1,5 +1,5 @@
 using ComicsInfraLib.Models;
-using ComicsInfraLib.Models.Views;
+using ComicsInfraLib.Models.Views.Settings;
 using ComicsLib.Models;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Navigation;
@@ -19,18 +19,15 @@ namespace ModernDownladComics.Pages
         public SettingsComicPage()
         {
             InitializeComponent();
-            ViewModel = new();
-            ViewModel.InitData(App.Current
-                .LocalizationService.GetData("SettingsComicPage", "Comic"));
+            ViewModel = new(new());
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
-
-            if (e.Parameter is SettingsPageArgs<Comic> args)
+            if(e.Parameter is SettingsPageArgs<Comic> arg)
             {
-                ViewModel.Setup(args);
+                ViewModel.Setup(arg);
             }
         }
     }

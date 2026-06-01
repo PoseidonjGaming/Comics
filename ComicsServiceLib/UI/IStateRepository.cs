@@ -5,8 +5,8 @@ namespace ComicsServiceLib.UI
 {
     public interface IStateRepository
     {
-        ObservableCollection<Comic> Comics { get; }
-        List<Track> Tracks { get; }
+        List<Comic> Comics { get; set; }
+        List<Track> Tracks { get; set; }
 
         void Save();
     }

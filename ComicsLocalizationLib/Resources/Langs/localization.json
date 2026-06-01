@@ -13,11 +13,15 @@
     "ImportPage",
     "PathPage",
     "Dialog",
-    "SearchPage",
     "ScanDialog",
+    "RestoreDialog",
+    "SearchPage",
+    "SettingsAppPage",
     "SettingsComicPage",
     "SettingsCredentialsPage",
-    "SettingsHostsPage"
+    "SettingsHostsPage",
+    "FileDialog",
+    "FolderDialog"
   ],
   "properties": {
     "Comic": {
@@ -94,10 +98,14 @@
     "MainPage": {
       "type": "object",
       "required": [
-
+        "ChangeSourceBTN",
+        "UnselectBTN",
+        "DeleteBTN"
       ],
       "properties": {
-
+        "ChangeSourceBTN": { "type": "string" },
+        "UnselectBTN": { "type": "string" },
+        "DeleteBTN": { "type": "string" }
       },
       "additionalProperties": false
     },
@@ -183,18 +191,18 @@
         "No",
         "Search",
         "Error",
-        "Restore",
-        "RestoreQuestion",
-        "Close"
+        "Close",
+        "Cancel"
       ],
       "properties": {
         "Yes": { "type": "string" },
         "No": { "type": "string" },
         "Search": { "type": "string" },
         "Error": { "type": "string" },
-        "Restore": { "type": "string" },
-        "RestoreQuestion": { "type": "string" },
-        "Close": { "type": "string" }
+        "Close": { "type": "string" },
+        "Cancel": { "type": "string" },
+
+        "Folder": { "type": "string" }
       },
       "additionalProperties": false
     },
@@ -212,9 +220,22 @@
       },
       "additionalProperties": false
     },
+    "RestoreDialog": {
+      "type": "object",
+      "required": [
+        "Title",
+        "Question"
+      ],
+      "properties": {
+        "Title": { "type": "string" },
+        "Question": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
     "SettingsWindow": {
       "type": "object",
       "required": [
+        "App",
         "Hosts",
         "SearchHosts",
         "ConfirmHosts",
@@ -225,6 +246,7 @@
         "ExportSettings"
       ],
       "properties": {
+        "App": { "type": "string" },
         "Hosts": { "type": "string" },
         "SearchHosts": { "type": "string" },
         "ConfirmHosts": { "type": "string" },
@@ -236,14 +258,28 @@
       },
       "additionalProperties": false
     },
+    "SettingsAppPage": {
+      "type": "object",
+      "required": [
+        "Path",
+        "PathBTN"
+      ],
+      "properties": {
+        "Path": { "type": "string" },
+        "PathBTN": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
     "SettingsComicPage": {
       "type": "object",
       "required": [
+        "BaseURL",
         "Enabling",
         "Enabled",
         "Disabled"
       ],
       "properties": {
+        "BaseURL": { "type": "string" },
         "Enabling": { "type": "string" },
         "Enabled": { "type": "string" },
         "Disabled": { "type": "string" }
@@ -279,6 +315,30 @@
       "properties": {
         "AddBTN": { "type": "string" },
         "DeleteBTN": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+    "FileDialog": {
+      "type": "object",
+      "required": [
+        "Title",
+        "Select"
+      ],
+      "properties": {
+        "Title": { "type": "string" },
+        "Select": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+    "FolderDialog": {
+      "type": "object",
+      "required": [
+        "Title",
+        "Select"
+      ],
+      "properties": {
+        "Title": { "type": "string" },
+        "Select": { "type": "string" }
       },
       "additionalProperties": false
     }

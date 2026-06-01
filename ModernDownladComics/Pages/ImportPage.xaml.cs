@@ -27,13 +27,6 @@ public sealed partial class ImportPage : Page
         {
             Frame.Navigate(typeof(PathPage), new PathPageArgs(comic, typeof(ImportPage)));
         };
-
-        App.Current.LocalizationService.LanguageChangedEvent += (data) =>
-        {
-            ViewModel.Loc = App.Current.LocalizationService.GetData("ImportPage", "Comic");
-            Bindings.Update();
-        };
-        ViewModel.InitData(App.Current.LocalizationService.GetData("ImportPage", "Comic"));
     }
 
     private void Page_Loaded(object sender, RoutedEventArgs e)

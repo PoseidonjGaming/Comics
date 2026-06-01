@@ -1,4 +1,3 @@
-using ComicsInfraLib.Helpers;
 using ComicsInfraLib.Models;
 using ComicsLib.Models;
 using ComicsLib.Utility;
@@ -15,8 +14,6 @@ using Microsoft.Windows.Storage.Pickers;
 using ModernDownladComics.Pages;
 using ModernDownloadComics.Services;
 using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -31,18 +28,13 @@ namespace ModernDownladComics.windows
         private static WindowService WindowService => WindowService.Instance;
         private readonly Options options;
         private readonly JDCredentials credentials;
-
-        private readonly ObservableCollection<string> Host;
-        private readonly ObservableCollection<string> Confirm;
-        private readonly ObservableCollection<string> Excluded;
-        private readonly ObservableCollection<string> Path;
-        public Dictionary<string, string> Loc { get; set; }
-
+        private readonly SettingsInputModel settingsInputModel;
+        private readonly IPickerDialog<WindowId> pickerDialogService;
 
         public SettingsWindow()
         {
             InitializeComponent();
-            AppWindow.Resize(new(1100, 700));
+            AppWindow.Resize(new(1150, 700));
             AppWindow.TitleBar.PreferredTheme = TitleBarTheme.UseDefaultAppMode;
             WindowService.SetOwner(this);
             WindowService.Center(this);
@@ -51,6 +43,7 @@ namespace ModernDownladComics.windows
             presenter.IsModal = true;
             presenter.SetBorderAndTitleBar(true, true);
             presenter.IsResizable = false;
+            presenter.IsMaximizable = false;
 
             AppWindow.SetPresenter(presenter);
 
@@ -59,22 +52,18 @@ namespace ModernDownladComics.windows
             AppWindow.TitleBar.ButtonBackgroundColor = Colors.Transparent;
             AppWindow.TitleBar.ButtonInactiveBackgroundColor = Colors.Transparent;
             AppWindow.TitleBar.ButtonForegroundColor = Colors.White;
-            
-            Loc = App.Current.LocalizationService.GetData("SettingsWindow");
-            
 
             options = App.Current.Services.GetRequiredService<ISettingsService>().GetOptions();
-            Host = new(options.Hosts);
-            Confirm = new(options.Confirms);
-            Excluded = new(options.ExcludedHosts);
-            Path = new(options.Paths);
+            settingsInputModel = new(options);
 
             credentials = App.Current.Services.GetRequiredService<ICredentialsService>().GetCredentials();
 
+            pickerDialogService = App.Current.Services.GetRequiredService<IPickerDialog<WindowId>>();
+
             AppWindow.Show();
 
-            settingsFrame.Navigate(typeof(SettingsComicPage),
-                new SettingsPageArgs<Comic?>(options.Comic, false));
+            settingsFrame.Navigate(typeof(SettingsAppPage),
+                new SettingsPageArgs<SettingsInputModel>(settingsInputModel));
         }
 
         public async void NavigationView_SelectionChangedAsync(NavigationView sender, NavigationViewSelectionChangedEventArgs args)
@@ -83,40 +72,50 @@ namespace ModernDownladComics.windows
             {
                 switch (item.Tag)
                 {
+                    case "comic":
+                        {
+                            settingsFrame.Navigate(typeof(SettingsComicPage),
+                                new SettingsPageArgs<Comic?>(settingsInputModel.Comic));
+                            break;
+                        }
                     case "search":
-                        settingsFrame.Navigate(typeof(SettingsHostsPage),
-                            new SettingsPageArgs<ObservableCollection<string>>(Host, true));
-                        break;
+                        {
+                            settingsFrame.Navigate(typeof(SettingsHostsPage),
+                                new SettingsCollectionPageArg(settingsInputModel.Hosts, true));
+                            break;
+                        }
                     case "confirm":
-                        settingsFrame.Navigate(typeof(SettingsHostsPage),
-                            new SettingsPageArgs<ObservableCollection<string>>(Confirm, true));
-                        break;
+                        {
+                            settingsFrame.Navigate(typeof(SettingsHostsPage),
+                                new SettingsCollectionPageArg(settingsInputModel.Confirms, true));
+                            break;
+                        }
                     case "excluded":
-                        settingsFrame.Navigate(typeof(SettingsHostsPage),
-                            new SettingsPageArgs<ObservableCollection<string>>(Excluded, true));
-                        break;
+                        {
+                            settingsFrame.Navigate(typeof(SettingsHostsPage),
+                                new SettingsCollectionPageArg(settingsInputModel.ExcludedHosts, true));
+                            break;
+                        }
                     case "path":
-                        settingsFrame.Navigate(typeof(SettingsHostsPage),
-                            new SettingsPageArgs<ObservableCollection<string>>(Path, false));
-                        break;
+                        {
+                            settingsFrame.Navigate(typeof(SettingsHostsPage),
+                                new SettingsCollectionPageArg(settingsInputModel.Paths, false));
+                            break;
+                        }
                     case "credentials":
-                        settingsFrame.Navigate(typeof(SettingsCredentials),
-                            new SettingsPageArgs<JDCredentials>(credentials, false));
-                        break;
+                        {
+                            settingsFrame.Navigate(typeof(SettingsCredentials),
+                                new SettingsPageArgs<JDCredentials>(credentials));
+                            break;
+                        }
                     case "import_settings":
                         {
-                            FileOpenPicker dialog = new(AppWindow.Id)
-                            {
-                                Title ="Import Settings",
-                                CommitButtonText = "Import Settigns",
-                                SuggestedFolder = @"E:\Manga Scan",
-
-                            };
-                            dialog.FileTypeChoices.Add("JSON", [".json"]);
-
-                            var file = await dialog.PickSingleFileAsync();
+                            string path = await pickerDialogService.FileOpenDialog(AppWindow.Id,
+                                "FileDialog.Title");
+                            if (string.IsNullOrEmpty(path))
+                                break;
                             App.Current.Services.GetRequiredService<ISettingsService>()
-                                .SetOptions(FileUtility.ReadFile<Options>(file.Path) ?? new());
+                                .SetOptions(FileUtility.ReadFile<Options>(path) ?? new());
                             AppNotification notification = new AppNotificationBuilder()
                                 .AddText("Settings import successful")
                                 .BuildNotification();
@@ -124,44 +123,21 @@ namespace ModernDownladComics.windows
                             navView.SelectedItem = null;
                             break;
                         }
-                    case "export_settings":
+                    default:
                         {
-                            FileSavePicker saveDialog = new(AppWindow.Id)
-                            {
-                                Title = "Export Settings",
-                                CommitButtonText = "Save file",
-                                SuggestedFileName = "Settings Download Comics",
-                                DefaultFileExtension =".json"
-                            };
-                            saveDialog.FileTypeChoices.Add("JSON Files", [".json"]);
-                            var result = await saveDialog.PickSaveFileAsync();
-
-                            if(result!= null)
-                            {
-                                Options options = App.Current.Services
-                                    .GetRequiredService<ISettingsService>()
-                                    .GetOptions();
-                                FileUtility.WriteFile(result.Path, options);
-                            }
+                            settingsFrame.Navigate(typeof(SettingsAppPage),
+                                new SettingsPageArgs<SettingsInputModel>(settingsInputModel));
                             break;
                         }
-                    default:
-                        settingsFrame.Navigate(typeof(SettingsComicPage),
-                            new SettingsPageArgs<Comic?>(options.Comic, false));
-                        break;
                 }
             }
         }
 
         private void Window_Closed(object sender, WindowEventArgs args)
         {
-            options.Hosts = [.. Host];
-            options.Confirms = [.. Confirm];
-            options.ExcludedHosts = [.. Excluded];
-            options.Paths = [.. Path];
-            Comic? comic = options.Comic;
-            comic?.Host = RegexUtility.HostRegex().Match(comic.URL).Value;
-            App.Current.Services.GetRequiredService<ISettingsService>().SaveOptions();
+            var settingsService = App.Current.Services.GetRequiredService<ISettingsService>();
+            settingsService.SetOptions(settingsInputModel);
+            settingsService.SaveOptions();
 
             App.Current.Services.GetRequiredService<ICredentialsService>().SaveCredentials();
         }

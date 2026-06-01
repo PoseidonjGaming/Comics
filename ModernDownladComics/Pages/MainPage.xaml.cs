@@ -19,17 +19,11 @@ namespace ModernDownladComics.Pages
         {
             InitializeComponent();
             ViewModel = App.Current.Services.GetRequiredService<MainPageViewModel>();
+            ViewModel.Init();
             ViewModel.ChangeSourceRequested += async comic =>
             {
                 _ = new ChangeSourceWindow(comic);
             };
-
-            App.Current.LocalizationService.LanguageChangedEvent += (data) =>
-            {
-                ViewModel.Loc = App.Current.LocalizationService.GetData("MainPage", "Comic");
-                Bindings.Update();
-            };
-            ViewModel.Init(App.Current.LocalizationService.GetData("MainPage", "Comic"));
         }
 
         private void FilterTXT_TextChanged(object sender, TextChangedEventArgs e)

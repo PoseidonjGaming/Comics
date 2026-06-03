@@ -8,9 +8,13 @@
 
   <ItemGroup>
     <None Remove="en.json" />
+    <None Remove="Resources\Flags\en.png" />
+    <None Remove="Resources\Flags\fr.png" />
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="Resources\Flags\en.png" />
+    <EmbeddedResource Include="Resources\Flags\fr.png" />
     <EmbeddedResource Include="Resources\Langs\en.json" />
     <EmbeddedResource Include="Resources\Langs\fr.json" />
   </ItemGroup>

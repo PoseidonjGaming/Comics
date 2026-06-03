@@ -14,6 +14,13 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Remove="Assets\Flags\**" />
+    <Content Remove="Assets\Flags\**" />
+    <EmbeddedResource Remove="Assets\Flags\**" />
+    <None Remove="Assets\Flags\**" />
+    <Page Remove="Assets\Flags\**" />
+  </ItemGroup>
+  <ItemGroup>
     <None Remove="Pages\AddPage.xaml" />
     <None Remove="Pages\ArchivePage.xaml" />
     <None Remove="Pages\BrowserPage.xaml" />
@@ -145,9 +152,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Assets\Flags\" />
-  </ItemGroup>
   
   
   <!--
@@ -178,4 +182,7 @@
     <PublishReadyToRun>false</PublishReadyToRun>
     <PublishTrimmed>false</PublishTrimmed>
   </PropertyGroup>
+  <ItemGroup>
+    <PRIResource Remove="Assets\Flags\**" />
+  </ItemGroup>
 </Project>

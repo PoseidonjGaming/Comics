@@ -21,7 +21,8 @@ namespace ComicsLocalizationLib
 
         public LocalizationService()
         {
-            Languages = [..Assembly.GetExecutingAssembly().GetManifestResourceNames().Select(s=>{
+            Languages = [..Assembly.GetExecutingAssembly().GetManifestResourceNames().
+                Where(s=>s.Contains("Langs")).Select(s=>{
                 string code = s.Split("Langs").Last().TrimStart('.').Replace(".json", string.Empty);
                 return new LanguageOption(code,code);
             })];
@@ -93,6 +94,13 @@ namespace ComicsLocalizationLib
             return Assembly.GetExecutingAssembly()
                  .GetManifestResourceNames().First(s =>
                  s.Equals($"ComicsLocalizationLib.Resources.Langs.{lang}"));
+        }
+
+        public static Stream? GetResource(string lang)
+        {
+            var list = Assembly.GetExecutingAssembly().GetManifestResourceNames();
+            return Assembly.GetExecutingAssembly()
+             .GetManifestResourceStream($"ComicsLocalizationLib.Resources.Flags.{lang}.png");
         }
     }
 }

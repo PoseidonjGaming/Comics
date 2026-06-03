@@ -7,6 +7,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:res="using:ModernDownladComics"
+    xmlns:ext="using:ModernDownladComics.Extensions"
     mc:Ignorable="d" DataContext="{x:Bind ViewModel}">
 
     <Grid>
@@ -40,11 +41,13 @@
             <StackPanel Orientation="Vertical" Margin="10">
                 <TextBlock Text="Langage" FontSize="16" Margin="0,0,0,5"/>
                 <ComboBox ItemsSource="{Binding Languages}"
-                          SelectedItem="{Binding Lang, Mode=TwoWay}" SelectionChanged="Lang_SelectionChanged">
+                          SelectedItem="{Binding Lang, Mode=TwoWay}" 
+                          SelectionChanged="Lang_SelectionChanged">
                     <ComboBox.ItemTemplate>
                         <DataTemplate>
                             <StackPanel Orientation="Horizontal" Margin="4,2">
-                                <Image Source="{Binding FlagPath}" Width="28" Height="21" Margin="6,0,12,0"
+                                <Image Source="{ext:Image}"
+                                       Width="28" Height="21" Margin="6,0,12,0"
                                        Stretch="UniformToFill" VerticalAlignment="Center"/>
                                 <TextBlock Text="{Binding DisplayName}" FontSize="16" 
                                            VerticalAlignment="Center" HorizontalAlignment="Center"/>

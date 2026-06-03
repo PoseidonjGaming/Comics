@@ -82,8 +82,8 @@ namespace ModernDownladComics.Services
         {
             ContentDialog dialog = new()
             {
-                Title = localizationService["Dialog.Restore"],
-                Content = localizationService["Dialog.RestoreQuestion"],
+                Title = localizationService["RestoreDialog.Title"],
+                Content = localizationService["RestoreDialog.Question"],
                 DefaultButton = ContentDialogButton.Primary,
                 PrimaryButtonText = localizationService["Dialog.Yes"],
                 CloseButtonText = localizationService["Dialog.No"],

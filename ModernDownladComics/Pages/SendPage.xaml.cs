@@ -21,7 +21,7 @@ namespace ModernDownladComics.Pages
     public sealed partial class SendPage : Page
     {
 
-        private CancellationTokenSource? _verifyTokenSource;
+
 
         private readonly JDownloadJobService? _jobService;
         public readonly SendViewModel ViewModel;
@@ -42,49 +42,17 @@ namespace ModernDownladComics.Pages
 
         private async void JobToggleBTN_Checked(object sender, RoutedEventArgs e)
         {
-            if (_verifyTokenSource == null || _verifyTokenSource.IsCancellationRequested)
-            {
-                _verifyTokenSource?.Dispose();
-                _verifyTokenSource = new CancellationTokenSource();
-
-                ViewModel.IsDetermined = false;
-
-                jobToggleBTN.IsChecked = true;
-                jobToggleBTN.Content = "Stop";
-
-                if (_jobService != null)
-                {
-                    await _jobService.RunAsync(_verifyTokenSource.Token);
-                    jobToggleBTN.IsChecked = false;
-                    Frame.Navigate(typeof(MainPage));
-                }
-
-            }
+            await ViewModel.StartJobAsync(() => Frame.Navigate(typeof(MainPage)));
         }
 
-        private void jobToggleBTN_Unchecked(object sender, RoutedEventArgs e)
+        private void JobToggleBTN_Unchecked(object sender, RoutedEventArgs e)
         {
-
+            ViewModel.Cancel();
         }
 
         private async void Page_Loaded(object sender, RoutedEventArgs e)
         {
-            _verifyTokenSource = new CancellationTokenSource();
-            ViewModel.IsDetermined = false;
-            jobToggleBTN.IsChecked = true;
-            jobToggleBTN.Content = "Stop";
-
-            if (_jobService != null)
-            {
-                await _jobService.RunAsync(_verifyTokenSource.Token);
-                _stateRepository.Comics.Clear();
-                ViewModel.IsDetermined = true;
-                var pathService = App.Current.Services.GetRequiredService<IPathService>();
-                FileUtility.WriteFile(pathService.BackupFilePath, _stateRepository.Comics);
-                Frame.Navigate(typeof(MainPage));
-            }
-
-
+            await ViewModel.Load(() => Frame.Navigate(typeof(MainPage)));
         }
     }
 }

@@ -1,15 +1,11 @@
-﻿using ComicsInfraLib.Services;
-using ComicsLocalizationLib;
+﻿using ComicsLocalizationLib;
 using FuzzierSharp;
 using FuzzierSharp.Extractor;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.UI.Xaml.Controls.Primitives;
 using SearchComicsLib;
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 
 namespace ModernDownladComics.Utilities
 {

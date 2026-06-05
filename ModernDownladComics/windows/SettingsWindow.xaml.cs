@@ -11,7 +11,9 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.Windows.AppNotifications;
 using Microsoft.Windows.AppNotifications.Builder;
 using Microsoft.Windows.Storage.Pickers;
+using ModernDownladComics.Models;
 using ModernDownladComics.Pages;
+using ModernDownladComics.Utilities;
 using ModernDownloadComics.Services;
 using System;
 
@@ -136,7 +138,7 @@ namespace ModernDownladComics.windows
         private void Window_Closed(object sender, WindowEventArgs args)
         {
             var settingsService = App.Current.Services.GetRequiredService<ISettingsService>();
-            settingsService.SetOptions(settingsInputModel);
+            settingsService.SetOptions(SettingsUtility.ToOptions(settingsInputModel));
             settingsService.SaveOptions();
 
             App.Current.Services.GetRequiredService<ICredentialsService>().SaveCredentials();

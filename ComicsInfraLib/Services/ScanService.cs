@@ -77,7 +77,7 @@ namespace ComicsInfraLib.Services
         public async Task<IReadOnlyList<string>> ScanAsync(Comic comic, IEnumerable<string> roots,
             CancellationToken token)
         {
-            List<string> results = new();
+            List<string> results = [];
 
             foreach (string root in roots)
             {

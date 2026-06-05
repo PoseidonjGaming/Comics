@@ -9,6 +9,7 @@ using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
+using ModernDownladComics.Models;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -29,22 +30,28 @@ namespace ModernDownladComics.Pages
     {
         public SettingsAppPageViewModel<WindowId> ViewModel { get; set; }
         public WindowId WindowId { get; set; }
+
+        public SettingsInputModel? InputModel { get; set; }
+
         public SettingsAppPage()
         {
             InitializeComponent();
             ViewModel = App.Current.Services.GetRequiredService<SettingsAppPageViewModel<WindowId>>();
-            
-            
+            ViewModel.Init();
+
+            ViewModel.PathChanged += path => InputModel?.Path = path;
+            ViewModel.LangChanged += lang => InputModel?.Lang = lang;
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             base.OnNavigatedTo(e);
-            if(e.Parameter is SettingsPageArgs<SettingsInputModel> settingsArgs)
+            if (e.Parameter is SettingsPageArgs<SettingsInputModel> args)
             {
-                ViewModel.Init(settingsArgs.Arg);
+                {
+                    InputModel = args.Arg;
+                }
             }
-            
         }
 
         private void Lang_SelectionChanged(object sender, SelectionChangedEventArgs e)

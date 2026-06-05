@@ -1,4 +1,5 @@
-﻿using ComicsLocalizationLib;
+﻿using ComicsLib.Models;
+using ComicsLocalizationLib;
 using ComicsLocalizationLib.Resources;
 using ComicsServiceLib.UI;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -8,9 +9,10 @@ using System.Collections.ObjectModel;
 namespace ComicsInfraLib.Models.Views.Settings
 {
     public partial class SettingsAppPageViewModel<T>(IPickerDialog<T> pickerDialog,
-        LocalizationService localizationService) : ObservableObject
+        LocalizationService localizationService, ISettingsService settingsService) : ObservableObject
     {
-        public SettingsInputModel? Options { get; set; }
+        [ObservableProperty]
+        public partial string Path { get; set; }
 
         [ObservableProperty]
         public partial LanguageOption Lang { get; set; }
@@ -18,23 +20,28 @@ namespace ComicsInfraLib.Models.Views.Settings
         public ObservableCollection<LanguageOption> Languages { get; set; } =
             new(localizationService.Languages);
 
+        public event Action<string>? PathChanged;
+        public event Action<string>? LangChanged;
+
         [RelayCommand]
         public async Task SetPath(T arg)
         {
-            Options?.Path = await pickerDialog.FolderDialog(arg, 
+            string path = await pickerDialog.FolderDialog(arg,
                 localizationService["FileDialog.Title"]);
+            if (!string.IsNullOrEmpty(path))
+                PathChanged?.Invoke(path);
         }
 
-        public void Init(SettingsInputModel inputModel)
+        public void Init()
         {
-            Options = inputModel;
-            Lang = Languages.First(l => l.Code == Options?.Lang);
+            Path = settingsService.GetOptions().Path;
+            Lang = Languages.First(l => l.Code == settingsService.GetOptions().Lang);
         }
 
         public void LoadLang()
         {
             localizationService.LoadLang(Lang.Code);
-            Options?.Lang = Lang.Code;
+            LangChanged?.Invoke(Lang.Code);
         }
     }
 }

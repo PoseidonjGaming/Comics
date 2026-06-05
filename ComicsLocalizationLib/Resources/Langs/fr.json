@@ -62,6 +62,17 @@
     "Delete": "Voulez-vous supprimer ce téléchargement ?",
     "Add": "Voulez-vous ajouter ce téléchargement ({0})?"
   },
+  "SendPage": {
+    "Try": "Essai",
+    "Final_Try": "Dernière essai",
+    "DisableLinks": "Désactiver les liens",
+    "SortLinks": "Trier les liens",
+    "SetNameAndComment": "Définir le nom et le commentaire",
+    "Add": "Ajout de",
+    "Start": "Démarrer",
+    "Stop": "Arrêter",
+    "JobNotStarted": "Envoi non démarré"
+  },
   "Dialog": {
     "Yes": "Oui",
     "No": "Non",

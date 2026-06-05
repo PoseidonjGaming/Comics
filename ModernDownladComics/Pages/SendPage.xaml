@@ -19,8 +19,8 @@
         </Grid.RowDefinitions>
 
         <StackPanel>
-            <ToggleButton x:Name="jobToggleBTN" Margin="10"
-                          Checked="JobToggleBTN_Checked" Unchecked="jobToggleBTN_Unchecked"
+            <ToggleButton x:Name="jobToggleBTN" Margin="10" Content="{Binding Job}"
+                          Checked="JobToggleBTN_Checked" Unchecked="JobToggleBTN_Unchecked"
                           HorizontalAlignment="Center" FontSize="20" Padding="15"/>
             <ProgressBar Height="20" Minimum="0" Value="{Binding ProgressValue}"
                          IsIndeterminate="{Binding IsDetermined}"

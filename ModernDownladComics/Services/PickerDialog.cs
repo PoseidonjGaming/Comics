@@ -29,11 +29,11 @@ namespace ModernDownladComics.Services
             FolderPicker dialog = new(arg)
             {
                 Title = localizationService[title],
-                CommitButtonText = localizationService["Folder.Select"]
+                CommitButtonText = localizationService["FolderDialog.Select"],
             };
 
             var res = await dialog.PickSingleFolderAsync();
-            return res.Path;
+            return res != null ? res.Path : string.Empty;
         }
     }
 }

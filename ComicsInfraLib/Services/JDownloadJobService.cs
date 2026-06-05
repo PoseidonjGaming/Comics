@@ -1,6 +1,6 @@
-﻿using ComicsInfraLib.Models.Views;
-using ComicsJDownloaderApi;
+﻿using ComicsJDownloaderApi;
 using ComicsLib.Models;
+using ComicsLocalizationLib;
 using ComicsServiceLib.UI;
 using JDownloader.Model;
 using System.Net;
@@ -9,7 +9,7 @@ namespace ComicsInfraLib.Services
 {
     public class JDownloadJobService(JdownloaderService jdownloaderService,
         ISettingsService settingsService, IJobState jobState, 
-        IStateRepository stateRepository)
+        IStateRepository stateRepository, LocalizationService localizationService)
     {
         private int progress;
 
@@ -26,7 +26,7 @@ namespace ComicsInfraLib.Services
             do
             {
                 tr++;
-                jobState.UpdateTry($"Try {tr}");
+                jobState.UpdateTry($"{localizationService["SendPage.Try"]} {tr}");
                 links.Clear();
                 await AddLinks(c => false, listener, token);
 
@@ -53,7 +53,7 @@ namespace ComicsInfraLib.Services
                 await jdownloaderService.RemoveLinks();
             } while (links.Any(cl => cl.AvailableLinkState == AvailableLinkState.OFFLINE));
 
-            jobState.UpdateTry("Final Try");
+            jobState.UpdateTry(localizationService["SendPage.Final_Try"]);
             jobState.ClearState();
             await AddLinks(c => !options.Confirms.Contains(c.Host), listener, token);
 
@@ -64,17 +64,17 @@ namespace ComicsInfraLib.Services
         private async Task FinalizeLinks(CancellationToken token)
         {
             ComicsJDownloaderClient client = await jdownloaderService.GetClient();
-            jobState.UpdateState("Set links disabled", false);
+            jobState.UpdateState(localizationService["SendPage.DisableLinks"], false);
             await DisableLinks(client);
 
             await Task.Delay(1000, token);
 
-            jobState.UpdateState("Sort links", false);
+            jobState.UpdateState(localizationService["SendPage.SortLinks"], false);
             await SortPackages(client);
 
             await Task.Delay(1000, token);
 
-            jobState.UpdateState("Set name and comment", false);
+            jobState.UpdateState(localizationService["SendPage.SetNameAndComment"], false);
             await FinishedLink(client);
 
             jobState.ClearState();
@@ -135,6 +135,8 @@ namespace ComicsInfraLib.Services
             foreach (var comic in stateRepository.Comics)
             {
                 ct.ThrowIfCancellationRequested();
+                jobState.UpdateState(comic.PackageName, false);
+                jobState.UpdateProgess(progress++, true);
                 await jdownloaderService.AddLinks(comic, autoStartFunc(comic), state =>
                 {
                     jobState.UpdateState(state, false);

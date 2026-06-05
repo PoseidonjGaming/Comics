@@ -1,5 +1,4 @@
-﻿using ComicsInfraLib.Models;
-using ComicsLib.Models;
+﻿using ComicsLib.Models;
 
 namespace ComicsServiceLib.UI
 {
@@ -8,6 +7,5 @@ namespace ComicsServiceLib.UI
         Options GetOptions();
         void SetOptions(Options options);
         void SaveOptions();
-        void SetOptions(SettingsInputModel settingsInputModel);
     }
 }

@@ -1,5 +1,6 @@
 ﻿using ComicsJDownloaderApi;
 using ComicsLib.Models;
+using ComicsLocalizationLib;
 using ComicsServiceLib;
 using ComicsServiceLib.UI;
 using FuzzierSharp;
@@ -10,8 +11,8 @@ using JDownloader.Model;
 namespace ComicsInfraLib.Services
 {
     public class JdownloaderService(Lazy<Task<ComicsJDownloaderClient>> jdClient,
-        IHtmlParserService htmlParserService, IHostService hostService,
-        IStateRepository stateRepository)
+        IHtmlParserService htmlParserService, IStateRepository stateRepository, 
+        LocalizationService localizationService)
     {
         public Task<ComicsJDownloaderClient> GetClient() => jdClient.Value;
 
@@ -111,7 +112,7 @@ namespace ComicsInfraLib.Services
 
             LinkCollectingJob job = await client.LinkGrabberV2.AddLinks(query);
             comic.UUID = job.Id;
-            stateAction.Invoke($"Add {comic.PackageName}");
+            stateAction.Invoke($"{localizationService["SendPage.Add"]} {comic.PackageName}");
         }
         public void ChangeUrl(Comic comic, string[] hosts, Action<string> stateAction)
         {
@@ -155,7 +156,7 @@ namespace ComicsInfraLib.Services
         public async Task<List<CrawledLink>> GetCrawledLink(long? UUID = null)
         {
             ComicsJDownloaderClient client = await GetClient();
-            
+
             CrawledLinkQuery query = new()
             {
                 Availability = true,

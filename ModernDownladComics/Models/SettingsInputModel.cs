@@ -2,7 +2,7 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using System.Collections.ObjectModel;
 
-namespace ComicsInfraLib.Models
+namespace ModernDownladComics.Models
 {
     public partial class SettingsInputModel(Options options) : ObservableObject
     {

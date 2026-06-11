@@ -12,7 +12,7 @@
   <Identity
     Name="ModernDownloadComics"
     Publisher="CN=lucas"
-    Version="1.0.0.0" />
+    Version="2.0.0.0" />
 
   <mp:PhoneIdentity PhoneProductId="4c2a33fd-bab8-48ff-a2cf-3fe79fbb6770" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 

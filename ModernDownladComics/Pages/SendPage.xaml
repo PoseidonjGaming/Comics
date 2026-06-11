@@ -22,9 +22,9 @@
             <ToggleButton x:Name="jobToggleBTN" Margin="10" Content="{Binding Job}"
                           Checked="JobToggleBTN_Checked" Unchecked="JobToggleBTN_Unchecked"
                           HorizontalAlignment="Center" FontSize="20" Padding="15"/>
-            <ProgressBar Height="20" Minimum="0" Value="{Binding ProgressValue}"
-                         IsIndeterminate="{Binding IsDetermined}"
-                         Maximum="{Binding Maximum}"/>
+            <ProgressBar Height="20" Minimum="0" Value="{Binding ProgressValue, Mode=TwoWay}"
+                         IsIndeterminate="{Binding IsDetermined, Mode=TwoWay}"
+                         Maximum="{Binding Maximum, Mode=TwoWay}"/>
         </StackPanel>
 
         <TextBlock Text="{Binding StateJob}" Grid.Row="1" FontSize="16" Margin="10,10,10,5"/>

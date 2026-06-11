@@ -30,7 +30,7 @@
 
                 <TextBlock Text="{res:Loc Key=Path, Section=SettingsAppPage}"
                            FontSize="16" Margin="0,0,0,5"/>
-                <TextBox Grid.Row="1" Text="{Binding Path, Mode=TwoWay}" 
+                <TextBox Grid.Row="1" Text="{x:Bind InputModel.Path, Mode=TwoWay}" 
                          IsReadOnly="True" FontSize="16"/>
                 <Button Grid.Row="1" Grid.Column="1" Content="{res:Loc Key=PathBTN, Section=SettingsAppPage}" 
                         Margin="10,0,10,0" FontSize="16" 

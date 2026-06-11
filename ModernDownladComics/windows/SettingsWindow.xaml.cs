@@ -16,6 +16,7 @@ using ModernDownladComics.Pages;
 using ModernDownladComics.Utilities;
 using ModernDownloadComics.Services;
 using System;
+using System.IO;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -120,6 +121,20 @@ namespace ModernDownladComics.windows
                                 .SetOptions(FileUtility.ReadFile<Options>(path) ?? new());
                             AppNotification notification = new AppNotificationBuilder()
                                 .AddText("Settings import successful")
+                                .BuildNotification();
+                            AppNotificationManager.Default.Show(notification);
+                            navView.SelectedItem = null;
+                            break;
+                        }
+                        case "export_settings":
+                        {
+                            string path = await pickerDialogService.FolderDialog(AppWindow.Id,
+                                "FileDialog.Title");
+                            if (string.IsNullOrEmpty(path))
+                                break;
+                            FileUtility.WriteFile(Path.Combine(path, "settings.json"), options);
+                            AppNotification notification = new AppNotificationBuilder()
+                                .AddText("Settings export successful")
                                 .BuildNotification();
                             AppNotificationManager.Default.Show(notification);
                             navView.SelectedItem = null;

@@ -54,26 +54,26 @@ namespace ComicsInfraLib.Models.Views
 
             try
             {
-                //if (Directory.Exists(Comic.Path))
-                //{
-                //    string destPath = Comic.Path.Replace(SelectedRoot,
-                //        _pathService.BackupDirPath);
+                if (Directory.Exists(Comic.Path))
+                {
+                    string destPath = Comic.Path.Replace(SelectedRoot,
+                        _pathService.BackupDirPath);
 
-                //    DirectoryInfo? destInfo = Directory.GetParent(destPath);
+                    DirectoryInfo? destInfo = Directory.GetParent(destPath);
 
-                //    if (destInfo is not null)
-                //    {
-                //        if (!destInfo.Exists)
-                //        {
-                //            destInfo.Create();
-                //        }
-                //    }
+                    if (destInfo is not null)
+                    {
+                        if (!destInfo.Exists)
+                        {
+                            destInfo.Create();
+                        }
+                    }
 
-                //    if (_pathService.BackupDirPath[0] == SelectedRoot[0])
-                //    {
-                //        _pathService.MoveComic(destPath, Comic.Path);
-                //    }
-                //}
+                    if (_pathService.BackupDirPath[0] == SelectedRoot[0])
+                    {
+                        _pathService.MoveComic(destPath, Comic.Path);
+                    }
+                }
             }
             catch (IOException) { }
             catch (UnauthorizedAccessException) { }

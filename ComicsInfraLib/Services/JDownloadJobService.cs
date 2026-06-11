@@ -49,7 +49,9 @@ namespace ComicsInfraLib.Services
                 jobState.UpdateProgess(progress, true);
 
                 links = await jdownloaderService.GetCrawledLink();
-
+                
+                await Task.Delay(1000, token);
+                
                 await jdownloaderService.RemoveLinks();
             } while (links.Any(cl => cl.AvailableLinkState == AvailableLinkState.OFFLINE));
 
@@ -135,15 +137,13 @@ namespace ComicsInfraLib.Services
             foreach (var comic in stateRepository.Comics)
             {
                 ct.ThrowIfCancellationRequested();
-                jobState.UpdateState(comic.PackageName, false);
-                jobState.UpdateProgess(progress++, true);
                 await jdownloaderService.AddLinks(comic, autoStartFunc(comic), state =>
                 {
                     jobState.UpdateState(state, false);
-                    jobState.UpdateProgess(progress++, true);
+                    jobState.UpdateProgess(progress++, false);
                 });
 
-                await Task.Delay(1000, ct);
+                await Task.Delay(1500, ct);
                 HttpListenerContext context = await listener.GetContextAsync();
                 HandleRequest(context, comic);
             }

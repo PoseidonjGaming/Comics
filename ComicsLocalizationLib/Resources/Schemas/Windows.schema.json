@@ -1,6 +1,7 @@
 ﻿{
   "$id": "windows_schema",
   "title": "Schema for windows",
+  "type": "object",
   "required": [
     "Title"
   ],

@@ -19,6 +19,6 @@
     <EmbeddedResource Include="Resources\Langs\fr.json" />
   </ItemGroup>
 
-  <ProjectExtensions><VisualStudio><UserProperties resources_4langs_4en_1json__JsonSchema="localization.json" resources_4langs_4fr_1json__JsonSchema="localization.json" resources_4langs_4localization_1json__JsonSchema="https://json-schema.org/draft/2020-12/schema" /></VisualStudio></ProjectExtensions>
+  <ProjectExtensions><VisualStudio><UserProperties resources_4langs_4en_1json__JsonSchema="localization.json" resources_4langs_4fr_1json__JsonSchema="../Schemas/localization.json" resources_4schemas_4localization_1json__JsonSchema="https://json-schema.org/draft/2020-12/schema" resources_4schemas_4windows_1schema_1json__JsonSchema="https://json-schema.org/draft/2020-12/schema" /></VisualStudio></ProjectExtensions>
 
 </Project>

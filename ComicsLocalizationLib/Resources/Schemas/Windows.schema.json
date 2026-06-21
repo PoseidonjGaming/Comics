@@ -1,0 +1,21 @@
+﻿{
+  "$id": "windows_schema",
+  "title": "Schema for windows",
+  "required": [
+
+  ],
+  "$defs": {
+    "Window": {
+      "required": [
+        "Title"
+      ],
+      "properties": {
+        "Title": { "type": "string" }
+      }
+    }
+  },
+  "properties": {
+    
+  },
+  "additionalProperties": false
+}

@@ -1,0 +1,330 @@
+{
+  "$id": "loc_schema",
+  "title": "Localization Schema",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "Comic",
+    "Buttons",
+    "Entities",
+    "Priority",
+    "MainWindow",
+    "MainPage",
+    "AddPage",
+    "ArchivePage",
+    "PathPage",
+    "SendPage",
+    "SettingsWindow",
+    "SettingsAppPage",
+    "SettingsComicsPage",
+    "SettingsCredentialsPage",
+    "Dialog",
+    "ScanDialog",
+    "RestoreDialog",
+    "SearchDialog",
+    "DeleteDialog"
+  ],
+  "$defs": {
+    "Dialog": {
+      "type": "object",
+      "required": [
+        "Title",
+        "Content"
+      ],
+      "properties": {
+        "Title": { "type": "string" },
+        "Content": { "type": "string" }
+      }
+    },
+    "Window": {
+      "type": "object",
+      "required": [ "Title" ],
+      "properties": {
+        "Title": { "type": "string" }
+      }
+    }
+  },
+  "properties": {
+    "Comic": {
+      "required": [
+        "Author",
+        "PackageName",
+        "Pages",
+        "Host",
+        "Filename",
+        "Path",
+        "Priority",
+        "BaseURL"
+      ],
+      "properties": {
+        "Author": { "type": "string" },
+        "PackageName": { "type": "string" },
+        "Pages": { "type": "string" },
+        "Host": { "type": "string" },
+        "Filename": { "type": "string" },
+        "Path": { "type": "string" },
+        "Enable": { "type": "string" },
+        "Priority": { "type": "string" },
+        "BaseURL": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+    "Buttons": {
+      "type": "object",
+      "required": [
+        "AddBTN",
+        "ChangeSourceBTN",
+        "UnselectBTN",
+        "DeleteBTN",
+        "ClearBTN",
+        "RestoreBTN",
+        "CancelBTN",
+        "SelectBTN",
+        "SearchBTN",
+        "PathBTN"
+      ],
+      "properties": {
+        "AddBTN": {
+          "type": "string",
+          "pattern": "{[0-9]+}"
+        },
+        "ChangeSourceBTN": { "type": "string" },
+        "UnselectBTN": { "type": "string" },
+        "DeleteBTN": {
+          "type": "string",
+          "pattern": "{[0-9]+}"
+        },
+        "ClearBTN": { "type": "string" },
+        "RestoreBTN": { "type": "string" },
+        "CancelBTN": { "type": "string" },
+        "SelectBTN": { "type": "string" },
+        "SearchBTN": {
+          "type": "string",
+          "pattern": "{[0-9]+}"
+        },
+        "PathBTN": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+    "Entities": {
+      "type": "object",
+      "required": [
+        "Comics",
+        "Archive",
+        "Host",
+        "Path"
+      ],
+      "properties": {
+        "Comics": { "type": "string" },
+        "Archive": { "type": "string" },
+        "Host": { "type": "string" },
+        "Path": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+    "Priority": {
+      "type": "object",
+      "required": [
+        "DEFAULT",
+        "HIGHEST",
+        "HIGHER",
+        "HIGH",
+        "LOW",
+        "LOWER",
+        "LOWEST"
+      ],
+      "properties": {
+        "DEFAULT": { "type": "string" },
+        "HIGHEST": { "type": "string" },
+        "HIGHER": { "type": "string" },
+        "HIGH": { "type": "string" },
+        "LOW": { "type": "string" },
+        "LOWER": { "type": "string" },
+        "LOWEST": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+    "MainWindow": {
+      "allOf": [
+        { "$ref": "#/$defs/Window" }
+
+      ],
+      "type": "object",
+      "required": [
+        "Title",
+        "Home",
+        "Send",
+        "Add",
+        "AddLink",
+        "ImportLinks",
+        "Archive",
+        "Settings",
+        "RestoreBackup"
+      ],
+      "properties": {
+        "Home": { "type": "string" },
+        "Send": { "type": "string" },
+        "Add": { "type": "string" },
+        "AddLink": { "type": "string" },
+        "ImportLinks": { "type": "string" },
+        "Archive": { "type": "string" },
+        "Settings": { "type": "string" },
+        "RestoreBackup": { "type": "string" }
+      }
+    },
+    "MainPage": {
+      "type": "object",
+      "required": [
+      ],
+      "properties": {
+
+      },
+      "additionalProperties": false
+    },
+    "AddPage": {
+
+    },
+    "ArchivePage": {
+
+    },
+    "PathPage": {
+      "type": "object",
+      "required": [
+
+      ],
+      "properties": {
+
+      },
+      "additionalProperties": false
+    },
+    "SendPage": {
+      "type": "object",
+      "required": [
+        "Add",
+        "Try",
+        "FinalTry",
+        "DisableLinks",
+        "SortLinks",
+        "SetNameAndComment",
+        "Start",
+        "Stop"
+      ],
+      "properties": {
+        "Add": { "type": "string" },
+        "Try": { "type": "string" },
+        "FinalTry": { "type": "string" },
+        "DisableLinks": { "type": "string" },
+        "SortLinks": { "type": "string" },
+        "SetNameAndComment": { "type": "string" },
+        "Start": { "type": "string" },
+        "Stop": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+    "SettingsWindow": {
+      "allOf": [
+        { "$ref": "#/%24defs/Window" }
+      ],
+      "required": [
+        "App",
+        "Hosts",
+        "SearchHosts",
+        "ConfirmHosts",
+        "ExcludedHosts",
+        "Paths",
+        "ImportSettings",
+        "ExportSettings",
+        "Credentials"
+      ],
+      "properties": {
+        "App": { "type": "string" },
+        "Hosts": { "type": "string" },
+        "SearchHosts": { "type": "string" },
+        "ConfirmHosts": { "type": "string" },
+        "ExcludedHosts": { "type": "string" },
+        "Paths": { "type": "string" },
+        "ImportSettings": { "type": "string" },
+        "ExportSettings": { "type": "string" },
+        "Credentials": { "type": "string" }
+      }
+    },
+    "SettingsAppPage": {
+      "type": "object",
+      "required": [
+        "Path"
+      ],
+      "properties": {
+        "Path": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+    "SettingsComicsPage": {
+      "type": "object",
+      "required": [
+        "Enabled",
+        "Disabled"
+      ],
+      "properties": {
+        "Enabled": { "type": "string" },
+        "Disabled": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+    "SettingsCredentialsPage": {
+      "type": "object",
+      "required": [
+        "Mail",
+        "Password",
+        "Device",
+        "TestConnectionBTN"
+      ],
+      "properties": {
+        "Mail": { "type": "string" },
+        "Password": { "type": "string" },
+        "Device": { "type": "string" },
+        "TestConnectionBTN": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+    "Dialog": {
+      "type": "object",
+      "required": [
+        "Yes",
+        "No",
+        "Close",
+        "Cancel"
+      ],
+      "properties": {
+        "Yes": { "type": "string" },
+        "No": { "type": "string" },
+        "Close": { "type": "string" },
+        "Cancel": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+    "ScanDialog": {
+      "$ref": "#/%24defs/Dialog"
+    },
+    "RestoreDialog": {
+      "$ref": "#/%24defs/Dialog"
+    },
+    "SearchDialog": {
+      "allOf": [
+        { "$ref": "#/%24defs/Dialog" }
+      ],
+      "required": [
+        "From",
+        "Empty",
+        "NotFound"
+      ],
+      "properties": {
+        "From": { "type": "string" },
+        "Empty": { "type": "string" },
+        "NotFound": { "type": "string" }
+      }
+    },
+    "DeleteDialog": {
+      "$ref": "#/%24defs/Dialog"
+    }
+  }
+}

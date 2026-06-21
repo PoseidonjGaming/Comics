@@ -8,7 +8,25 @@
     "Enable": "Actif",
     "Priority": "Priorité",
     "Host": "Hôte",
-    "BaseURL": "URL de base"
+    "BaseURL": "URL de base"    
+  },
+  "Buttons": {
+    "ChangeSourceBTN": "Changer la source",
+    "UnselectBTN": "Désélectionner",
+    "DeleteBTN": "Supprimer {0}",
+    "AddBTN": "Ajouter {0}",
+    "CancelBTN": "Annuler",
+    "ClearBTN": "Nettoyer le comics",
+    "RestoreBTN": "Restaurer l'archive",
+    "SelectBTN": "Sélectionner",
+    "SearchBTN": "Rechercher {0}",
+    "PathBTN": "Sélection d'un chemin"
+  },
+  "Entities": {
+    "Comics": "le comics",
+    "Archive": "l'archive",
+    "Host": "l'hôte",
+    "Path": "le chemin"
   },
   "Priority": {
     "DEFAULT": "Normale",
@@ -20,94 +38,54 @@
     "LOWEST": "Très basse"
   },
   "MainWindow": {
-    "Title": "Gestionnaire de comics",
+    "Title": "Gestionnaire de Comics",
     "Home": "Accueil",
     "Send": "Envoyer",
     "Add": "Ajouter",
     "AddLink": "Ajouter un lien",
     "ImportLinks": "Import des liens",
     "Archive": "Archive",
-    "Settings": "Options"
+    "RestoreBackup": "Restaurer les archives",
+    "Settings": "Paramètres"
   },
   "MainPage": {
-    "ChangeSourceBTN": "Changer la source",
-    "UnselectBTN": "Désélectionner le comic",
-    "DeleteBTN": "Supprimer le comic"
+
   },
   "AddPage": {
-    "AddBTN": "Ajouter le comic",
-    "SearchBTN": "Rechercher le comic",
-    "DeleteBTN": "Supprimer le comic",
-    "ClearBTN": "Effacer le comic"
+    "Title": "Ajout de comics"
   },
   "ArchivePage": {
-    "SearchBTN": "Rechercher le comics",
-    "RestoreBTN": "Restaurer le comics",
-    "DeleteBTN": "Supprimer l'archive"
-  },
-  "ImportPage": {
-    "AddBTN": "Ajouter le comic",
-    "ClearBTN": "Effacer le comic",
-    "SearchBTN": "Rechercher le comic"
+    "Title": "Archives"
   },
   "PathPage": {
-    "CancelBTN": "Annuler",
-    "SelectBTN": "Sélectionner"
-  },
-  "SearchPage": {
-    "Title": "Recherche",
-    "From": "Depuis",
-    "Empty": "Vide",
-    "NotFound": "Téléchargement non trouvé",
-    "Delete": "Voulez-vous supprimer ce téléchargement ?",
-    "Add": "Voulez-vous ajouter ce téléchargement ({0})?"
+
   },
   "SendPage": {
-    "Try": "Essai",
-    "Final_Try": "Dernière essai",
-    "DisableLinks": "Désactiver les liens",
-    "SortLinks": "Trier les liens",
-    "SetNameAndComment": "Définir le nom et le commentaire",
     "Add": "Ajout de",
-    "Start": "Démarrer",
-    "Stop": "Arrêter",
-    "JobNotStarted": "Envoi non démarré"
-  },
-  "Dialog": {
-    "Yes": "Oui",
-    "No": "Non",
-    "Search": "Rechercher",
-    "Error": "Erreur",
-    "Close": "Fermer",
-    "Cancel": "Annuler"
-  },
-  "ScanDialog": {
-    "Title": "Scanner l'url",
-    "Content": "Voulez-vous scanner l'url ?",
-    "Cancel": "Annuler"
-  },
-  "RestoreDialog": {
-    "Title": "Restaurer",
-    "Question": "Voulez-vous restaurer cette archive ?"
+    "Try": "Essai",
+    "FinalTry": "Dernier essai",
+    "DisableLinks": "Désaction de liens concernés",
+    "SortLinks": "Tri des liens par taille",
+    "SetNameAndComment": "Mise à jour des noms et commentaires",
+    "Start": "Commencer",
+    "Stop": "Arrêter"
   },
   "SettingsWindow": {
+    "Title": "Paramètres",
     "App": "Application",
+    "Credentials": "Informations d'identification",
     "Hosts": "Hôtes",
     "SearchHosts": "Hôtes à rechercher",
-    "ConfirmHosts": "Hôtes à ne pas confirmer ",
+    "ConfirmHosts": "Hôtes à confirmer",
     "ExcludedHosts": "Hôtes à exclure",
-    "Paths": "Chemins prédéfinis",
-    "Credentials": "Informations d'identification",
+    "Paths": "Chemins",
     "ImportSettings": "Importer les paramètres",
-    "ExportSettings": "Export les paramètres"
+    "ExportSettings": "Exporter les paramètres"
   },
   "SettingsAppPage": {
-    "Path": "Chemin des comics",
-    "PathBTN": "Modifier le chemin"
+    "Path": "Chemin de la librairie"
   },
-  "SettingsComicPage": {
-    "BaseURL": "URL de base",
-    "Enabling": "Activer le téléchargement",
+  "SettingsComicsPage": {
     "Enabled": "Activé",
     "Disabled": "Désactivé"
   },
@@ -115,20 +93,31 @@
     "Mail": "Email",
     "Password": "Mot de passe",
     "Device": "Nom de l'appareil",
-    "TestConnectionBTN": "Tester la connexion",
-    "ConnectionFailed": "Échec de la connexion",
-    "ConnectionSuccessful": "Connexion réussie"
+    "TestConnectionBTN": "Tester la connection"
   },
-  "SettingsHostsPage": {
-    "AddBTN": "Ajouter",
-    "DeleteBTN": "Supprimer"
+  "Dialog": {
+    "Yes": "Oui",
+    "No": "Non",
+    "Close": "Fermer",
+    "Cancel": "Annuler"
   },
-  "FileDialog": {
-    "Title": "Sélection d'un fichier",
-    "Select": "Sélectionner un fichier"
+  "ScanDialog": {
+    "Title": "Analyse",
+    "Content": "Voulez-vous analyser ce lien?"
   },
-  "FolderDialog": {
-    "Title": "Sélection d'un dossier",
-    "Select": "Sélectionner un dossier"
+  "RestoreDialog": {
+    "Title": "Restauration",
+    "Content": "Voulez-vous restaurer cette archive ({0})"
+  },
+  "SearchDialog": {
+    "Title": "Recherche",
+    "Content": "Voulez-vous ajouter ce comics ({0})",
+    "Empty": "Vide",
+    "From": "Depuis",
+    "NotFound": "Non trouvé"
+  },
+  "DeleteDialog": {
+    "Title": "Suppression",
+    "Content": "Voulez-vous supprimer cet archive ({0})"
   }
 }

@@ -15,7 +15,6 @@ namespace ComicsLocalizationLib
         public List<LanguageOption> Languages { get; }
 
         public string this[string key] => Get(key);
-        public event Action<Dictionary<string, string>>? LanguageChangedEvent;
 
         public event PropertyChangedEventHandler? PropertyChanged;
 
@@ -98,7 +97,6 @@ namespace ComicsLocalizationLib
 
         public static Stream? GetResource(string lang)
         {
-            var list = Assembly.GetExecutingAssembly().GetManifestResourceNames();
             return Assembly.GetExecutingAssembly()
              .GetManifestResourceStream($"ComicsLocalizationLib.Resources.Flags.{lang}.png");
         }

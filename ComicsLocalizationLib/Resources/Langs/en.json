@@ -10,6 +10,18 @@
     "Priority": "Priority",
     "BaseURL": "Base URL"
   },
+  "Buttons": {
+    "ChangeSourceBTN": "Change Source",
+    "UnselectBTN": "Unselect Comic",
+    "DeleteBTN": "Delete {0}",
+    "AddBTN": "Add Comics",
+    "SearchBTN": "Search Comcis",
+    "RestoreBTN": "Restore Comics",
+    "CancelBTN": "Annuler",
+    "ClearBTN": "Vider le comics",
+    "SelectBTN": "Sélectionner",
+    "PathBTN": "Sélectionner un chemin"
+  },
   "Priority": {
     "DEFAULT": "Default",
     "HIGHEST": "Highest",
@@ -27,40 +39,32 @@
     "AddLink": "Add Link",
     "ImportLinks": "Import Links",
     "Archive": "Backup",
-    "Settings": "Settings"
+    "Settings": "Settings",
+    "ClearSession": "Clear Previous Session",
+    "OpenJDownloaderSettings": "Open JDownloadet Settings",
+    "OpenSettings": "Open Settings",
+    "RestoreBackup": "Restore Backup",
+    "SelectLanguage": "Select Lang"
   },
   "MainPage": {
-    "ChangeSourceBTN": "Change Source",
-    "UnselectBTN": "Unselect Comic",
-    "DeleteBTN": "Delete Comic"
+   
   },
   "AddPage": {
-    "AddBTN": "Add Comics",
-    "SearchBTN": "Search Comics",
-    "DeleteBTN": "Delete Comcis",
-    "ClearBTN": "Clear Comics"
   },
   "ArchivePage": {
-    "SearchBTN": "Search Comcis",
-    "RestoreBTN": "Restore Comics",
-    "DeleteBTN": "Delete Archive"
+  
   },
   "ImportPage": {
-    "AddBTN": "Add Comics",
-    "ClearBTN": "Clear Comics",
-    "SearchBTN": "Search Comics"
+    
   },
   "PathPage": {
-    "CancelBTN": "Cancel",
-    "SelectBTN": "Select"
+    
   },
   "SearchPage": {
     "Title": "Search",
     "From": "From",
     "Empty": "Empty",
-    "NotFound": "Download Not Found",
-    "Delete": "Do you want to delete this download ?",
-    "Add": "Do you want to add this download ({0})?"
+    "NotFound": "Download Not Found"
   },
   "SendPage": {
     "Try": "Try",
@@ -76,21 +80,23 @@
   "Dialog": {
     "Yes": "Yes",
     "No": "No",
-    "Search": "Search",
-    "Error": "Error",
     "Close": "Close",
     "Cancel": "Cancel"
   },
   "ScanDialog": {
     "Title": "Scan URL",
-    "Content": "Do you want to scan the url ?",
-    "Cancel": "Cancel"
+    "Content": "Do you want to scan the url ?"
   },
   "RestoreDialog": {
     "Title": "Restore",
-    "Question": "Do you want to restore this backup ?"
+    "Content": "Do you want to restore this backup ?"
+  },
+  "DeleteDialog": {
+    "Title": "Delete",
+    "Content": "Do you want to delete this archive ({0})"
   },
   "SettingsWindow": {
+    "Title": "Settings",
     "App": "Application",
     "Hosts": "Hosts",
     "SearchHosts": "Search Hosts",
@@ -130,5 +136,9 @@
   "FolderDialog": {
     "Title": "Select a folder",
     "Select": "Select a folder"
+  },
+  "SaveFileDialog": {
+    "Title": "Save File",
+    "Save": "Save"
   }
 }

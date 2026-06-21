@@ -1,5 +1,5 @@
 ﻿{
-  "$id": "windows_schema",
+  "$id": "https://raw.githubusercontent.com/PoseidonjGaming/Comics/refs/heads/master/ComicsLocalizationLib/Resources/Schemas/Windows.schema.json",
   "title": "Schema for windows",
   "type": "object",
   "required": [

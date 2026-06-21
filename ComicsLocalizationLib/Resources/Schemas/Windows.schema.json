@@ -6,6 +6,7 @@
   ],
   "$defs": {
     "Window": {
+      "type": "object",
       "required": [
         "Title"
       ],

@@ -1,0 +1,68 @@
+﻿<Window x:Class="DownloadComics.windows.AddWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:DownloadComics.windows"
+        xmlns:vw="clr-namespace:ComicsInfraLib.Models.Views;assembly=ComicsInfraLib"
+        xmlns:res="clr-namespace:DownloadComics.Extension"
+        mc:Ignorable="d" Title="{res:Loc Key=Title, Section=AddWindow}"
+        Height="720" Width="1280" WindowStartupLocation="CenterOwner"
+        DataContext="{Binding ViewModel, RelativeSource={RelativeSource Self}}">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <StackPanel Orientation="Vertical" HorizontalAlignment="Stretch" VerticalAlignment="Top">
+            <StackPanel Orientation="Vertical" Margin="10">
+                <TextBlock Text="URL:" FontSize="16" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                <TextBox Text="{Binding Comic.BaseURL, Mode=TwoWay}" FontSize="16"
+                         HorizontalAlignment="Stretch" VerticalAlignment="Center" TextWrapping="NoWrap"/>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch">
+                <StackPanel Orientation="Vertical" HorizontalAlignment="Center" Margin="10">
+                    <TextBlock Text="{res:Loc Key=Author, Section=Comic, Format='{}{0}:'}" 
+                               FontSize="16" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                    <TextBox Text="{Binding Comic.Author, Mode=TwoWay}"
+                             TextWrapping="NoWrap" Width="200" FontSize="16"
+                             HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                </StackPanel>
+                <StackPanel Orientation="Vertical" HorizontalAlignment="Center" Margin="10">
+                    <TextBlock Text="{res:Loc Key=PackageName, Section=Comic, Format='{}{0}:'}" 
+                               FontSize="16" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                    <TextBox Text="{Binding Comic.PackageName, Mode=TwoWay}"
+                             FontSize="16" TextWrapping="NoWrap" Width="250"
+                             HorizontalAlignment="Left" VerticalContentAlignment="Center" />
+                </StackPanel>
+                <StackPanel Orientation="Vertical" HorizontalAlignment="Center" Margin="10">
+                    <TextBlock Text="{res:Loc Key=Pages, Section=Comic, Format='{}{0}:'}"
+                               FontSize="16" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                    <TextBox Text="{Binding Comic.NumberPages, Mode=TwoWay}" FontSize="16" Width="75"
+                             HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                </StackPanel> 
+            </StackPanel>
+
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                <Button Content="{Binding AddBTNContent, RelativeSource={RelativeSource AncestorType=local:AddWindow}}"
+                        Command="{Binding AddComicCommand}" FontSize="16" Margin="10,10,10,0" Padding="5"
+                        CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=Window}}"/>
+                <Button Content="{Binding SearchBTNContent, RelativeSource={RelativeSource AncestorType=local:AddWindow}}"
+                        Command="{Binding SearchComicCommand}" Margin="0,10,10,0" FontSize="16" Padding="5"
+                        CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=local:AddWindow}}"/>
+                <Button Content="{Binding ClearBTNContent, RelativeSource={RelativeSource AncestorType=local:AddWindow}}"
+                        Command="{Binding ClearComicCommand}" FontSize="16" Margin="0,10,10,0" Padding="5"/>
+                <Button Content="{Binding DeleteBTNContent, RelativeSource={RelativeSource AncestorType=local:AddWindow}}"
+                        Command="{Binding DeleteSelectComicCommand}" FontSize="16" Margin="0,10,10,0" Padding="5"/>
+            </StackPanel>
+        </StackPanel>
+
+        <ListView Grid.Column="1" Margin="10" ItemsSource="{Binding Comics, Mode=TwoWay}" 
+                  SelectedItem="{Binding SelectedComic, Mode=TwoWay}" DisplayMemberPath="PackageName"/>
+    </Grid>
+</Window>

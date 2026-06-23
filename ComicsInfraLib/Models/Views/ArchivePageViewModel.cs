@@ -1,14 +1,15 @@
 ﻿using ComicsInfraLib.Services;
 using ComicsLib.Models;
+using ComicsLocalizationLib;
 using ComicsServiceLib.UI;
 using CommunityToolkit.Mvvm.Input;
 using System.Collections.ObjectModel;
 
 namespace ComicsInfraLib.Models.Views
 {
-    public partial class ArchivePageViewModel<T>(JdownloaderService jdownloaderService,
+    public partial class ArchivePageViewModel<T, L>(JdownloaderService<L> jdownloaderService,
         IPathService pathService, ArchiveService archiveService,
-        IDialogService<T> dialogService) where T : class
+        IDialogService<T> dialogService) where T : class where L : LocalizationService
     {
         public ObservableCollection<TreeItem> Items { get; } = [];
 
@@ -24,8 +25,9 @@ namespace ComicsInfraLib.Models.Views
 
 
             DialogResult res = await dialogService.ShowSearchAsync(new(SelectedItem.Name,
-                archiveService.GetAuthor(SelectedItem), pathService.BackupDirPath, jd), arg);
-            if (res == DialogResult.SUCCESS)
+                archiveService.GetAuthor(SelectedItem), pathService.BackupDirPath, jd), arg,
+                "DeleteDialog.Title", "DeleteDialog.Content");
+            if (res == DialogResult.YES)
             {
                 DeleteItem();
             }
@@ -60,8 +62,8 @@ namespace ComicsInfraLib.Models.Views
         {
             if (SelectedItem != null)
             {
-                DialogResult res = await dialogService.ShowRestoreAsync(arg);
-                if (res == DialogResult.SUCCESS)
+                DialogResult res = await dialogService.ShowRestoreAsync(arg, SelectedItem.Name);
+                if (res == DialogResult.YES)
                 {
                     archiveService.RestoreBackup(SelectedItem);
                     DeleteItem();

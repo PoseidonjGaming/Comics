@@ -59,7 +59,7 @@ namespace ComicsInfraLib.Services
                     .Replace("_", " ") : name;
 
                 comic.Populate(url, baseUrl, name, filename, numberPage, author.Trim(), html);
-                comic.Host = RegexUtility.HostRegex().Match(url).Value;
+                comic.Host = host;
                 comic.NumberPages = numberPage;
             }
             else

@@ -1,0 +1,26 @@
+﻿<Window x:Class="DownloadComics.windows.Dialogs.AddDialogWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:DownloadComics.windows.Dialogs"
+        xmlns:res="clr-namespace:DownloadComics.Extension"
+        mc:Ignorable="d" Height="150" Width="250" WindowStartupLocation="CenterOwner"
+        DataContext="{Binding RelativeSource={RelativeSource Self}}">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <TextBlock Text="{res:Loc Key=Content, Section=ScanDialog}" 
+                   FontSize="16" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+        
+        <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+            <Button Content="{res:Loc Key=Yes, Section=Dialog}" Click="AddBTN_Click" Margin="10" Padding="10,0,10,0" FontSize="16"/>
+            <Button Content="{res:Loc Key=No, Section=Dialog}" Click="NoBTN_Click" Margin="10" Padding="10,0,10,0" FontSize="16"/>
+            <Button Content="{res:Loc Key=CancelBTN, Section=Buttons}" Click="CancelBTN_Click" Margin="10" Padding="10,0,10,0" FontSize="16"/>
+        </StackPanel>
+    </Grid>
+    
+</Window>

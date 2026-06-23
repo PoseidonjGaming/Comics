@@ -7,9 +7,9 @@ using System.Net;
 
 namespace ComicsInfraLib.Services
 {
-    public class JDownloadJobService(JdownloaderService jdownloaderService,
+    public class JDownloadJobService<L>(JdownloaderService<L> jdownloaderService,
         ISettingsService settingsService, IJobState jobState, 
-        IStateRepository stateRepository, LocalizationService localizationService)
+        IStateRepository stateRepository, L localizationService) where L : LocalizationService
     {
         private int progress;
 
@@ -32,7 +32,7 @@ namespace ComicsInfraLib.Services
 
                 token.ThrowIfCancellationRequested();
 
-                stateRepository.Comics.ForEach(async c =>
+                stateRepository.Comics.ToList().ForEach(async c =>
                 {
                     List<CrawledLink> crawledLinks = await jdownloaderService.GetCrawledLink(c.UUID);
 
@@ -55,7 +55,7 @@ namespace ComicsInfraLib.Services
                 await jdownloaderService.RemoveLinks();
             } while (links.Any(cl => cl.AvailableLinkState == AvailableLinkState.OFFLINE));
 
-            jobState.UpdateTry(localizationService["SendPage.Final_Try"]);
+            jobState.UpdateTry(localizationService["SendPage.FinalTry"]);
             jobState.ClearState();
             await AddLinks(c => !options.Confirms.Contains(c.Host), listener, token);
 
@@ -78,7 +78,9 @@ namespace ComicsInfraLib.Services
 
             jobState.UpdateState(localizationService["SendPage.SetNameAndComment"], false);
             await FinishedLink(client);
-
+            
+            await Task.Delay(1000, token);
+            
             jobState.ClearState();
         }
 

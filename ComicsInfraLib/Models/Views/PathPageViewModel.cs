@@ -81,11 +81,8 @@ namespace ComicsInfraLib.Models.Views
             {
                 _stateRepository.Comics.Add(Comic);
                 _stateRepository.Tracks.Add(new(Comic.BaseURL, Comic.URL, Comic.Host));
-
-                FileUtility.WriteFile<List<Comic>>(_pathService.BackupFilePath,
-                   [.. _stateRepository.Comics]);
-                FileUtility.WriteFile<List<Track>>(_pathService.TrackFilePath,
-                    _stateRepository.Tracks);
+                _stateRepository.Save();
+               
 
                 if (ReturnType != null)
                     NavigateEvent(ReturnType);

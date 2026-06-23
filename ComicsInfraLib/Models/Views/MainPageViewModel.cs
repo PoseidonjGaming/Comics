@@ -1,23 +1,18 @@
-﻿using ComicsInfraLib.Services;
-using ComicsJDownloaderApi;
-using ComicsJDownloaderApi.Model;
-using ComicsLib.Models;
+﻿using ComicsLib.Models;
 using ComicsServiceLib.UI;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using FuzzierSharp;
 using FuzzierSharp.PreProcess;
-using JDownloader.Model;
 using System.Collections.ObjectModel;
 
 namespace ComicsInfraLib.Models.Views
 {
-    public partial class MainPageViewModel(IStateRepository stateRepository): ObservableObject
+    public partial class MainPageViewModel(IStateRepository stateRepository) : ObservableObject
     {
         public Array Priorities { get; } = Enum.GetValues<Priorities>();
 
-        public ObservableCollection<Comic> Comics { get; set; } = 
-            new(stateRepository.Comics);
+        public ObservableCollection<Comic> Comics { get; set; } = new(stateRepository.Comics);
 
         public event Action<Comic>? ChangeSourceRequested;
 
@@ -35,7 +30,6 @@ namespace ComicsInfraLib.Models.Views
 
         public void Init()
         {
-
             FilterComics();
             InitFilteredHosts();
         }
@@ -52,8 +46,8 @@ namespace ComicsInfraLib.Models.Views
             if (SelectedComic != null)
             {
                 stateRepository.Comics.Remove(SelectedComic);
-                Comics.Remove(SelectedComic);                
                 stateRepository.Save();
+                FilterComics();
             }
         }
 
@@ -89,7 +83,7 @@ namespace ComicsInfraLib.Models.Views
                     filterHost = c.Host == SelectedHost;
                 }
                 return filteredName && filterHost;
-            }).ToList();
+            }).ToList() ?? [];
 
             foreach (var item in comics)
             {
@@ -100,7 +94,8 @@ namespace ComicsInfraLib.Models.Views
         private void InitFilteredHosts()
         {
             Hosts.Clear();
-            foreach (var host in stateRepository.Comics.Select(c => c.Host).Distinct().Prepend("All"))
+            foreach (var host in stateRepository.Comics.Select(c => c.Host)
+                .Distinct().Prepend("All") ?? [])
             {
                 Hosts.Add(host);
             }

@@ -34,7 +34,7 @@ namespace ComicsInfraLib
                     }
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
             }
 

@@ -8,8 +8,9 @@ using System.Collections.ObjectModel;
 
 namespace ComicsInfraLib.Models.Views.Settings
 {
-    public partial class SettingsAppPageViewModel<T>(IPickerDialog<T> pickerDialog,
-        LocalizationService localizationService, ISettingsService settingsService) : ObservableObject
+    public partial class SettingsAppPageViewModel<T, L>(IPickerDialog<T> pickerDialog,
+        L localizationService, ISettingsService settingsService) :
+        ObservableObject where L : LocalizationService
     {
         [ObservableProperty]
         public partial string Path { get; set; }
@@ -26,8 +27,7 @@ namespace ComicsInfraLib.Models.Views.Settings
         [RelayCommand]
         public async Task SetPath(T arg)
         {
-            string path = await pickerDialog.FolderDialog(arg,
-                localizationService["FileDialog.Title"]);
+            string path = await pickerDialog.FolderOpenDialog(arg, "FileDialog.Title");
             if (!string.IsNullOrEmpty(path))
                 PathChanged?.Invoke(path);
         }

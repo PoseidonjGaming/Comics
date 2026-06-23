@@ -4,20 +4,27 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:DownloadComics.windows"
-        xmlns:res="clr-namespace:DownloadComics.resources"
+        xmlns:res="clr-namespace:DownloadComics.Extension"
         mc:Ignorable="d"
-        Title="{res:Loc Change_Source_Title}" Height="115" Width="200" 
-        WindowStartupLocation="CenterScreen" Loaded="Window_Loaded">
+        Title="{res:Loc Key=Title, Section=ChangeSourceWindow}" 
+        Height="150" Width="350" WindowStartupLocation="CenterOwner"
+        DataContext="{Binding ViewModel, RelativeSource={RelativeSource Self}}">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
 
         <StackPanel Margin="10">
-            <ComboBox Name="sourcesCMB" FontSize="14"/>
-            <Button Name="changeSourceBTN" Content="{res:Loc Change_Source_Change_Button}" 
-                    Margin="0,10,0,0" Click="ChangeSourceBTN_Click" FontSize="14"/> 
+            <ComboBox FontSize="16" Width="200" HorizontalAlignment="Center"
+                      ItemsSource="{Binding Hosts}"
+                      SelectedItem="{Binding Comic.Host, Mode=TwoWay}"
+                      SelectionChanged="ComboBox_SelectionChanged"/>
+            <Button Content="{res:Loc Key=CloseBTN, Section=Buttons}"
+                    Margin="0,10,0,0" Padding="5,0,5,0" FontSize="16"
+                    Click="Button_Click" HorizontalAlignment="Center"/>
         </StackPanel>
-
     </Grid>
 </Window>

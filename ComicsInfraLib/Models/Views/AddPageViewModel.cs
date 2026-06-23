@@ -9,37 +9,18 @@ using System.Collections.ObjectModel;
 
 namespace ComicsInfraLib.Models.Views
 {
-    public partial class AddPageViewModel<T>: ObservableObject where T : class
+    public partial class AddPageViewModel<T, L>(IComicsBuilderService builderService,
+    JdownloaderService<L> jdownloaderService, IPathService pathService,
+    IStateRepository stateRepository, IDialogService<T> dialogService) : 
+        ObservableObject where T : class where L : LocalizationService
     {
-
-        private readonly IComicsBuilderService builderService;
-        private readonly JdownloaderService jdownloaderService;
-        private readonly IPathService pathService;
-        private readonly IStateRepository stateRepository;
-        private readonly IDialogService<T> dialogService;
-
         [ObservableProperty]
         public partial ComicInputModel Comic { get; set; } = new();
         [ObservableProperty]
         public partial Comic SelectedComic { get; set; } = new Comic();
-        public ObservableCollection<Comic> Comics { get; set; }
+        public ObservableCollection<Comic> Comics { get; set; } = stateRepository.Comics;
 
         public event Action<Comic>? NavigateEvent;
-
-        public AddPageViewModel(IComicsBuilderService builderService,
-        JdownloaderService jdownloaderService, IPathService pathService,
-        IStateRepository stateRepository, IDialogService<T> dialogService,
-        LocalizationService localizationService)
-        {
-            this.builderService = builderService;
-            this.jdownloaderService = jdownloaderService;
-            this.pathService = pathService;
-            this.stateRepository = stateRepository;
-            this.dialogService = dialogService;
-
-            Comics = new(stateRepository.Comics);
-        }
-
 
         [RelayCommand]
         public async Task AddComic(T arg)
@@ -52,7 +33,7 @@ namespace ComicsInfraLib.Models.Views
                 return;
 
             Comic? comic = await builderService.MakeComics(Comic.BaseURL,
-                Comic.Author, Comic.PackageName, Comic.NumberPages, res == DialogResult.SUCCESS);
+                Comic.Author, Comic.PackageName, Comic.NumberPages, res == DialogResult.YES);
 
             if (comic == null) return;
             NavigateEvent?.Invoke(comic);
@@ -67,8 +48,8 @@ namespace ComicsInfraLib.Models.Views
                 Comic.PackageName);
 
             DialogResult res = await dialogService.ShowSearchAsync(new(Comic.PackageName, Comic.Author,
-                pathService.BackupDirPath, jd), arg);
-            if (res == DialogResult.SUCCESS)
+                pathService.BackupDirPath, jd), arg, "SearchDialogWindow.Title", "SearchDialog.Content");
+            if (res == DialogResult.YES)
             {
                 await AddComic(arg);
             }
@@ -81,9 +62,9 @@ namespace ComicsInfraLib.Models.Views
         }
 
         [RelayCommand]
-        public void DelecteSelectComic()
+        public void DeleteSelectComic()
         {
-            stateRepository.Comics.Remove(SelectedComic);
+            Comics.Remove(SelectedComic);
             stateRepository.Save();
         }
     }

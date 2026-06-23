@@ -7,9 +7,9 @@ using System.Collections.ObjectModel;
 
 namespace ComicsInfraLib.Models.Views
 {
-    public partial class SendViewModel(IStateRepository stateRepository,
-        LocalizationService localizationService, JDownloadJobService jDownloadJobService,
-        IPathService pathService) : ObservableObject
+    public partial class SendViewModel<L>(IStateRepository stateRepository,
+        L localizationService, JDownloadJobService<L> jDownloadJobService,
+        IPathService pathService) : ObservableObject where L : LocalizationService
     {
         [ObservableProperty]
         public partial string Job { get; set; } = localizationService["SendPage.Start"];
@@ -43,7 +43,7 @@ namespace ComicsInfraLib.Models.Views
                 Job = localizationService["SendPage.Stop"];
 
                 await jDownloadJobService.RunAsync(_verifyTokenSource.Token);
-                
+
                 IsChecked = false;
                 Job = localizationService["SendPage.Start"];
 
@@ -60,7 +60,8 @@ namespace ComicsInfraLib.Models.Views
             ProgressValue = 0;
         }
 
-        public async Task Load(Action frameAction) {
+        public async Task Load(Action frameAction)
+        {
             _verifyTokenSource = new CancellationTokenSource();
             IsDetermined = false;
             IsChecked = true;

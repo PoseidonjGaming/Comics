@@ -8,8 +8,8 @@ using JDownloader.Model;
 
 namespace ComicsInfraLib.Models.Views
 {
-    public partial class SettingsCredientialsPageViewModel<T>(IDialogService<T> dialogService,
-        LocalizationService localizationService) :ObservableObject where T : class
+    public partial class SettingsCredientialsPageViewModel<T, L>(IDialogService<T> dialogService,
+        L localizationService) : ObservableObject where T : class where L : LocalizationService
     {
         [ObservableProperty]
         public partial JDCredentials Credentials { get; set; } = new("mail", "password", "device");
@@ -18,9 +18,7 @@ namespace ComicsInfraLib.Models.Views
         public partial string ConnectionLabel { get; set; } = string.Empty;
 
 
-        public event Action? ConnectionEvent;
-        public event Action<string>? DialogEvent;
-
+        public event Action<bool>? ConnectionEvent;
 
         public void Setup(SettingsPageArgs<JDCredentials> args)
         {
@@ -53,9 +51,8 @@ namespace ComicsInfraLib.Models.Views
                             client.SetDirectConnectionInfo(directInfos.Infos[0]);
                         }
 
-                        ConnectionLabel = localizationService["SettingsCredentialsPage.ConnectionSuccessful"]
-                        ;
-                        ConnectionEvent();
+                        ConnectionLabel = localizationService["SettingsCredentialsPage.ConnectionSuccessful"];
+                        ConnectionEvent(true);
                     }
                     else
                     {
@@ -75,9 +72,9 @@ namespace ComicsInfraLib.Models.Views
 
         private async Task HandleConnectionException(string message, T arg)
         {
-            if (ConnectionEvent == null || DialogEvent == null) return;
+            if (ConnectionEvent == null) return;
             ConnectionLabel = localizationService["SettingsCredentialsPage.ConnectionFailed"];
-            ConnectionEvent();
+            ConnectionEvent(false);
             await dialogService.ShowErrorAsync(arg, message);
 
 

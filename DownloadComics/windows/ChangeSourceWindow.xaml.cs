@@ -1,9 +1,8 @@
-﻿using DownloadComics.models;
-using DownloadComics.utilities;
-using FuzzierSharp;
-using HtmlAgilityPack;
-using Newtonsoft.Json;
-using System.Windows;
+﻿using System.Windows;
+using System.Windows.Controls;
+using ComicsInfraLib.Models.Views;
+using ComicsLib.Models;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace DownloadComics.windows
 {
@@ -12,43 +11,23 @@ namespace DownloadComics.windows
     /// </summary>
     public partial class ChangeSourceWindow : Window
     {
-        private Comic comic;
+        public ChangeSourcePageViewModel ViewModel { get; set; }
         public ChangeSourceWindow(Comic comic)
         {
             InitializeComponent();
-            this.comic = comic;
+            ViewModel = App.Current.ServiceProvider.GetRequiredService<ChangeSourcePageViewModel>();
+            ViewModel.Init(comic);
+            DataContext = ViewModel;
         }
 
-        private void Window_Loaded(object sender, RoutedEventArgs e)
+        private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            Options? options = JsonConvert.DeserializeObject<Options>(Properties.Settings.Default.Options ?? string.Empty);
-
-            if (options != null)
-            {
-                sourcesCMB.ItemsSource = options.Hosts;
-                sourcesCMB.SelectedItem = Process.ExtractOne(comic.URL, options.Hosts).Value;
-            }
+            ViewModel.ChangeSource();
         }
 
-        private void ChangeSourceBTN_Click(object sender, RoutedEventArgs e)
+        private void Button_Click(object sender, RoutedEventArgs e)
         {
-            if (sourcesCMB.SelectedItem != null)
-            {
-                HtmlNode? baseNode = ComicUtility.GetBodyNode(comic.BaseURL, comic.HtmlBody, out string? body);
-                if (baseNode != null)
-                {
-                    comic.URL = ComicUtility.GetUrlByHost(baseNode, sourcesCMB.Text);
-                    DialogResult = true;
-                }
-
-            }
-            else
-            {
-                DialogResult = false;
-            }
-
+            Close();
         }
-
-
     }
 }

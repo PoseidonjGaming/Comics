@@ -10,9 +10,9 @@ using JDownloader.Model;
 
 namespace ComicsInfraLib.Services
 {
-    public class JdownloaderService(Lazy<Task<ComicsJDownloaderClient>> jdClient,
+    public class JdownloaderService<L>(Lazy<Task<ComicsJDownloaderClient>> jdClient,
         IHtmlParserService htmlParserService, IStateRepository stateRepository, 
-        LocalizationService localizationService)
+        L localizationService) where L : LocalizationService
     {
         public Task<ComicsJDownloaderClient> GetClient() => jdClient.Value;
 

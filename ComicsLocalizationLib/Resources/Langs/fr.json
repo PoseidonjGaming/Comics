@@ -20,7 +20,8 @@
     "RestoreBTN": "Restaurer l'archive",
     "SelectBTN": "Sélectionner",
     "SearchBTN": "Rechercher {0}",
-    "PathBTN": "Sélection d'un chemin"
+    "PathBTN": "Sélection d'un chemin",
+    "CloseBTN": "Fermer"
   },
   "Entities": {
     "Comics": "le comics",
@@ -52,10 +53,10 @@
 
   },
   "AddPage": {
-    "Title": "Ajout de comics"
+    
   },
   "ArchivePage": {
-    "Title": "Archives"
+    
   },
   "PathPage": {
 
@@ -93,13 +94,15 @@
     "Mail": "Email",
     "Password": "Mot de passe",
     "Device": "Nom de l'appareil",
-    "TestConnectionBTN": "Tester la connection"
+    "TestConnectionBTN": "Tester la connection",
+    "ConnectionSuccessful": "Connexion réussie",
+    "ConnectionFailed": "Connexion échouée"
   },
   "Dialog": {
     "Yes": "Oui",
     "No": "Non",
-    "Close": "Fermer",
-    "Cancel": "Annuler"
+    "Folder": "Dossier",
+    "File": "Fichier"
   },
   "ScanDialog": {
     "Title": "Analyse",
@@ -114,10 +117,14 @@
     "Content": "Voulez-vous ajouter ce comics ({0})",
     "Empty": "Vide",
     "From": "Depuis",
-    "NotFound": "Non trouvé"
+    "NotFound": "Non trouvé",
+    "NoComment": "Aucun commentaire"
   },
   "DeleteDialog": {
     "Title": "Suppression",
     "Content": "Voulez-vous supprimer cet archive ({0})"
+  },
+  "FileDialog": {
+    "Title": "Sélectionnez un {0}"
   }
 }

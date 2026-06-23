@@ -8,8 +8,7 @@ namespace ComicsLocalizationLib
 {
     public partial class LocalizationService : INotifyPropertyChanged
     {
-        private Dictionary<string, string> _data = [];
-        public Dictionary<string, string> Data { get => _data; }
+        protected Dictionary<string, string> _data = [];
         public string CurrentCulture { get; private set; } = "en";
 
         public List<LanguageOption> Languages { get; }
@@ -27,27 +26,54 @@ namespace ComicsLocalizationLib
             })];
         }
 
-        public string Get(string key)
+        public virtual string Get(string key)
         {
             return _data.TryGetValue(key, out var value) ? value : $"#{key}#";
         }
 
         public void LoadLang(string lang)
         {
-            string fileResource = GetRessource($"{lang}.json");
+            string fileResource = GetRessource($"{lang}.json", "ComicsLocalizationLib.Resources.Langs");
 
-            using Stream? stream = Assembly.GetExecutingAssembly()
+            Dictionary<string, string> baseData = ReadLang(fileResource);
+            IEnumerable<Dictionary<string, string>> layers = LoadAdditionnalLayers(lang);
+            _data = Merge(baseData, layers);
+
+            CurrentCulture = lang;
+
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("Item[]"));
+        }
+
+        private Dictionary<string, string> Merge(Dictionary<string, string> baseData, IEnumerable<Dictionary<string, string>> layers)
+        {
+            Dictionary<string,string> result= new Dictionary<string,string>(baseData);
+            foreach (Dictionary<string, string> layer in layers)
+            {
+                foreach (var item in layer)
+                {
+                    result[item.Key] = item.Value;
+                }
+            }
+
+            return result;
+        }
+
+        protected virtual IEnumerable<Dictionary<string, string>> LoadAdditionnalLayers(string lang)
+        {
+            yield break;
+        }
+
+        protected static Dictionary<string, string> ReadLang(string fileResource)
+        {
+            using Stream? stream = AppDomain.CurrentDomain.GetAssemblies()
+                .First(assembly => assembly.GetName().Name == fileResource.Split(".").First())
                 .GetManifestResourceStream(fileResource)
                 ?? throw new Exception("The stream is empty");
 
             using StreamReader reader = new(stream);
             string json = reader.ReadToEnd();
-            _data = Deserializer(json);
 
-            CurrentCulture = lang;
-
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("Item[]"));
-
+            return Deserializer(json);
         }
 
         private static Dictionary<string, string> Deserializer(string json)
@@ -87,18 +113,24 @@ namespace ComicsLocalizationLib
             }
         }
 
-        private static string GetRessource(string lang)
+        protected static string GetRessource(string lang, string path)
         {
-            var list = Assembly.GetExecutingAssembly().GetManifestResourceNames();
-            return Assembly.GetExecutingAssembly()
+
+            return AppDomain.CurrentDomain.GetAssemblies()
+                .First(assembly => assembly.GetName().Name == path.Split(".").First())
                  .GetManifestResourceNames().First(s =>
-                 s.Equals($"ComicsLocalizationLib.Resources.Langs.{lang}"));
+                 s.Equals($"{path}.{lang}"));
         }
 
         public static Stream? GetResource(string lang)
         {
             return Assembly.GetExecutingAssembly()
              .GetManifestResourceStream($"ComicsLocalizationLib.Resources.Flags.{lang}.png");
+        }
+
+        public void Notify()
+        {
+
         }
     }
 }

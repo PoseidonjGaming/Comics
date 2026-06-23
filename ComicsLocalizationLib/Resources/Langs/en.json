@@ -3,24 +3,31 @@
     "Author": "Author",
     "PackageName": "Package Name",
     "Pages": "Number of Pages",
-    "Host": "Host",
     "Filename": "Filename",
     "Path": "Path",
-    "Enable": "Enable",
+    "Enable": "Enabled",
     "Priority": "Priority",
+    "Host": "Host",
     "BaseURL": "Base URL"
   },
   "Buttons": {
     "ChangeSourceBTN": "Change Source",
-    "UnselectBTN": "Unselect Comic",
+    "UnselectBTN": "Unselect",
     "DeleteBTN": "Delete {0}",
-    "AddBTN": "Add Comics",
-    "SearchBTN": "Search Comcis",
-    "RestoreBTN": "Restore Comics",
-    "CancelBTN": "Annuler",
-    "ClearBTN": "Vider le comics",
-    "SelectBTN": "Sélectionner",
-    "PathBTN": "Sélectionner un chemin"
+    "AddBTN": "Add {0}",
+    "CancelBTN": "Cancel",
+    "ClearBTN": "Clear comic",
+    "RestoreBTN": "Restore the backup",
+    "SelectBTN": "Select",
+    "SearchBTN": "Search {0}",
+    "PathBTN": "Select a path",
+    "CloseBTN": "Close"
+  },
+  "Entities": {
+    "Comics": "Comics",
+    "Archive": "Backup",
+    "Host": "Host",
+    "Path": "Path"
   },
   "Priority": {
     "DEFAULT": "Default",
@@ -32,113 +39,92 @@
     "LOWEST": "Lowest"
   },
   "MainWindow": {
-    "Title": "Modern Download Comics",
+    "Title": "Comics Manager",
     "Home": "Home",
     "Send": "Send",
     "Add": "Add",
-    "AddLink": "Add Link",
-    "ImportLinks": "Import Links",
+    "AddLink": "Add link",
+    "ImportLinks": "Import links",
     "Archive": "Backup",
-    "Settings": "Settings",
-    "ClearSession": "Clear Previous Session",
-    "OpenJDownloaderSettings": "Open JDownloadet Settings",
-    "OpenSettings": "Open Settings",
-    "RestoreBackup": "Restore Backup",
-    "SelectLanguage": "Select Lang"
+    "RestoreBackup": "Restore backups",
+    "Settings": "Settings"
   },
   "MainPage": {
-   
+
   },
   "AddPage": {
+
   },
   "ArchivePage": {
-  
-  },
-  "ImportPage": {
-    
+
   },
   "PathPage": {
-    
-  },
-  "SearchPage": {
-    "Title": "Search",
-    "From": "From",
-    "Empty": "Empty",
-    "NotFound": "Download Not Found"
+
   },
   "SendPage": {
+    "Add": "Add of",
     "Try": "Try",
-    "Final_Try": "Final Try",
-    "DisableLinks": "Disable Links",
-    "SortLinks": "Sort Links",
-    "SetNameAndComment": "Set Name and Comment",
-    "Add": "Add",
-    "Stop": "Stop",
+    "FinalTry": "Last try",
+    "DisableLinks": "Disable links",
+    "SortLinks": "Sort links",
+    "SetNameAndComment": "Set names and comments",
     "Start": "Start",
-    "JobNotStarted": "Job not started"
-  },
-  "Dialog": {
-    "Yes": "Yes",
-    "No": "No",
-    "Close": "Close",
-    "Cancel": "Cancel"
-  },
-  "ScanDialog": {
-    "Title": "Scan URL",
-    "Content": "Do you want to scan the url ?"
-  },
-  "RestoreDialog": {
-    "Title": "Restore",
-    "Content": "Do you want to restore this backup ?"
-  },
-  "DeleteDialog": {
-    "Title": "Delete",
-    "Content": "Do you want to delete this archive ({0})"
+    "Stop": "Stop"
   },
   "SettingsWindow": {
     "Title": "Settings",
     "App": "Application",
+    "Credentials": "Credentials",
     "Hosts": "Hosts",
-    "SearchHosts": "Search Hosts",
-    "ConfirmHosts": "Confirm Hosts",
-    "ExcludedHosts": "Excluded Hosts",
+    "SearchHosts": "Hosts to scan",
+    "ConfirmHosts": "Hosts to be confirmed",
+    "ExcludedHosts": "Hosts to excluded",
     "Paths": "Paths",
     "ImportSettings": "Import Settings",
-    "ExportSettings": "Export Settings",
-    "Credentials": "Credentials"
+    "ExportSettings": "Export Settings"
   },
   "SettingsAppPage": {
-    "Path": "Path of comics",
-    "PathBTN": "Set Path"
+    "Path": "Library Path"
   },
-  "SettingsComicPage": {
-    "BaseURL": "Base URL",
-    "Enabling": "Enable Download",
+  "SettingsComicsPage": {
     "Enabled": "Enabled",
     "Disabled": "Disabled"
   },
   "SettingsCredentialsPage": {
-    "Mail": "Email",
+    "Mail": "Mail",
     "Password": "Password",
     "Device": "Device Name",
     "TestConnectionBTN": "Test connection",
-    "ConnectionFailed": "Connection failed",
-    "ConnectionSuccessful": "Connection successful"
+    "ConnectionSuccessful": "Connection successful",
+    "ConnectionFailed": "Connection failed"
   },
-  "SettingsHostsPage": {
-    "AddBTN": "Add",
-    "DeleteBTN": "Delete"
+  "Dialog": {
+    "Yes": "Yies",
+    "No": "Non",
+    "Folder": "Folder",
+    "File": "File"
+  },
+  "ScanDialog": {
+    "Title": "Scan",
+    "Content": "Do you want to scan this link?"
+  },
+  "RestoreDialog": {
+    "Title": "Restore",
+    "Content": "Do you want to restore this backup?"
+  },
+  "SearchDialog": {
+    "Title": "Search",
+    "Content": "Do you want to add this comics ({0})",
+    "Empty": "Empty",
+    "From": "From",
+    "NotFound": "Not Found",
+    "NoComment": "No comment"
+  },
+  "DeleteDialog": {
+    "Title": "Delete",
+    "Content": "Do you to delete this backup ({0})"
   },
   "FileDialog": {
-    "Title": "Select a file",
-    "Select": "Select a file"
-  },
-  "FolderDialog": {
-    "Title": "Select a folder",
-    "Select": "Select a folder"
-  },
-  "SaveFileDialog": {
-    "Title": "Save File",
-    "Save": "Save"
+    "Title": "Select a {0}"
   }
 }

@@ -22,7 +22,8 @@
     "ScanDialog",
     "RestoreDialog",
     "SearchDialog",
-    "DeleteDialog"
+    "DeleteDialog",
+    "FileDialog"
   ],
   "$defs": {
     "Dialog": {
@@ -81,7 +82,8 @@
         "CancelBTN",
         "SelectBTN",
         "SearchBTN",
-        "PathBTN"
+        "PathBTN",
+        "CloseBTN"
       ],
       "properties": {
         "AddBTN": {
@@ -102,7 +104,8 @@
           "type": "string",
           "pattern": "{[0-9]+}"
         },
-        "PathBTN": { "type": "string" }
+        "PathBTN": { "type": "string" },
+        "CloseBTN": { "type": "string" }
       },
       "additionalProperties": false
     },
@@ -147,7 +150,6 @@
     "MainWindow": {
       "allOf": [
         { "$ref": "#/$defs/Window" }
-
       ],
       "type": "object",
       "required": [
@@ -276,13 +278,17 @@
         "Mail",
         "Password",
         "Device",
-        "TestConnectionBTN"
+        "TestConnectionBTN",
+        "ConnectionSuccessful",
+        "ConnectionFailed"
       ],
       "properties": {
         "Mail": { "type": "string" },
         "Password": { "type": "string" },
         "Device": { "type": "string" },
-        "TestConnectionBTN": { "type": "string" }
+        "TestConnectionBTN": { "type": "string" },
+        "ConnectionSuccessful": { "type": "string" },
+        "ConnectionFailed": { "type": "string" }
       },
       "additionalProperties": false
     },
@@ -291,14 +297,14 @@
       "required": [
         "Yes",
         "No",
-        "Close",
-        "Cancel"
+        "Folder",
+        "File"
       ],
       "properties": {
         "Yes": { "type": "string" },
         "No": { "type": "string" },
-        "Close": { "type": "string" },
-        "Cancel": { "type": "string" }
+        "Folder": { "type": "string" },
+        "File": { "type": "string" }
       },
       "additionalProperties": false
     },
@@ -315,16 +321,21 @@
       "required": [
         "From",
         "Empty",
-        "NotFound"
+        "NotFound",
+        "NoComment"
       ],
       "properties": {
         "From": { "type": "string" },
         "Empty": { "type": "string" },
-        "NotFound": { "type": "string" }
+        "NotFound": { "type": "string" },
+        "NoComment": { "type": "string" }
       }
     },
     "DeleteDialog": {
       "$ref": "#/%24defs/Dialog"
+    },
+    "FileDialog": {
+      "$ref": "#/%24defs/Window"
     }
   }
 }

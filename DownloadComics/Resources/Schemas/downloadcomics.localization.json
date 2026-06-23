@@ -1,0 +1,88 @@
+﻿{
+  "$id": "https://poseidonjgaming.com/schemas/download-comics",
+  "title": "Download Comics Schema",
+  "type": "object",
+  "$defs": {
+    "Window": {
+      "required": [ "Title" ],
+      "properties": {
+        "Title": { "type": "string" }
+      }
+    }
+  },
+  "required": [
+    "AddWindow",
+    "ArchiveWindow",
+    "MainWindow",
+    "ImportWindow",
+    "SendWindow",
+    "ChangeSourceWindow",
+    "SettingsComicWindow",
+    "SettingsHostsWindow",
+    "SearchDialogWindow"
+  ],
+  "properties": {
+    "AddWindow": {
+      "$ref": "#/%24defs/Window"
+    },
+    "ArchiveWindow": {
+      "$ref": "#/%24defs/Window"
+    },
+    "MainWindow": {
+      "required": [
+        "OpenSettings",
+        "OpenJDownloaderSettings"
+      ],
+      "properties": {
+        "OpenSettings": { "type": "string" },
+        "OpenJDownloaderSettings": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+    "ImportWindow": {
+      "$ref": "#/%24defs/Window"
+    },
+    "SettingsComicWindow": {
+      "$ref": "#/%24defs/Window"
+    },
+    "SendWindow": {
+      "$ref": "#/%24defs/Window"
+    },
+    "ChangeSourceWindow": {
+      "$ref": "#/%24defs/Window"
+    },
+    "SettingsHostsWindow": {
+      "type": "object",
+      "required": [
+        "Title",
+        "Scan",
+        "Confirm",
+        "Excluded",
+        "Paths"
+      ],
+      "properties": {
+        "Title": {
+          "$ref": "#/%24defs/Window/properties/Title",
+          "pattern": "\\{[0-9]+\\}"
+        },
+        "Scan": { "type": "string" },
+        "Confirm": { "type": "string" },
+        "Excluded": { "type": "string" },
+        "Paths": { "type": "string" }
+      }
+    },
+    "SettingsJDownloader": {
+      "$ref": "#/%24defs/Window"
+    },
+    "SearchDialogWindow": {
+      "required": [ "Title" ],
+      "properties": {
+        "Title": {
+          "$ref": "#/%24defs/Window/properties/Title",
+          "pattern": "\\{[0-9]+\\}"
+        }
+      }
+    }
+  },
+  "additionalProperties": false
+}

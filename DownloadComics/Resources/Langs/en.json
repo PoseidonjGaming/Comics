@@ -1,0 +1,37 @@
+﻿{
+  "AddWindow": {
+    "Title": "Add a Comic"
+  },
+  "ArchiveWindow": {
+    "Title": "Backups"
+  },
+  "MainWindow": {
+    "OpenSettings": "Open settings",
+    "OpenJDownloaderSettings": "Open JDownloader Settings"
+  },
+  "ImportWindow": {
+    "Title": "Import Comics"
+  },
+  "SendWindow": {
+    "Title": "Send to JDownloader"
+  },
+  "ChangeSourceWindow": {
+    "Title": "Change Source"
+  },
+  "SettingsJDownloader": {
+    "Title": "JDownloader Credentials"
+  },
+  "SettingsComicWindow": {
+    "Title": "Comcis Settings"
+  },
+  "SettingsHostsWindow": {
+    "Title": "{0} Settings",
+    "Scan": "Hosts' to scan",
+    "Confirm": "Hosts not to be confirmed",
+    "Excluded": "Hosts to be excluded",
+    "Paths": "Paths"
+  },
+  "SearchDialogWindow": {
+    "Title": "Search of {0}"
+  }
+}

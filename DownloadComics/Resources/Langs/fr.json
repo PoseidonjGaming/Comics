@@ -1,0 +1,37 @@
+﻿{
+  "AddWindow": {
+    "Title": "Ajout d'un comics"
+  },
+  "ArchiveWindow": {
+    "Title": "Archives"
+  },
+  "MainWindow": {
+    "OpenSettings": "Ouvrir les paramètres",
+    "OpenJDownloaderSettings": "Ouvrire les paramètre JDownloader"
+  },
+  "ImportWindow": {
+    "Title": "Import de comics"
+  },
+  "SendWindow": {
+    "Title": "Envoi à JDownloader"
+  },
+  "ChangeSourceWindow": {
+    "Title": "Changer la source"
+  },
+  "SettingsComicWindow": {
+    "Title": "Paramètres d'un comics"
+  },
+  "SettingsHostsWindow": {
+    "Title": "Paramètres des {0}",
+    "Scan": "hôtes à scanner",
+    "Confirm": "hôtes à ne pas confirmer",
+    "Excluded": "hôtes à exclure",
+    "Paths": "chemins"
+  },
+  "SettingsJDownloader": {
+    "Title": "Identifiants JDownloader"
+  },
+  "SearchDialogWindow": {
+    "Title": "Recherche de {0}"
+  }
+}

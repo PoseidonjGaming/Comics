@@ -4,12 +4,10 @@ namespace ComicsLib.Models
 {
     public class TreeItem(string path, TreeItem? parent = null)
     {
-        public string Name = System.IO.Path.GetFileName(path);
-        public string Path = path;
-        public TreeItem? Parent = parent;
+        public string Name { get; set; } = System.IO.Path.GetFileName(path);
+        public string Path { get; set; } = path;
+        public TreeItem? Parent { get; set; } = parent;
         public ObservableCollection<TreeItem> Children { get; set; } = [];
-
-        
 
         public TreeItem? Remove()
         {

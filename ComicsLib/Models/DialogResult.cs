@@ -6,6 +6,6 @@ namespace ComicsLib.Models
 {
     public enum DialogResult
     {
-        SUCCESS, FAILED, CANCELLED
+        YES, NO, CANCELLED
     }
 }

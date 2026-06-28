@@ -23,7 +23,8 @@
     "RestoreDialog",
     "SearchDialog",
     "DeleteDialog",
-    "FileDialog"
+    "FileDialog",
+    "SaveFileDialog"
   ],
   "$defs": {
     "Dialog": {
@@ -336,6 +337,17 @@
     },
     "FileDialog": {
       "$ref": "#/%24defs/Window"
+    },
+    "SaveFileDialog": {
+      "allOf": [
+        { "$ref": "#/%24defs/Window" }
+      ],
+      "required": [
+        "SaveBTN"
+      ],
+      "properties": {
+        "SaveBTN": {"type": "string"}
+      }
     }
   }
 }

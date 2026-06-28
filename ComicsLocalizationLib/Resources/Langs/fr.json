@@ -126,5 +126,9 @@
   },
   "FileDialog": {
     "Title": "Sélectionnez un {0}"
-  }
+  },
+  "SaveFileDialog": {
+    "Title": "Enregistrer sous",
+    "SaveBTN": "Sauvegarder"
+  } 
 }

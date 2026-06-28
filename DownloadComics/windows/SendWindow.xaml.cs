@@ -21,12 +21,12 @@ namespace DownloadComics.windows
     /// </summary>
     public partial class SendWindow : Window
     {
-        public SendViewModel<DownloadLocalizationService> ViewModel { get; set; }
+        public SendViewModel ViewModel { get; set; }
         public SendWindow()
         {
             InitializeComponent();
             ViewModel = App.Current.ServiceProvider
-                .GetRequiredService<SendViewModel<DownloadLocalizationService>>();
+                .GetRequiredService<SendViewModel>();
             DataContext = ViewModel;
 
             JobState? jobState = App.Current.ServiceProvider.GetRequiredService<IJobState>() as JobState;

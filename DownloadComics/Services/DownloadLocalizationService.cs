@@ -1,16 +1,29 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Text;
+﻿using System.ComponentModel;
 using ComicsLocalizationLib;
 
 namespace DownloadComics.Services
 {
-    public class DownloadLocalizationService : LocalizationService
+    public class DownloadLocalizationService : LocalizationService, ILocalizationService, INotifyPropertyChanged
     {
-        protected override IEnumerable<Dictionary<string, string>> LoadAdditionnalLayers(string lang)
+        public event PropertyChangedEventHandler? PropertyChanged;
+
+        public void LoadLang(string lang)
         {
-            yield return ReadLang(GetRessource($"{lang}.json", "DownloadComics.Resources.Langs"));
+            string filename = $"{lang}.json";
+            string baseFileResource = GetRessource(filename,
+                "ComicsLocalizationLib.Resources.Langs");
+            Dictionary<string, string> baseData = ReadLang(baseFileResource);
+
+            string downloadFileResource = GetRessource(filename,
+                "DownloadComics.Resources.Langs");
+            Dictionary<string, string> downloadData = ReadLang(downloadFileResource);
+
+            _data = baseData;
+            foreach (var item in downloadData)
+            {
+                _data[item.Key] = item.Value;
+            }
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("Item[]"));
         }
     }
 }

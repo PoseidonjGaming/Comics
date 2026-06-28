@@ -7,14 +7,14 @@ using System.Windows;
 
 namespace DownloadComics.Services
 {
-    public class DialogService(DownloadLocalizationService localizationService,
-        ContentPageService<DownloadLocalizationService> contentPageService,
+    public class DialogService(ILocalizationService localizationService,
+        ContentPageService contentPageService,
         ISettingsService settingsService) : IDialogService<Window>
     {
         public async Task<DialogResult> ShowAddAsync(Window arg)
         {
-            AddDialogWindow addDialog = new(arg, localizationService["ScanDialog.Title"],
-                localizationService["ScanDialog.Content"]);
+            AddDialogWindow addDialog = new(arg, localizationService.Get("ScanDialog.Title"),
+                localizationService.Get("ScanDialog.Content"));
 
             addDialog.ShowDialog();
             return await addDialog.Result.Task;
@@ -28,7 +28,8 @@ namespace DownloadComics.Services
 
         public async Task<DialogResult> ShowRestoreAsync(Window arg, string comic)
         {
-            RestoreDialogWindow restoreDialog = new(localizationService["RestoreDialog.Content"], comic)
+            RestoreDialogWindow restoreDialog = new(localizationService
+                .Get("RestoreDialog.Content"), comic)
             {
                 Owner = arg
             };
@@ -37,17 +38,17 @@ namespace DownloadComics.Services
         }
 
         public async Task<DialogResult> ShowSearchAsync(DialogArgs args, Window arg, string title,
-            string question)
+            string content)
         {
             string manga = contentPageService.Search(args.Name, args.Author,
                 settingsService.GetOptions().Path, "Manga");
             string backup = contentPageService.Search(args.Name, args.Author,
                 args.Path, "Backup");
-            string jd = args.Jd ?? localizationService["SearchDialog.NoComment"];
+            string jd = args.Jd ?? localizationService.Get("SearchDialog.NoComment");
 
-            string from = localizationService["SearchDialog.From"];
-            string windowTitle = string.Format(localizationService[title], args.Name);
-            string windowQuestion = string.Format(localizationService[question], args.Name);
+            string from = localizationService.Get("SearchDialog.From");
+            string windowTitle = string.Format(localizationService.Get(title), args.Name);
+            string windowQuestion = string.Format(localizationService.Get(content), args.Name);
 
             SearchDialogWindow searchDialog = new(arg, windowTitle, windowQuestion, manga, backup, 
                 $"{from} JD: {jd}");

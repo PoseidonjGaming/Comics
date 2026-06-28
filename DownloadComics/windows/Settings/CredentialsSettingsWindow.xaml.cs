@@ -23,12 +23,12 @@ namespace DownloadComics.windows.Settings
     /// </summary>
     public partial class CredentialsSettingsWindow : Window
     {
-        public SettingsCredientialsPageViewModel<Window, DownloadLocalizationService> ViewModel { get; set; }
+        public SettingsCredientialsPageViewModel<Window> ViewModel { get; set; }
         public CredentialsSettingsWindow(SettingsPageArgs<JDCredentials> arg)
         {
             InitializeComponent();
             ViewModel = App.Current.ServiceProvider
-                .GetRequiredService<SettingsCredientialsPageViewModel<Window, DownloadLocalizationService>>();
+                .GetRequiredService<SettingsCredientialsPageViewModel<Window>>();
             ViewModel.Setup(arg);
             ViewModel.ConnectionEvent += (success) =>
             {

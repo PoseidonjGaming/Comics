@@ -12,7 +12,7 @@ namespace DownloadComics.windows
     [ObservableObject]
     public partial class AddWindow : Window
     {
-        public AddPageViewModel<Window, DownloadLocalizationService> ViewModel { get; set; }
+        public AddPageViewModel<Window> ViewModel { get; set; }
 
         [ObservableProperty]
         public partial string AddBTNContent { get; set; }
@@ -28,7 +28,7 @@ namespace DownloadComics.windows
         {
             InitializeComponent();
             ViewModel = App.Current.ServiceProvider
-                .GetRequiredService<AddPageViewModel<Window, DownloadLocalizationService>>();
+                .GetRequiredService<AddPageViewModel<Window>>();
             ViewModel.NavigateEvent += (comic) =>
             {
                 PathWindow pathWindow = new(comic)

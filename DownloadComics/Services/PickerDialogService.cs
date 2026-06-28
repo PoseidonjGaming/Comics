@@ -1,22 +1,19 @@
-﻿using ComicsLocalizationLib;
+﻿using System.Windows;
+using ComicsLocalizationLib;
 using ComicsServiceLib.UI;
 using Microsoft.Win32;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Windows;
 
 namespace DownloadComics.Services
 {
-    public class PickerDialogService(DownloadLocalizationService localizationService,
+    public class PickerDialogService(ILocalizationService localizationService,
         IPathService pathService) : IPickerDialog<Window>
     {
         public Task<string> FileOpenDialog(Window arg, string title)
         {
             OpenFileDialog openFileDialog = new()
             {
-                Title = string.Format(localizationService[title],
-                localizationService["Dialog.File"]),
+                Title = string.Format(localizationService.Get(title),
+                localizationService.Get("Dialog.File")),
                 AddExtension = true,
                 DefaultExt = "json",
                 Filter = "Json Files (.json) | *.json"
@@ -29,8 +26,8 @@ namespace DownloadComics.Services
         {
             OpenFolderDialog openFolderDialog = new()
             {
-                Title = string.Format(localizationService[title], 
-                localizationService["Dialog.Folder"]),
+                Title = string.Format(localizationService.Get(title), 
+                localizationService.Get("Dialog.Folder")),
             };
             openFolderDialog.ShowDialog(arg);
             return Task.FromResult(openFolderDialog.FolderName);

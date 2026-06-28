@@ -1,4 +1,5 @@
-﻿using ComicsInfraLib;
+﻿using System.Windows;
+using ComicsInfraLib;
 using ComicsInfraLib.Models.Views;
 using ComicsInfraLib.Models.Views.Settings;
 using ComicsInfraLib.Services;
@@ -7,9 +8,7 @@ using ComicsLocalizationLib;
 using ComicsServiceLib;
 using ComicsServiceLib.UI;
 using DownloadComics.Services;
-using DownloadComics.windows;
 using Microsoft.Extensions.DependencyInjection;
-using System.Windows;
 
 namespace DownloadComics;
 
@@ -27,22 +26,19 @@ public partial class App : Application
         AddModels(services);
 
         ServiceProvider = services.BuildServiceProvider();
-
-        var settingsService= ServiceProvider.GetRequiredService<ISettingsService>();
-        ServiceProvider.GetRequiredService<DownloadLocalizationService>().LoadLang(settingsService.GetOptions().Lang);
     }
 
     private static void AddModels(ServiceCollection services)
     {
         services.AddTransient<MainPageViewModel>();
-        services.AddTransient<AddPageViewModel<Window, DownloadLocalizationService>>();
+        services.AddTransient<AddPageViewModel<Window>>();
         services.AddTransient<PathPageViewModel>();
-        services.AddTransient<SettingsAppPageViewModel<Window, DownloadLocalizationService>>();
-        services.AddTransient<SettingsHostPageViewModel<Window, DownloadLocalizationService>>();
-        services.AddTransient<SettingsCredientialsPageViewModel<Window, DownloadLocalizationService>>();
-        services.AddTransient<ArchivePageViewModel<Window, DownloadLocalizationService>>();
-        services.AddTransient<ImportPageViewModel<Window, DownloadLocalizationService>>();
-        services.AddTransient<SendViewModel<DownloadLocalizationService>>();
+        services.AddTransient<SettingsAppPageViewModel<Window>>();
+        services.AddTransient<SettingsHostPageViewModel<Window>>();
+        services.AddTransient<SettingsCredientialsPageViewModel<Window>>();
+        services.AddTransient<ArchivePageViewModel<Window>>();
+        services.AddTransient<ImportPageViewModel<Window>>();
+        services.AddTransient<SendViewModel>();
         services.AddTransient<ChangeSourcePageViewModel>();
     }
 
@@ -62,11 +58,10 @@ public partial class App : Application
 
         services.AddSingleton<ICredentialsService, CredentialsService>();
         services.AddSingleton<ISettingsService, SettingsService>();
-        services.AddSingleton<DownloadLocalizationService>();
         services.AddSingleton<IPathService, PathService>();
         services.AddTransient<IDialogService<Window>, DialogService>();
-        services.AddTransient<ContentPageService<DownloadLocalizationService>>();
-        services.AddSingleton<JdownloaderService<DownloadLocalizationService>>();
+        services.AddTransient<ContentPageService>();
+        services.AddSingleton<JdownloaderService>();
         services.AddSingleton<IHtmlParserService, HtmlParserService>();
         services.AddSingleton<IStateRepository, StateRepository>();
         services.AddSingleton<IJobState, JobState>();
@@ -76,7 +71,8 @@ public partial class App : Application
         services.AddSingleton<IHostService, HostSelectionService>();
         services.AddSingleton<IScanService, ScanService>();
         services.AddTransient<ArchiveService>();
-        services.AddSingleton<JDownloadJobService<DownloadLocalizationService>>();
+        services.AddSingleton<JDownloadJobService>();
+        services.AddSingleton<ILocalizationService, DownloadLocalizationService>();
     }
 }
 

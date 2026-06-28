@@ -14,26 +14,26 @@ namespace DownloadComics.windows.Settings
     [ObservableObject]
     public partial class CollectionSettingsWindow : Window
     {
-        public SettingsHostPageViewModel<Window, DownloadLocalizationService> ViewModel { get; set; }
+        public SettingsHostPageViewModel<Window> ViewModel { get; set; }
 
         [ObservableProperty]
         public partial string AddBTNContent { get; set; }
         [ObservableProperty]
         public partial string DeleteBTNContent { get; set; }
-        public CollectionSettingsWindow(SettingsCollectionPageArg arg, string entity, string title)
+        public CollectionSettingsWindow(SettingsCollectionPageArg<Window> arg, string title)
         {
             InitializeComponent();
             ViewModel = App.Current.ServiceProvider
-                .GetRequiredService<SettingsHostPageViewModel<Window, DownloadLocalizationService>>();
+                .GetRequiredService<SettingsHostPageViewModel<Window>>();
             ViewModel.Setup(arg);
             DataContext = ViewModel;
-            var localization = App.Current.ServiceProvider.GetRequiredService<DownloadLocalizationService>();
-            AddBTNContent = string.Format(localization["Buttons.AddBTN"],
-                localization[$"Entities.{entity}"]);
-            DeleteBTNContent = string.Format(localization["Buttons.DeleteBTN"],
-                localization[$"Entities.{entity}"]);
-            Title = string.Format(localization["SettingsHostsWindow.Title"],
-                localization[$"SettingsHostsWindow.{title}"]);
+            var localization = App.Current.ServiceProvider.GetRequiredService<ILocalizationService>();
+            AddBTNContent = string.Format(localization.Get("Buttons.AddBTN"),
+                localization.Get($"Entities.{arg.Entity}"));
+            DeleteBTNContent = string.Format(localization.Get("Buttons.DeleteBTN"),
+                localization.Get($"Entities.{arg.Entity}"));
+            Title = string.Format(localization.Get("SettingsHostsWindow.Title"),
+                localization.Get($"SettingsHostsWindow.{title}"));
         }
     }
 }

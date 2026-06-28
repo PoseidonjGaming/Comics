@@ -49,10 +49,13 @@ namespace DownloadComics.windows
             };
             DataContext = ViewModel;
 
-            var localizationService = App.Current.ServiceProvider.GetRequiredService<DownloadLocalizationService>();
+            var localizationService = App.Current.ServiceProvider.GetRequiredService<ILocalizationService>();
 
-            DeleteBTNContent = string.Format(localizationService["Buttons.DeleteBTN"],
-                localizationService["Entities.Comics"]);
+            localizationService.LoadLang(_settingsService.GetOptions().Lang);
+
+
+            DeleteBTNContent = string.Format(localizationService.Get("Buttons.DeleteBTN"),
+                localizationService.Get("Entities.Comics"));
 
             Init();
         }

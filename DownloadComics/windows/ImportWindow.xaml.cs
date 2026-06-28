@@ -13,7 +13,7 @@ namespace DownloadComics.windows
     [ObservableObject]
     public partial class ImportWindow : Window
     {
-        public ImportPageViewModel<Window, DownloadLocalizationService> ViewModel { get; set; }
+        public ImportPageViewModel<Window> ViewModel { get; set; }
 
         [ObservableProperty]
         public partial string AddBTNContent { get; set; }
@@ -25,7 +25,7 @@ namespace DownloadComics.windows
         {
             InitializeComponent();
             ViewModel = App.Current.ServiceProvider
-                .GetRequiredService<ImportPageViewModel<Window,DownloadLocalizationService>>();
+                .GetRequiredService<ImportPageViewModel<Window>>();
             ViewModel.PathEvent += comic =>
             {
                 PathWindow pathWindow = new(comic)
@@ -36,14 +36,14 @@ namespace DownloadComics.windows
             };
             DataContext = ViewModel;
 
-            var localisationService = App.Current.ServiceProvider.GetRequiredService<DownloadLocalizationService>();
+            var localisationService = App.Current.ServiceProvider.GetRequiredService<ILocalizationService>();
 
-            AddBTNContent = string.Format(localisationService["Buttons.AddBTN"],
-                localisationService["Entities.Comics"]);
-            SearchBTNContent = string.Format(localisationService["Buttons.SearchBTN"],
-                localisationService["Entities.Comics"]);
-            ClearBTNContent = string.Format(localisationService["Buttons.ClearBTN"],
-                localisationService["Entities.Comics"]);
+            AddBTNContent = string.Format(localisationService.Get("Buttons.AddBTN"),
+                localisationService.Get("Entities.Comics"));
+            SearchBTNContent = string.Format(localisationService.Get("Buttons.SearchBTN"),
+                localisationService.Get("Entities.Comics"));
+            ClearBTNContent = string.Format(localisationService.Get("Buttons.ClearBTN"),
+                localisationService.Get("Entities.Comics"));
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)

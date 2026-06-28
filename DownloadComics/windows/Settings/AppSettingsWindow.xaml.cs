@@ -18,7 +18,7 @@ namespace DownloadComics.windows.Settings
     /// </summary>
     public partial class AppSettingsWindow : Window
     {
-        public SettingsAppPageViewModel<Window, DownloadLocalizationService> ViewModel { get; set; }
+        public SettingsAppPageViewModel<Window> ViewModel { get; set; }
         public SettingsInputModel InputModel { get; set; }
 
         private readonly IPickerDialog<Window> _pickerService;
@@ -34,7 +34,7 @@ namespace DownloadComics.windows.Settings
             InputModel = inputModel;
 
             ViewModel = App.Current.ServiceProvider
-                .GetRequiredService<SettingsAppPageViewModel<Window, DownloadLocalizationService>>();
+                .GetRequiredService<SettingsAppPageViewModel<Window>>();
             ViewModel.Init();
             ViewModel.PathChanged += path => InputModel.Path = path;
             ViewModel.LangChanged += lang => InputModel.Lang = lang;
@@ -68,7 +68,8 @@ namespace DownloadComics.windows.Settings
 
         private void HostsItem_Click(object sender, RoutedEventArgs e)
         {
-            CollectionSettingsWindow hostsWindow = new(new(InputModel.Hosts, true), "Host", "Scan")
+            CollectionSettingsWindow hostsWindow = new(new(InputModel.Hosts, this,
+                true, "Host"), "Scan")
             {
                 Owner = this
             };
@@ -77,7 +78,8 @@ namespace DownloadComics.windows.Settings
 
         private void ConfirmHostsItem_Click(object sender, RoutedEventArgs e)
         {
-            CollectionSettingsWindow hostsWindow = new(new(InputModel.Confirms, true), "Host", "Confirm")
+            CollectionSettingsWindow hostsWindow = new(new(InputModel.Confirms, this,
+                true, "Host"), "Confirm")
             {
                 Owner = this
             };
@@ -86,7 +88,8 @@ namespace DownloadComics.windows.Settings
 
         private void ExcludedHostsItem_Click(object sender, RoutedEventArgs e)
         {
-            CollectionSettingsWindow hostsWindow = new(new(InputModel.ExcludedHosts, true), "Host", "Excluded")
+            CollectionSettingsWindow hostsWindow = new(new(InputModel.ExcludedHosts, this,
+                true, "Host"), "Excluded")
             {
                 Owner = this
             };
@@ -95,7 +98,8 @@ namespace DownloadComics.windows.Settings
 
         private void PathsItem_Click(object sender, RoutedEventArgs e)
         {
-            CollectionSettingsWindow hostsWindow = new(new(InputModel.Paths, false), "Path", "Paths")
+            CollectionSettingsWindow hostsWindow = new(new(InputModel.Paths, this,
+                false, "Path"), "Paths")
             {
                 Owner = this
             };

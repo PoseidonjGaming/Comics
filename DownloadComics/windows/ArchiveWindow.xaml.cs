@@ -15,7 +15,7 @@ namespace DownloadComics.windows
     [ObservableObject]
     public partial class ArchiveWindow : Window
     {
-        public ArchivePageViewModel<Window, DownloadLocalizationService> ViewModel { get; set; }
+        public ArchivePageViewModel<Window> ViewModel { get; set; }
 
         [ObservableProperty]
         public partial string SearchBTNContent { get; set; }
@@ -25,7 +25,7 @@ namespace DownloadComics.windows
         {
             InitializeComponent();
             ViewModel = App.Current.ServiceProvider
-                .GetRequiredService<ArchivePageViewModel<Window, DownloadLocalizationService>>();
+                .GetRequiredService<ArchivePageViewModel<Window>>();
             DataContext = ViewModel;
 
             var localizationService = App.Current.ServiceProvider.GetRequiredService<DownloadLocalizationService>();

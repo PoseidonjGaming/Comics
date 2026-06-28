@@ -33,7 +33,7 @@ namespace DownloadComics.Extension
             var binding = new Binding
             {
                 Path = new PropertyPath($"[{Section}.{Key}]"),
-                Source = App.Current.ServiceProvider.GetRequiredService<DownloadLocalizationService>(),
+                Source = App.Current.ServiceProvider.GetRequiredService<ILocalizationService>(),
                 Converter = new LocConverter(Format),
                 Mode = BindingMode.OneWay
             };

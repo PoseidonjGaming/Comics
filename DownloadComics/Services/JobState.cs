@@ -5,9 +5,9 @@ namespace DownloadComics.Services
 {
     public class JobState : IJobState
     {
-        private SendViewModel<DownloadLocalizationService>? _viewModel;
+        private SendViewModel? _viewModel;
 
-        public void Init(SendViewModel<DownloadLocalizationService> viewModel)
+        public void Init(SendViewModel viewModel)
         {
             _viewModel = viewModel;
         }

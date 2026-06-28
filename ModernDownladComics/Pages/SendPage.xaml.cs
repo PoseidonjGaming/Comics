@@ -2,6 +2,7 @@ using ComicsInfraLib.Models.Views;
 using ComicsInfraLib.Services;
 using ComicsLib.Models;
 using ComicsLib.Utility;
+using ComicsLocalizationLib;
 using ComicsServiceLib.UI;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
@@ -21,23 +22,17 @@ namespace ModernDownladComics.Pages
     public sealed partial class SendPage : Page
     {
 
-
-
-        private readonly JDownloadJobService? _jobService;
         public readonly SendViewModel ViewModel;
-        private readonly IStateRepository _stateRepository;
 
         public SendPage()
         {
             InitializeComponent();
             ViewModel = App.Current.Services.GetRequiredService<SendViewModel>();
 
-            _jobService = App.Current.Services.GetRequiredService<JDownloadJobService>();
             var service = App.Current.Services.GetRequiredService<IJobState>() as JobState;
 
             service?.InitPage(ViewModel);
 
-            _stateRepository = App.Current.Services.GetRequiredService<IStateRepository>();
         }
 
         private async void JobToggleBTN_Checked(object sender, RoutedEventArgs e)

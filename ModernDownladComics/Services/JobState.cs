@@ -1,4 +1,5 @@
 ﻿using ComicsInfraLib.Models.Views;
+using ComicsLocalizationLib;
 using ComicsServiceLib.UI;
 
 namespace ModernDownladComics.Services
@@ -35,7 +36,5 @@ namespace ModernDownladComics.Services
             _viewModel?.ProgressValue = progress;
             _viewModel?.IsDetermined = IsDetermined;                
         }
-
-        
     }
 }

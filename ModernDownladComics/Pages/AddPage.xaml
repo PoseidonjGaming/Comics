@@ -15,74 +15,58 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="3*"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
-        <StackPanel Orientation="Vertical"
-                    HorizontalAlignment="Center" VerticalAlignment="Top">
-            <StackPanel Orientation="Vertical" Margin="10">
-                <TextBlock Text="URL:" FontSize="16" Margin="0,0,0,5"
-                           HorizontalAlignment="Left" VerticalAlignment="Center"/>
-                <TextBox x:Name="urlTXT" FontSize="16"
-                         TextWrapping="NoWrap" Width="615"
-                         Text="{Binding Comic.BaseURL, Mode=TwoWay}"
-                         HorizontalAlignment="Left" VerticalContentAlignment="Center" />
-            </StackPanel>
+        <WebView2 Source="{Binding Comic.BaseURL, Mode=TwoWay}"/>
 
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
-                <StackPanel Orientation="Vertical" HorizontalAlignment="Center" Margin="10">
-                    <TextBlock Text="{res:Loc Key=Author, Format='{}{0}:', Section=Comic}" FontSize="16" Margin="0,0,0,5"
-                               HorizontalAlignment="Left" VerticalAlignment="Center"/>
-                    <TextBox x:Name="authorTXT" FontSize="16" 
-                             Text="{Binding Comic.Author, Mode=TwoWay}"
-                             TextWrapping="NoWrap" Width="200"
-                             HorizontalAlignment="Left" VerticalContentAlignment="Center" />
+        <StackPanel Grid.Row="1" Orientation="Vertical">
+            <StackPanel Orientation="Horizontal" Margin="10">
+                <StackPanel Orientation="Vertical">
+                    <TextBlock Text="URL:" FontSize="16" Margin="0,0,0,5"/>
+                    <TextBox Text="{Binding Comic.BaseURL, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                             FontSize="16" Width="500"/>
                 </StackPanel>
-                <StackPanel Orientation="Vertical" HorizontalAlignment="Center" Margin="10">
-                    <TextBlock Text="{res:Loc Key=PackageName, Format='{}{0}:', Section=Comic}" FontSize="16" Margin="0,0,0,5" 
-                               HorizontalAlignment="Left" VerticalAlignment="Center"/>
-                    <TextBox Grid.Row="1" x:Name="nameTXT" FontSize="16" 
-                             Text="{Binding Comic.PackageName, Mode=TwoWay}"
-                             TextWrapping="NoWrap" Width="300"
-                             HorizontalAlignment="Left" VerticalContentAlignment="Center" />
+                <StackPanel Orientation="Vertical" Margin="10,0,0,0">
+                    <TextBlock Text="{res:Loc Key=Author, Section=Comic, Format='{}{0}:'}" 
+                               FontSize="16" Margin="0,0,0,5"/>
+                    <TextBox Text="{Binding Comic.Author, Mode=TwoWay}" FontSize="16" Width="200"/>
                 </StackPanel>
-
-                <StackPanel Orientation="Vertical" HorizontalAlignment="Left" Margin="10">
-                    <TextBlock Text="{res:Loc Key=Pages, Format='{}{0}:', Section=Comic}" FontSize="16" Margin="0,0,0,5"
-                               HorizontalAlignment="Left" VerticalAlignment="Center"/>
-                    <TextBox x:Name="pageTXT" FontSize="16" TextWrapping="NoWrap" Width="75"
-                             Text="{Binding Comic.NumberPages, Mode=TwoWay}"
-                             HorizontalAlignment="Left" VerticalContentAlignment="Center"/>
+                <StackPanel Orientation="Vertical" Margin="10,0,10,0">
+                    <TextBlock Text="{res:Loc Key=PackageName, Section=Comic, Format='{}{0}:'}" 
+                               FontSize="16" Margin="0,0,0,5"/>
+                    <TextBox Text="{Binding Comic.PackageName, Mode=TwoWay}"
+                             FontSize="16" Width="300"/>
+                </StackPanel>
+                <StackPanel Orientation="Vertical" Margin="0,0,10,0">
+                    <TextBlock Text="{res:Loc Key=Pages, Section=Comic, Format='{}{0}:'}"
+                               FontSize="16" Margin="0,0,0,5"/>
+                    <TextBox Text="{Binding Comic.NumberPages, Mode=TwoWay}" 
+                             FontSize="16" Width="30" HorizontalAlignment="Left"/>
                 </StackPanel>
             </StackPanel>
-
-
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
-                <Button x:Name="addComicBTN" Content="{res:Loc Key=AddBTN, Section=AddPage}" Margin="10"
-                        Background="{StaticResource AddButton}" 
-                        Command="{Binding AddComicCommand}"
-                        CommandParameter="{x:Bind XamlRoot}"/>
-
-                <Button x:Name="searchComicBTN" Content="{res:Loc Key=SearchBTN, Section=AddPage}" Margin="10" 
-                        Background="{StaticResource StandardButton}"
-                        Command="{Binding SearchComicCommand}"
-                        CommandParameter="{x:Bind XamlRoot}"/>
-                <Button x:Name="clearBTN" Content="{res:Loc Key=ClearBTN, Section=AddPage}" Margin="10"
-                        Background="{StaticResource ClearButton}"
+            <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+                <Button Content="{x:Bind AddLinksModelView.AddBTNContent}" Margin="10,0,10,0"
+                        Background="{StaticResource AddButton}" FontSize="16" 
+                        Command="{Binding AddComicCommand}" CommandParameter="{x:Bind XamlRoot}"/>
+                <Button Content="{x:Bind AddLinksModelView.SearchBTNContent}" Margin="0,0,10,0"
+                        Background="{StaticResource StandardButton}" FontSize="16"
+                        Command="{Binding SearchComicCommand}" CommandParameter="{x:Bind XamlRoot}"/>
+                <Button Content="{x:Bind AddLinksModelView.ClearBTNContent}" Margin="0,0,10,0"
+                        Background="{StaticResource ClearButton}" FontSize="16"
                         Command="{Binding ClearComicCommand}"/>
-
-                <Button x:Name="deleteBTN" Content="{res:Loc Key=DeleteBTN, Section=AddPage}" FontSize="16" Margin="10"
-                        Background="{StaticResource DeleteButton}"
-                        Command="{Binding DelecteSelectComicCommand}"/>
+                <Button Content="{x:Bind AddLinksModelView.DeleteBTNContent}"
+                        Background="{StaticResource DeleteButton}" FontSize="16"
+                        Command="{Binding DeleteSelectComicCommand}"/>
             </StackPanel>
         </StackPanel>
 
-        <ListView Grid.Column="1" Margin="10" x:Name="comicLST"
-                  ItemsSource="{Binding Comics, Mode=TwoWay}"
-                  DisplayMemberPath="PackageName"
-                  SelectedItem="{Binding SelectedComic, Mode=TwoWay}"/>
+        <ListView Grid.RowSpan="2" Grid.Column="1" DisplayMemberPath="PackageName"
+                 ItemsSource="{Binding Comics}"
+                 SelectedItem="{Binding SelectedComic, Mode=TwoWay}"/>
     </Grid>
 </Page>

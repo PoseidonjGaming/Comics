@@ -1,4 +1,5 @@
 using ComicsInfraLib.Models.Views;
+using ComicsLocalizationLib;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml.Controls;
 using ModernDownladComics.windows;
@@ -15,6 +16,7 @@ namespace ModernDownladComics.Pages
     public sealed partial class MainPage : Page
     {
         public MainPageViewModel ViewModel { get; set; }
+        public string DeleteBTNContent { get; set; }
         public MainPage()
         {
             InitializeComponent();
@@ -24,6 +26,10 @@ namespace ModernDownladComics.Pages
             {
                 _ = new ChangeSourceWindow(comic);
             };
+
+            var localizationService= App.Current.Services.GetRequiredService<ILocalizationService>();
+            DeleteBTNContent = string.Format(localizationService.Get("Buttons.DeleteBTN"),
+                localizationService.Get("Entities.Comics"));
         }
 
         private void FilterTXT_TextChanged(object sender, TextChangedEventArgs e)

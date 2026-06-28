@@ -83,26 +83,30 @@ namespace ModernDownladComics.windows
                         }
                     case "search":
                         {
-                            settingsFrame.Navigate(typeof(SettingsHostsPage),
-                                new SettingsCollectionPageArg(settingsInputModel.Hosts, true));
+                            SettingsCollectionPageArg<WindowId> param =
+                                new(settingsInputModel.Hosts, AppWindow.Id, true, "Host");
+                            settingsFrame.Navigate(typeof(SettingsHostsPage), param);
                             break;
                         }
                     case "confirm":
                         {
-                            settingsFrame.Navigate(typeof(SettingsHostsPage),
-                                new SettingsCollectionPageArg(settingsInputModel.Confirms, true));
+                            SettingsCollectionPageArg<WindowId> param = new(settingsInputModel.Confirms, AppWindow.Id,
+                                true, "Host");
+                            settingsFrame.Navigate(typeof(SettingsHostsPage), param);
                             break;
                         }
                     case "excluded":
                         {
-                            settingsFrame.Navigate(typeof(SettingsHostsPage),
-                                new SettingsCollectionPageArg(settingsInputModel.ExcludedHosts, true));
+                            SettingsCollectionPageArg<WindowId> param = new(settingsInputModel.ExcludedHosts, AppWindow.Id,
+                                true, "Host");
+                            settingsFrame.Navigate(typeof(SettingsHostsPage), param);
                             break;
                         }
                     case "path":
                         {
-                            settingsFrame.Navigate(typeof(SettingsHostsPage),
-                                new SettingsCollectionPageArg(settingsInputModel.Paths, false));
+                            SettingsCollectionPageArg<WindowId> param = new(settingsInputModel.Paths, AppWindow.Id,
+                                false, "Path");
+                            settingsFrame.Navigate(typeof(SettingsHostsPage), param);
                             break;
                         }
                     case "credentials":
@@ -126,10 +130,10 @@ namespace ModernDownladComics.windows
                             navView.SelectedItem = null;
                             break;
                         }
-                        case "export_settings":
+                    case "export_settings":
                         {
-                            string path = await pickerDialogService.FolderDialog(AppWindow.Id,
-                                "FileDialog.Title");
+                            string path = await pickerDialogService.SaveFileDialog(AppWindow.Id,
+                                "SaveFileDialog.Title");
                             if (string.IsNullOrEmpty(path))
                                 break;
                             FileUtility.WriteFile(Path.Combine(path, "settings.json"), options);

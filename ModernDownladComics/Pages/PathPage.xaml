@@ -53,10 +53,10 @@
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
 
-            <Button Content="{res:Loc Key=SelectBTN, Section=PathPage}"
+            <Button Content="{res:Loc Key=SelectBTN, Section=Buttons}"
                     FontSize="16" HorizontalAlignment="Center" 
                     Command="{Binding SelectCommand}" Background="#229c0a"/>
-            <Button Grid.Column="1" Content="{res:Loc Key=CancelBTN, Section=PathPage}"
+            <Button Grid.Column="1" Content="{res:Loc Key=CancelBTN, Section=Buttons}"
                     FontSize="16" HorizontalAlignment="Center" 
                     Command="{Binding CancelCommand}" Background="#d91c20"/>
         </Grid>

@@ -37,7 +37,7 @@ namespace ModernDownladComics
         {
             return new Binding()
             {
-                Source = App.Current.Services.GetRequiredService<LocalizationService>(),
+                Source = App.Current.Services.GetRequiredService<ILocalizationService>(),
                 Path = new PropertyPath($"[{Section}.{Key}]"),
                 Mode = BindingMode.OneWay,
                 Converter = new LocConverter(Format)

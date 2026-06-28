@@ -12,7 +12,7 @@ namespace ModernDownloadComics.Converters
         public object Convert(object value, Type targetType, object parameter, string culture)
         {
             string v = value.ToString() ?? string.Empty;
-            return App.Current.Services.GetRequiredService<LocalizationService>()[$"Priority.{v}"];
+            return App.Current.Services.GetRequiredService<ILocalizationService>().Get($"Priority.{v}");
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, string language)

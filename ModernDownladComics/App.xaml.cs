@@ -13,6 +13,7 @@ using ComicsServiceLib.UI;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI;
 using Microsoft.UI.Xaml;
+using ModernDownladComics.Models;
 using ModernDownladComics.Services;
 using System;
 using System.Threading;
@@ -74,7 +75,10 @@ namespace ModernDownladComics
             service.AddTransient<SettingsCredientialsPageViewModel<XamlRoot>>();
             service.AddTransient<SendViewModel>();
             service.AddTransient<SettingsAppPageViewModel<WindowId>>();
-            service.AddTransient<SettingsHostPageViewModel>();
+            service.AddTransient<SettingsHostPageViewModel<WindowId>>();
+            service.AddTransient<AddLinksModelView>();
+            service.AddTransient<ArchiveLinksViewModel>();
+            service.AddTransient<ChangeSourcePageViewModel>();
         }
 
         private static void AddServices(ServiceCollection services)
@@ -97,8 +101,10 @@ namespace ModernDownladComics
             services.AddTransient<ArchiveService>();
             services.AddTransient<IScanService, ScanService>();
             services.AddTransient<IDialogService<XamlRoot>, DialogService>();
-            services.AddSingleton<LocalizationService>();
+            services.AddSingleton<ModernDownloadComicsLocalizationService>();
             services.AddSingleton<IPickerDialog<WindowId>, PickerDialog>();
+            services.AddTransient<ContentPageService>();
+            services.AddSingleton<ILocalizationService, ModernDownloadComicsLocalizationService>();
         }
     }
 }

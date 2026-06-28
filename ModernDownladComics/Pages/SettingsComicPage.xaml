@@ -21,7 +21,7 @@
         </Grid.ColumnDefinitions>
         <StackPanel Orientation="Vertical">
             <StackPanel Orientation="Vertical" Margin="10">
-                <TextBlock Text="{res:Loc Key=BaseURL, Section=SettingsComicPage, Format='{}{0}:'}" FontSize="16"
+                <TextBlock Text="{res:Loc Key=BaseURL, Section=Comic, Format='{}{0}:'}" FontSize="16"
                            HorizontalAlignment="Left" Margin="0,0,0,5"/>
                 <TextBox FontSize="16" TextWrapping="NoWrap"
                          Text="{Binding Comic.BaseURL, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
@@ -78,9 +78,9 @@
             </StackPanel>
             <StackPanel Orientation="Horizontal">
                 <StackPanel Orientation="Vertical" Margin="10">
-                    <TextBlock Text="{res:Loc Key=Enabling, Section=SettingsComicPage, Format='{}{0}:'}" FontSize="16" Margin="0,0,0,5"/>
-                    <ToggleSwitch OffContent="{res:Loc Key=Disabled, Section=SettingsComicPage}" 
-                                  OnContent="{res:Loc Key=Enabled, Section=SettingsComicPage}" FontSize="16"
+                    <TextBlock Text="{res:Loc Key=Enable, Section=Comic, Format='{}{0}:'}" FontSize="16" Margin="0,0,0,5"/>
+                    <ToggleSwitch OffContent="{res:Loc Key=Disabled, Section=SettingsComicsPage}" 
+                                  OnContent="{res:Loc Key=Enabled, Section=SettingsComicsPage}" FontSize="16"
                                   IsOn="{Binding Comic.Enabled, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                 </StackPanel>
                 <StackPanel Orientation="Vertical" Margin="10">

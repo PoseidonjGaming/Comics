@@ -1,8 +1,10 @@
 using ComicsInfraLib.Models.Views;
 using ComicsLib.Utility;
+using ComicsLocalizationLib;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using ModernDownladComics.Models;
 using ModernDownladComics.Utilities;
 using System;
 
@@ -17,11 +19,13 @@ namespace ModernDownladComics.Pages
     public sealed partial class ArchivePage : Page
     {
         public ArchivePageViewModel<XamlRoot> ViewModel { get; set; }
+        public ArchiveLinksViewModel ArchiveLinksViewModel { get; set; }
         public ArchivePage()
         {
             InitializeComponent();
 
             ViewModel = App.Current.Services.GetRequiredService<ArchivePageViewModel<XamlRoot>>();
+            ArchiveLinksViewModel = App.Current.Services.GetRequiredService<ArchiveLinksViewModel>();
         }
 
         private void Page_Loaded(object sender, RoutedEventArgs e)

@@ -29,14 +29,10 @@ namespace ModernDownladComics.Pages
             InitializeComponent();
             ViewModel = App.Current.Services
                 .GetRequiredService<SettingsCredientialsPageViewModel<XamlRoot>>();
-            ViewModel.ConnectionEvent += () =>
+            ViewModel.ConnectionEvent += (isSucces) =>
             {
-                connectionLBL.Foreground = new SolidColorBrush(Colors.Green);
+                connectionLBL.Foreground = new SolidColorBrush(isSucces ? Colors.Green : Colors.Red);
             };
-            ViewModel.DialogEvent += async (msg) =>
-            {
-                connectionLBL.Foreground = new SolidColorBrush(Colors.Red);
-            };            
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
@@ -48,6 +44,6 @@ namespace ModernDownladComics.Pages
             }
         }
 
-       
+
     }
 }

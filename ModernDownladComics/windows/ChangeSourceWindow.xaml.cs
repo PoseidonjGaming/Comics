@@ -1,4 +1,6 @@
+using System.Collections.ObjectModel;
 using ComicsInfraLib.Helpers;
+using ComicsInfraLib.Models.Views;
 using ComicsLib.Models;
 using ComicsServiceLib;
 using ComicsServiceLib.UI;
@@ -8,7 +10,6 @@ using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using ModernDownloadComics.Services;
-using System.Collections.ObjectModel;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -21,12 +22,13 @@ namespace ModernDownladComics.windows
     public sealed partial class ChangeSourceWindow : Window
     {
         private static WindowService WindowService => WindowService.Instance;
-        public ObservableCollection<string> Hosts { get; set; } = [];
-        public Comic Comic { get; set; }
+        public ChangeSourcePageViewModel ViewModel { get; set; }
         public ChangeSourceWindow(Comic comic)
         {
             InitializeComponent();
 
+            ViewModel = App.Current.Services.GetRequiredService<ChangeSourcePageViewModel>();
+            ViewModel.Init(comic);
             AppWindow.Resize(new(200, 115));
             AppWindow.TitleBar.PreferredTheme = TitleBarTheme.UseDefaultAppMode;
 
@@ -39,13 +41,6 @@ namespace ModernDownladComics.windows
 
             AppWindow.SetPresenter(presenter);
 
-            foreach (var host in App.Current.Services.GetRequiredService<ISettingsService>().GetOptions().Hosts)
-            {
-                Hosts.Add(host);
-            }
-
-            Comic = comic;
-
             AppWindow.Show();
         }
 
@@ -56,21 +51,7 @@ namespace ModernDownladComics.windows
 
         private void ComicsHostCMB_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (comicsHostCMB.SelectedItem is string host)
-            {
-                var service = App.Current.Services.GetRequiredService<IHtmlParserService>();
-                HtmlNode? bodyNode = service?.LoadBody(Comic.HtmlBody ?? "");
-                if (bodyNode != null)
-                {
-                    HtmlNode? node = service?.FindNodeWithAttribute(bodyNode, host, "href");
-                    if (node != null)
-                    {
-                        string newUrl = node.GetAttributeValue("href", "");
-                        Comic.URL = newUrl;
-                        Comic.Host = RegexUtility.HostRegex().Match(newUrl).Value;
-                    }
-                }
-            }
+            ViewModel.ChangeSource();
         }
 
         private void Window_Closed(object sender, WindowEventArgs args)

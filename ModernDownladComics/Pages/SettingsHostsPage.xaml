@@ -28,10 +28,10 @@
                            Margin="0,0,0,5"/>
                 <StackPanel Orientation="Horizontal">
                     <TextBox FontSize="16" Width="200" Text="{Binding Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                    <Button Content="{res:Loc Key=AddBTN, Section=SettingsHostsPage}" FontSize="16" Margin="10,0,10,0"
+                    <Button Content="{x:Bind AddBTNContent}" FontSize="16" Margin="10,0,10,0"
                             Background="{StaticResource AddButton}"
-                            Command="{Binding AddValueCommand}"/>
-                    <Button Content="{res:Loc Key=DeleteBTN, Section=SettingsHostsPage}" FontSize="16"
+                            Command="{Binding AddValueCommand}" CommandParameter="{Binding Arg}"/>
+                    <Button Content="{x:Bind DeleteBTNContent}" FontSize="16"
                             Background="{StaticResource DeleteButton}"
                             Command="{Binding DeleteValueCommand}"/>
                 </StackPanel>

@@ -24,14 +24,14 @@
 
         <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center"
                     Margin="10">
-            <Button Content="{res:Loc Key=SearchBTN, Section=ArchivePage}" FontSize="16" 
+            <Button Content="{x:Bind ArchiveLinksViewModel.SearchBTNContent}" FontSize="16" 
                     Command="{Binding SearchCommand}"
                     CommandParameter="{x:Bind XamlRoot}"/>
-            <Button Content="{res:Loc Key=RestoreBTN, Section=ArchivePage}" FontSize="16"
+            <Button Content="{res:Loc Key=RestoreBTN, Section=Buttons}" FontSize="16"
                     Margin="10,0,10,0"
                     Command="{Binding RestoreCommand}"
                     CommandParameter="{x:Bind XamlRoot}"/>
-            <Button Content="{res:Loc Key=DeleteBTN, Section=ArchivePage}" FontSize="16"
+            <Button Content="{x:Bind ArchiveLinksViewModel.DeleteBTNContent}" FontSize="16"
                     Command="{Binding DeleteItemCommand}"/>
         </StackPanel>
 

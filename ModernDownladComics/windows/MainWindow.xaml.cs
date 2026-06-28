@@ -43,7 +43,7 @@ namespace ModernDownladComics
             _stateRepository = App.Current.Services.GetRequiredService<IStateRepository>();
             
             Init();
-            var localizationService = App.Current.Services.GetRequiredService<LocalizationService>();
+            var localizationService = App.Current.Services.GetRequiredService<ILocalizationService>();
             var options = App.Current.Services.GetRequiredService<ISettingsService>().GetOptions();
             localizationService.LoadLang(options.Lang);
 
@@ -101,7 +101,7 @@ namespace ModernDownladComics
         {
             var pathService = App.Current.Services.GetRequiredService<IPathService>();
             if (File.Exists(pathService.BackupFilePath))
-                _stateRepository.Comics = FileUtility.ReadFile<List<Comic>>(pathService.BackupFilePath) ?? [];
+                _stateRepository.Comics = new(FileUtility.ReadFile<List<Comic>>(pathService.BackupFilePath) ?? []) ;
             if (File.Exists(pathService.TrackFilePath))
                 _stateRepository.Tracks =
                     FileUtility.ReadFile<List<Track>>(pathService.TrackFilePath) ?? [];

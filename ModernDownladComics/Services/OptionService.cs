@@ -22,7 +22,6 @@ namespace ModernDownladComics.Services
         }
         private Options LoadOption()
         {
-
             if (!File.Exists(_optionPath))
             {
                 return new();

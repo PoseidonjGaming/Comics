@@ -118,11 +118,11 @@
             </StackPanel>
 
             <StackPanel Orientation="Horizontal" Margin="0,20,0,0">
-                <Button x:Name="changeSourceBTN" Content="{res:Loc Key=ChangeSourceBTN, Section=MainPage}"
+                <Button Content="{res:Loc Key=ChangeSourceBTN, Section=Buttons}"
                         FontSize="16" Padding="5" Command="{Binding ChangeSourceCommand}"/>
-                <Button x:Name="unselectBTN" Content="{res:Loc Key=UnselectBTN, Section=MainPage}"
+                <Button Content="{res:Loc Key=UnselectBTN, Section=Buttons}"
                         FontSize="16" Margin="20,0,20,0" Padding="5" Command="{Binding UnselectCommand}"/>
-                <Button Content="{res:Loc Key=DeleteBTN, Section=MainPage}" Padding="5" FontSize="16"
+                <Button Content="{x:Bind DeleteBTNContent}" Padding="5" FontSize="16"
                         Command="{Binding DeleteCommand}"/>
             </StackPanel>
         </StackPanel>

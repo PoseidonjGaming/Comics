@@ -10,9 +10,9 @@ using JDownloader.Model;
 
 namespace ComicsInfraLib.Services
 {
-    public class JdownloaderService<L>(Lazy<Task<ComicsJDownloaderClient>> jdClient,
+    public class JdownloaderService(Lazy<Task<ComicsJDownloaderClient>> jdClient,
         IHtmlParserService htmlParserService, IStateRepository stateRepository, 
-        L localizationService) where L : LocalizationService
+        ILocalizationService localizationService)
     {
         public Task<ComicsJDownloaderClient> GetClient() => jdClient.Value;
 
@@ -112,7 +112,7 @@ namespace ComicsInfraLib.Services
 
             LinkCollectingJob job = await client.LinkGrabberV2.AddLinks(query);
             comic.UUID = job.Id;
-            stateAction.Invoke($"{localizationService["SendPage.Add"]} {comic.PackageName}");
+            stateAction.Invoke($"{localizationService.Get("SendPage.Add")} {comic.PackageName}");
         }
         public void ChangeUrl(Comic comic, string[] hosts, Action<string> stateAction)
         {

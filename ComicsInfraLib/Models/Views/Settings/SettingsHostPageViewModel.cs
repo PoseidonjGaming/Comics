@@ -7,9 +7,8 @@ using System.Collections.ObjectModel;
 
 namespace ComicsInfraLib.Models.Views.Settings
 {
-    public partial class SettingsHostPageViewModel<T, L>(L localizationService,
-        IPickerDialog<T> pickerDialog) : 
-        ObservableObject where T : class where L: LocalizationService
+    public partial class SettingsHostPageViewModel<T>(ILocalizationService localizationService,
+        IPickerDialog<T> pickerDialog) : ObservableObject
     {
         [ObservableProperty]
         public partial ObservableCollection<string> Collection { get; set; } = [];
@@ -24,12 +23,15 @@ namespace ComicsInfraLib.Models.Views.Settings
         [ObservableProperty]
         public partial string Label { get; set; }
 
-        public void Setup(SettingsCollectionPageArg settings)
+        public T? Arg { get; set; }
+
+        public void Setup(SettingsCollectionPageArg<T> settings)
         {
             Collection = settings.List;
             isHost = settings.IsHost;
+            Arg = settings.Arg;
 
-            Label = string.Format("{0}:", localizationService[isHost ? "Comic.Host" : "Comic.Path"]);
+            Label = string.Format("{0}:", localizationService.Get(isHost ? "Comic.Host" : "Comic.Path"));
         }
 
         [RelayCommand]

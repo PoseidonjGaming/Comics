@@ -7,14 +7,14 @@ using System.Collections.ObjectModel;
 
 namespace ComicsInfraLib.Models.Views
 {
-    public partial class SendViewModel<L>(IStateRepository stateRepository,
-        L localizationService, JDownloadJobService<L> jDownloadJobService,
-        IPathService pathService) : ObservableObject where L : LocalizationService
+    public partial class SendViewModel(IStateRepository stateRepository,
+        ILocalizationService localizationService, JDownloadJobService jDownloadJobService,
+        IPathService pathService) : ObservableObject
     {
         [ObservableProperty]
-        public partial string Job { get; set; } = localizationService["SendPage.Start"];
+        public partial string Job { get; set; } = localizationService.Get("SendPage.Start");
         [ObservableProperty]
-        public partial string StateJob { get; set; } = localizationService["SendPage.JobNotStarted"];
+        public partial string StateJob { get; set; } = localizationService.Get("SendPage.JobNotStarted");
         [ObservableProperty]
         public partial int ProgressValue { get; set; }
         [ObservableProperty]
@@ -40,12 +40,12 @@ namespace ComicsInfraLib.Models.Views
                 IsDetermined = false;
 
                 IsChecked = true;
-                Job = localizationService["SendPage.Stop"];
+                Job = localizationService.Get("SendPage.Stop");
 
                 await jDownloadJobService.RunAsync(_verifyTokenSource.Token);
 
                 IsChecked = false;
-                Job = localizationService["SendPage.Start"];
+                Job = localizationService.Get("SendPage.Start");
 
                 frameAction();
             }
@@ -54,7 +54,7 @@ namespace ComicsInfraLib.Models.Views
         public void Cancel()
         {
             _verifyTokenSource?.Cancel();
-            Job = localizationService["SendPage.Start"];
+            Job = localizationService.Get("SendPage.Start");
             IsChecked = false;
             IsDetermined = true;
             ProgressValue = 0;
@@ -65,7 +65,7 @@ namespace ComicsInfraLib.Models.Views
             _verifyTokenSource = new CancellationTokenSource();
             IsDetermined = false;
             IsChecked = true;
-            Job = localizationService["SendPage.Stop"];
+            Job = localizationService.Get("SendPage.Stop");
 
             await jDownloadJobService.RunAsync(_verifyTokenSource.Token);
             stateRepository.Comics.Clear();

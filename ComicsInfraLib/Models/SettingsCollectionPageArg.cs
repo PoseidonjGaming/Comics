@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Text;
+﻿using System.Collections.ObjectModel;
 
 namespace ComicsInfraLib.Models
 {
-    public record SettingsCollectionPageArg(ObservableCollection<string> List, bool IsHost);
+    public record SettingsCollectionPageArg<T>(ObservableCollection<string> List, T Arg,
+        bool IsHost, string Entity);
 }

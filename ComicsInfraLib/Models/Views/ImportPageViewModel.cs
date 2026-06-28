@@ -1,18 +1,17 @@
-﻿using ComicsInfraLib.Services;
+﻿using System.Collections.ObjectModel;
+using ComicsInfraLib.Services;
 using ComicsLib.Models;
 using ComicsLib.Utilities;
-using ComicsLocalizationLib;
 using ComicsServiceLib;
 using ComicsServiceLib.UI;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using System.Collections.ObjectModel;
 
 namespace ComicsInfraLib.Models.Views
 {
-    public partial class ImportPageViewModel<T,L>(IComicsBuilderService comicService,
-        JdownloaderService<L> jdownloaderService, IPathService pathService,
-        IDialogService<T> dialogService) : ObservableObject where T : class where L: LocalizationService
+    public partial class ImportPageViewModel<T>(IComicsBuilderService comicService,
+        JdownloaderService jdownloaderService, IPathService pathService,
+        IDialogService<T> dialogService) : ObservableObject where T : class
     {
         public ObservableCollection<string> URLS { get; } = [];
         public ObservableCollection<string> Files { get; } = [];
@@ -61,16 +60,17 @@ namespace ComicsInfraLib.Models.Views
                 Comic.Author, Comic.PackageName, Comic.NumberPages, res == DialogResult.YES);
             if (comic != null)
                 PathEvent.Invoke(comic);
-
-            Comic.Author = string.Empty;
-            Comic.PackageName = string.Empty;
-            Comic.NumberPages = 0;
+            
+            ResetComic();
+            
         }
 
         [RelayCommand]
         public void ResetComic()
         {
-            Comic.Reset();
+            Comic.Author = string.Empty;
+            Comic.PackageName = string.Empty;
+            Comic.NumberPages = 0;
         }
 
         public void FileChanged()
@@ -82,6 +82,8 @@ namespace ComicsInfraLib.Models.Views
                 {
                     URLS.Clear();
                     JsonUtility.GetURLS(File.ReadAllText(path)).ForEach(URLS.Add);
+                    ResetComic();
+                    Comic.BaseURL = URLS.First();
                 }
 
             }
@@ -99,7 +101,8 @@ namespace ComicsInfraLib.Models.Views
             string? jd = await jdownloaderService.GetComicJdownloader(Comic.Author,
                Comic.PackageName);
             DialogResult res = await dialogService.ShowSearchAsync(new(Comic.PackageName,
-                Comic.Author, pathService.BackupDirPath, jd), arg,"","");
+                Comic.Author, pathService.BackupDirPath, jd), arg, 
+                "SearchDialog.Title", "SearchDialog.Content");
             if (res == DialogResult.YES)
             {
                 await AddComic(arg);

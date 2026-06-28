@@ -9,10 +9,10 @@ using System.Collections.ObjectModel;
 
 namespace ComicsInfraLib.Models.Views
 {
-    public partial class AddPageViewModel<T, L>(IComicsBuilderService builderService,
-    JdownloaderService<L> jdownloaderService, IPathService pathService,
+    public partial class AddPageViewModel<T>(IComicsBuilderService builderService,
+    JdownloaderService jdownloaderService, IPathService pathService,
     IStateRepository stateRepository, IDialogService<T> dialogService) : 
-        ObservableObject where T : class where L : LocalizationService
+        ObservableObject where T : class
     {
         [ObservableProperty]
         public partial ComicInputModel Comic { get; set; } = new();
@@ -48,7 +48,7 @@ namespace ComicsInfraLib.Models.Views
                 Comic.PackageName);
 
             DialogResult res = await dialogService.ShowSearchAsync(new(Comic.PackageName, Comic.Author,
-                pathService.BackupDirPath, jd), arg, "SearchDialogWindow.Title", "SearchDialog.Content");
+                pathService.BackupDirPath, jd), arg, "SearchDialog.Title", "SearchDialog.Content");
             if (res == DialogResult.YES)
             {
                 await AddComic(arg);

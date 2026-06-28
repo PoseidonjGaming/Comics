@@ -8,8 +8,8 @@ using JDownloader.Model;
 
 namespace ComicsInfraLib.Models.Views
 {
-    public partial class SettingsCredientialsPageViewModel<T, L>(IDialogService<T> dialogService,
-        L localizationService) : ObservableObject where T : class where L : LocalizationService
+    public partial class SettingsCredientialsPageViewModel<T>(IDialogService<T> dialogService,
+        ILocalizationService localizationService) : ObservableObject where T : class
     {
         [ObservableProperty]
         public partial JDCredentials Credentials { get; set; } = new("mail", "password", "device");
@@ -51,7 +51,7 @@ namespace ComicsInfraLib.Models.Views
                             client.SetDirectConnectionInfo(directInfos.Infos[0]);
                         }
 
-                        ConnectionLabel = localizationService["SettingsCredentialsPage.ConnectionSuccessful"];
+                        ConnectionLabel = localizationService.Get("SettingsCredentialsPage.ConnectionSuccessful");
                         ConnectionEvent(true);
                     }
                     else
@@ -73,7 +73,7 @@ namespace ComicsInfraLib.Models.Views
         private async Task HandleConnectionException(string message, T arg)
         {
             if (ConnectionEvent == null) return;
-            ConnectionLabel = localizationService["SettingsCredentialsPage.ConnectionFailed"];
+            ConnectionLabel = localizationService.Get("SettingsCredentialsPage.ConnectionFailed");
             ConnectionEvent(false);
             await dialogService.ShowErrorAsync(arg, message);
 

@@ -7,9 +7,9 @@ using System.Net;
 
 namespace ComicsInfraLib.Services
 {
-    public class JDownloadJobService<L>(JdownloaderService<L> jdownloaderService,
+    public class JDownloadJobService(JdownloaderService jdownloaderService,
         ISettingsService settingsService, IJobState jobState, 
-        IStateRepository stateRepository, L localizationService) where L : LocalizationService
+        IStateRepository stateRepository, ILocalizationService localizationService)
     {
         private int progress;
 
@@ -26,7 +26,7 @@ namespace ComicsInfraLib.Services
             do
             {
                 tr++;
-                jobState.UpdateTry($"{localizationService["SendPage.Try"]} {tr}");
+                jobState.UpdateTry($"{localizationService.Get("SendPage.Try")} {tr}");
                 links.Clear();
                 await AddLinks(c => false, listener, token);
 
@@ -55,7 +55,7 @@ namespace ComicsInfraLib.Services
                 await jdownloaderService.RemoveLinks();
             } while (links.Any(cl => cl.AvailableLinkState == AvailableLinkState.OFFLINE));
 
-            jobState.UpdateTry(localizationService["SendPage.FinalTry"]);
+            jobState.UpdateTry(localizationService.Get("SendPage.FinalTry"));
             jobState.ClearState();
             await AddLinks(c => !options.Confirms.Contains(c.Host), listener, token);
 
@@ -66,17 +66,17 @@ namespace ComicsInfraLib.Services
         private async Task FinalizeLinks(CancellationToken token)
         {
             ComicsJDownloaderClient client = await jdownloaderService.GetClient();
-            jobState.UpdateState(localizationService["SendPage.DisableLinks"], false);
+            jobState.UpdateState(localizationService.Get("SendPage.DisableLinks"), false);
             await DisableLinks(client);
 
             await Task.Delay(1000, token);
 
-            jobState.UpdateState(localizationService["SendPage.SortLinks"], false);
+            jobState.UpdateState(localizationService.Get("SendPage.SortLinks"), false);
             await SortPackages(client);
 
             await Task.Delay(1000, token);
 
-            jobState.UpdateState(localizationService["SendPage.SetNameAndComment"], false);
+            jobState.UpdateState(localizationService.Get("SendPage.SetNameAndComment"), false);
             await FinishedLink(client);
             
             await Task.Delay(1000, token);

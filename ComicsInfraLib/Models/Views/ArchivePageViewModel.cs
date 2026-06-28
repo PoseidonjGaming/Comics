@@ -7,9 +7,9 @@ using System.Collections.ObjectModel;
 
 namespace ComicsInfraLib.Models.Views
 {
-    public partial class ArchivePageViewModel<T, L>(JdownloaderService<L> jdownloaderService,
+    public partial class ArchivePageViewModel<T>(JdownloaderService jdownloaderService,
         IPathService pathService, ArchiveService archiveService,
-        IDialogService<T> dialogService) where T : class where L : LocalizationService
+        IDialogService<T> dialogService) where T : class
     {
         public ObservableCollection<TreeItem> Items { get; } = [];
 

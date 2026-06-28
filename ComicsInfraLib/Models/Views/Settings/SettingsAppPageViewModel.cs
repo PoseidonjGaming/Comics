@@ -8,9 +8,9 @@ using System.Collections.ObjectModel;
 
 namespace ComicsInfraLib.Models.Views.Settings
 {
-    public partial class SettingsAppPageViewModel<T, L>(IPickerDialog<T> pickerDialog,
-        L localizationService, ISettingsService settingsService) :
-        ObservableObject where L : LocalizationService
+    public partial class SettingsAppPageViewModel<T>(IPickerDialog<T> pickerDialog,
+        ILocalizationService localizationService, ISettingsService settingsService) :
+        ObservableObject
     {
         [ObservableProperty]
         public partial string Path { get; set; }
@@ -19,7 +19,7 @@ namespace ComicsInfraLib.Models.Views.Settings
         public partial LanguageOption Lang { get; set; }
 
         public ObservableCollection<LanguageOption> Languages { get; set; } =
-            new(localizationService.Languages);
+            new(localizationService.GetLanguage());
 
         public event Action<string>? PathChanged;
         public event Action<string>? LangChanged;
